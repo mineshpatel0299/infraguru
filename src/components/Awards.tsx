@@ -60,10 +60,10 @@ export default function Awards() {
           <motion.span variants={fadeUp} className="eyebrow mx-auto justify-center">
             Recognized Excellence
           </motion.span>
-          <motion.h2 variants={fadeUp} className="mt-4 font-heading text-[clamp(2.5rem,4vw,3.5rem)] text-primary-dark">
+          <motion.h2 variants={fadeUp} className="mt-4 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark">
             Awards & <span className="text-gradient italic font-light">Honors</span>
           </motion.h2>
-          <motion.p variants={fadeUp} className="mt-6 text-muted max-w-2xl mx-auto text-lg">
+          <motion.p variants={fadeUp} className="mt-6 text-[1.1rem] leading-[1.7] text-muted max-w-2xl mx-auto">
             Our commitment to quality, transparency, and architectural brilliance has earned us industry-wide recognition over the years.
           </motion.p>
         </motion.div>

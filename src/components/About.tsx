@@ -1,43 +1,163 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   motion,
   useScroll,
   useTransform,
   useSpring,
   useInView,
+  useMotionValue,
+  useMotionTemplate,
 } from 'framer-motion';
 import { viewportOnce } from '@/lib/motion';
 
-/* ── Animated counter ────────────────────────────────────────────────────── */
-function StatBadge({
-  value,
-  suffix,
-  label,
-  delay = 0,
+/* ── Pillar data ──────────────────────────────────────────────────────────── */
+const PILLARS = [
+  {
+    n: '01',
+    title: 'Vision',
+    body: 'We spot value before the skyline catches up.',
+  },
+  {
+    n: '02',
+    title: 'Trust',
+    body: 'RERA-backed, transparent, built on fifteen years of relationships.',
+  },
+  {
+    n: '03',
+    title: 'Craft',
+    body: 'Every deal handled like a signature piece — deliberate, built to last.',
+  },
+] as const;
+
+const TICKER = [
+  '77+ PROPERTIES LISTED',
+  '350+ PROPERTIES SOLD',
+  '500+ SATISFIED CLIENTS',
+  'RERA CERTIFIED',
+];
+
+/* ── Cursor-tracked gold foil headline ───────────────────────────────────── */
+function FoilHeadline() {
+  const ref = useRef<HTMLHeadingElement>(null);
+  const mx = useMotionValue(50);
+  const my = useMotionValue(50);
+  const smx = useSpring(mx, { stiffness: 120, damping: 22, mass: 0.6 });
+  const smy = useSpring(my, { stiffness: 120, damping: 22, mass: 0.6 });
+  const maskImage = useMotionTemplate`radial-gradient(circle 180px at ${smx}% ${smy}%, black 0%, transparent 100%)`;
+
+  const handleMove = (e: React.MouseEvent<HTMLHeadingElement>) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    mx.set(((e.clientX - rect.left) / rect.width) * 100);
+    my.set(((e.clientY - rect.top) / rect.height) * 100);
+  };
+
+  const text = (
+    <>
+      Where Vision <span className="italic font-light">Meets Value.</span>
+    </>
+  );
+
+  return (
+    <h2
+      ref={ref}
+      onMouseMove={handleMove}
+      className="relative select-none text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark"
+    >
+      {text}
+      <motion.span
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-br from-secondary-light via-secondary to-secondary-hover bg-clip-text text-transparent pointer-events-none"
+        style={{ WebkitMaskImage: maskImage as unknown as string, maskImage: maskImage as unknown as string }}
+      >
+        {text}
+      </motion.span>
+    </h2>
+  );
+}
+
+/* ── Single scrollytelling pillar row ────────────────────────────────────── */
+function PillarRow({
+  pillar,
+  isActive,
+  onActivate,
+  index,
 }: {
-  value: string;
-  suffix?: string;
-  label: string;
-  delay?: number;
+  pillar: (typeof PILLARS)[number];
+  isActive: boolean;
+  onActivate: () => void;
+  index: number;
 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={viewportOnce}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay }}
-      className="flex flex-col gap-1 p-8 border border-hairline rounded-2xl bg-bg-soft hover:bg-bg-soft-2 hover:border-primary/20 transition-all duration-500"
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
+      className="group relative flex items-center gap-5 py-6 border-b border-hairline"
     >
-      <div className="font-heading text-5xl lg:text-6xl text-primary-dark font-medium leading-none">
-        {value}
-        {suffix && <span className="text-secondary ml-1">{suffix}</span>}
-      </div>
-      <div className="text-[0.7rem] font-bold tracking-[0.2em] uppercase text-muted mt-2">
-        {label}
+      {/* invisible tracker: fires when this row crosses the vertical center */}
+      <motion.span
+        aria-hidden
+        onViewportEnter={onActivate}
+        viewport={{ margin: '-45% 0px -45% 0px' }}
+        className="absolute inset-0 pointer-events-none"
+      />
+      <span
+        className={`font-heading text-lg leading-none tabular-nums transition-colors duration-500 ${
+          isActive ? 'text-secondary' : 'text-primary/25'
+        }`}
+      >
+        {pillar.n}
+      </span>
+      <div className="flex-1">
+        <h3
+          className={`text-[1.3rem] transition-colors duration-500 ${
+            isActive ? 'text-primary-dark' : 'text-primary-dark/50'
+          }`}
+        >
+          {pillar.title}
+        </h3>
+        <p
+          className={`text-[0.95rem] leading-[1.6] transition-colors duration-500 ${
+            isActive ? 'text-muted' : 'text-muted/40'
+          }`}
+        >
+          {pillar.body}
+        </p>
       </div>
     </motion.div>
+  );
+}
+
+/* ── Infinite prestige ticker ────────────────────────────────────────────── */
+function PrestigeTicker() {
+  const row = (
+    <div className="flex items-center shrink-0">
+      {TICKER.map((item, i) => (
+        <React.Fragment key={i}>
+          <span className="font-heading text-base tracking-[0.15em] text-white/90 whitespace-nowrap px-8">
+            {item}
+          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="relative bg-primary-dark overflow-hidden py-6">
+      <motion.div
+        className="flex"
+        animate={{ x: ['0%', '-50%'] }}
+        transition={{ duration: 24, ease: 'linear', repeat: Infinity }}
+      >
+        {row}
+        {row}
+      </motion.div>
+    </div>
   );
 }
 
@@ -46,6 +166,7 @@ export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const isImageInView = useInView(imageRef, { once: true, margin: '-15%' });
+  const [activePillar, setActivePillar] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -64,135 +185,84 @@ export default function About() {
       {/* Soft radial glow for depth */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute -top-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-[radial-gradient(circle,var(--color-bg-soft)_0%,transparent_70%)] opacity-80" />
-        <div className="absolute -bottom-[20%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.05)_0%,transparent_70%)]" />
       </div>
 
-      {/* Giant watermark */}
-      <div className="absolute top-0 right-0 font-heading text-[clamp(18rem,30vw,36rem)] text-primary/[0.03] leading-none pointer-events-none select-none translate-x-[10%] -translate-y-[10%] z-0">
-        IG
-      </div>
-
-      <div className="relative z-10 container mx-auto px-6 max-w-[1400px] pt-28 lg:pt-40">
-        {/* ── Section label ── */}
+      <div className="relative z-10 container mx-auto max-w-7xl px-8 py-28 lg:py-36">
+        {/* ── Section header ── */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
           transition={{ duration: 0.6 }}
-          className="flex items-center gap-4 mb-12"
+          className="mx-auto mb-16 max-w-160 text-center"
         >
-          <span className="w-10 h-px bg-secondary" />
-          <span className="text-[0.7rem] font-bold tracking-[0.3em] uppercase text-primary">
-            Why Infraguru
-          </span>
+          <span className="eyebrow justify-center">Why Infraguru</span>
+          <FoilHeadline />
+          <p className="mt-5 text-[1.1rem] leading-[1.7] text-muted">
+            Fifteen years of turning capital into enduring wealth through a
+            curated portfolio built for long-term value.
+          </p>
         </motion.div>
 
-        {/* ── Cinematic split headline ── */}
-        <div className="overflow-hidden mb-4">
-          <motion.h2
-            initial={{ y: '100%' }}
-            whileInView={{ y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-heading text-[clamp(3.5rem,8vw,9rem)] text-primary-dark leading-[1] tracking-tight font-medium"
-          >
-            Where Vision
-          </motion.h2>
-        </div>
-        <div className="overflow-hidden mb-4">
-          <motion.h2
-            initial={{ y: '100%' }}
-            whileInView={{ y: 0 }}
-            viewport={viewportOnce}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
-            className="font-heading text-[clamp(3.5rem,8vw,9rem)] leading-[1] tracking-tight font-light italic"
-            style={{
-              WebkitTextStroke: '1px rgba(3,46,151,0.2)',
-              color: 'transparent',
-            }}
-          >
-            Meets Value.
-          </motion.h2>
-        </div>
+        {/* ── Image + pillar ledger ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
 
-        {/* ── Main content: image + text grid ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-20 items-start pb-28 lg:pb-40">
-          
-          {/* ── Left: Reveal image with clip-path animation ── */}
+          {/* ── Left: visual ── */}
           <div ref={imageRef} className="relative">
-            {/* Clip-path reveal frame */}
             <motion.div
               className="relative aspect-[4/5] rounded-3xl overflow-hidden"
               animate={isImageInView ? { clipPath: 'inset(0% 0% 0% 0% round 1.5rem)' } : {}}
               initial={{ clipPath: 'inset(0% 100% 0% 0% round 1.5rem)' }}
               transition={{ duration: 1.4, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
             >
-              <motion.div
-                className="absolute inset-0 w-full h-full"
-                style={{ y: parallaxY }}
-              >
+              <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
                 <img
                   src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90"
                   alt="Infraguru premium real estate"
                   className="w-full h-[115%] -mt-[7.5%] object-cover"
                 />
-                {/* Dark gradient over image for contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/80 via-primary-dark/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/70 via-primary-dark/5 to-transparent" />
               </motion.div>
 
-              {/* Floating year badge */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={viewportOnce}
-                transition={{ duration: 0.7, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute top-8 left-8 flex flex-col items-start"
               >
                 <div className="font-heading text-[0.7rem] text-white/70 tracking-[0.2em] uppercase mb-1">Est.</div>
-                <div className="font-heading text-7xl text-white leading-none font-medium">
-                  2011
-                </div>
+                <div className="font-heading text-5xl text-white leading-none font-medium">2011</div>
               </motion.div>
             </motion.div>
 
-            {/* Gold accent line beside image */}
             <motion.div
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
               viewport={viewportOnce}
-              transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.6 }}
+              transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.5 }}
               className="absolute -right-5 top-12 bottom-12 w-[2px] bg-secondary origin-top hidden lg:block"
             />
           </div>
 
-          {/* ── Right: Body + Stats ── */}
-          <div className="flex flex-col justify-between h-full">
-            
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-              className="text-[1.2rem] lg:text-[1.35rem] leading-[1.8] text-muted max-w-xl font-light"
-            >
-              At Infraguru, we&apos;ve built a track record of transforming capital into enduring wealth. Our curated real estate portfolio spans premium residential, commercial and strategic investment-grade assets — each selected for its long-term value potential.
-            </motion.p>
+          {/* ── Right: pillar ledger + CTA ── */}
+          <div className="flex flex-col">
+            {PILLARS.map((pillar, i) => (
+              <PillarRow
+                key={pillar.n}
+                pillar={pillar}
+                index={i}
+                isActive={activePillar === i}
+                onActivate={() => setActivePillar(i)}
+              />
+            ))}
 
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 gap-4 mt-14">
-              <StatBadge value="77" suffix="+" label="Properties Listed" delay={0.2} />
-              <StatBadge value="350" suffix="+" label="Properties Sold" delay={0.35} />
-              <StatBadge value="500" suffix="+" label="Satisfied Clients" delay={0.5} />
-              <StatBadge value="25" suffix="" label="Realtor Awards" delay={0.65} />
-            </div>
-
-            {/* CTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={viewportOnce}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-14 flex flex-wrap items-center gap-6"
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="mt-10 flex flex-wrap items-center gap-6"
             >
               <a
                 href="#projects"
@@ -208,12 +278,12 @@ export default function About() {
                 Book a Consultation
               </a>
             </motion.div>
-
           </div>
         </div>
       </div>
 
-
+      {/* ── Infinite prestige ticker ── */}
+      <PrestigeTicker />
     </section>
   );
 }
