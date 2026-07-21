@@ -31,13 +31,6 @@ const PILLARS = [
   },
 ] as const;
 
-const TICKER = [
-  '77+ PROPERTIES LISTED',
-  '350+ PROPERTIES SOLD',
-  '500+ SATISFIED CLIENTS',
-  'RERA CERTIFIED',
-];
-
 /* ── Cursor-tracked gold foil headline ───────────────────────────────────── */
 function FoilHeadline() {
   const ref = useRef<HTMLHeadingElement>(null);
@@ -129,35 +122,6 @@ function PillarRow({
         </p>
       </div>
     </motion.div>
-  );
-}
-
-/* ── Infinite prestige ticker ────────────────────────────────────────────── */
-function PrestigeTicker() {
-  const row = (
-    <div className="flex items-center shrink-0">
-      {TICKER.map((item, i) => (
-        <React.Fragment key={i}>
-          <span className="font-heading text-base tracking-[0.15em] text-white/90 whitespace-nowrap px-8">
-            {item}
-          </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-        </React.Fragment>
-      ))}
-    </div>
-  );
-
-  return (
-    <div className="relative bg-primary-dark overflow-hidden py-6">
-      <motion.div
-        className="flex"
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: 24, ease: 'linear', repeat: Infinity }}
-      >
-        {row}
-        {row}
-      </motion.div>
-    </div>
   );
 }
 
@@ -281,9 +245,6 @@ export default function About() {
           </div>
         </div>
       </div>
-
-      {/* ── Infinite prestige ticker ── */}
-      <PrestigeTicker />
     </section>
   );
 }

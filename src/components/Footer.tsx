@@ -184,16 +184,21 @@ export default function Footer() {
           <ul className="flex flex-col gap-3 text-[0.95rem] text-white/55">
             <li className="flex items-start gap-2.5">
               <span className="mt-1 text-secondary text-xs">◆</span>
-              <span>Skyline Tower, Sector 44<br />Gurugram, India</span>
+              <span>Tower B-3, Spaze Itech Park<br />Sector-49, Gurugram, Haryana</span>
             </li>
             <li>
-              <a href="mailto:hello@infraguru.com" className="hover:text-secondary transition-colors">
-                hello@infraguru.com
+              <a href="mailto:info@infraguru.in" className="hover:text-secondary transition-colors">
+                info@infraguru.in
               </a>
             </li>
             <li>
-              <a href="tel:+919876543210" className="hover:text-secondary transition-colors">
-                +91 98765 43210
+              <a href="tel:+919090656575" className="hover:text-secondary transition-colors">
+                +91 90 90 65 65 75
+              </a>
+            </li>
+            <li>
+              <a href="https://www.infraguru.in" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">
+                www.infraguru.in
               </a>
             </li>
           </ul>

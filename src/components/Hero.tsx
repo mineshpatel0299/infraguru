@@ -8,32 +8,45 @@ const HEADLINE_LINE_1 = "Your Trusted Partner In";
 const HEADLINE_LINE_2 = "Real Estate & Investment";
 
 
-const container: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } },
+const containerVariant: Variants = {
+  hidden: { opacity: 0 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: delay },
+  }),
 };
 
-const word: Variants = {
-  hidden: { opacity: 0, y: 60, rotateX: -50 },
+const wordVariant: Variants = {
+  hidden: { opacity: 0, y: 30, filter: "blur(8px)", scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
-    rotateX: 0,
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+    filter: "blur(0px)",
+    scale: 1,
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
-function AnimatedLine({ text, className = '' }: { text: string; className?: string }) {
+function BlurWordReveal({
+  text,
+  className = '',
+  delay = 0.5,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+}) {
   return (
     <motion.span
-      className={`block overflow-hidden [perspective:1000px] ${className}`}
-      variants={container}
+      className={`inline-flex flex-wrap ${className}`}
+      custom={delay}
+      variants={containerVariant}
       initial="hidden"
       animate="visible"
     >
-      {text.split(' ').map((w, i) => (
-        <motion.span key={i} className="inline-block [transform-origin:bottom]" variants={word}>
-          {w}&nbsp;
+      {text.split(' ').map((word, i) => (
+        <motion.span key={i} className="mr-[0.25em]" variants={wordVariant}>
+          {word}
         </motion.span>
       ))}
     </motion.span>
@@ -132,11 +145,12 @@ export default function Hero() {
             Infraguru — A Tradition of Trust
           </motion.span>
 
-          <h1 className="mb-8 max-w-4xl text-[clamp(2.8rem,3.2vw+2rem,5.6rem)] font-medium tracking-[-1.5px] text-white">
-            <AnimatedLine text={HEADLINE_LINE_1} />
-            <AnimatedLine
+          <h1 className="mb-8 max-w-4xl text-[clamp(2.8rem,3.2vw+2rem,5.6rem)] font-medium tracking-[-1.5px] text-white leading-[1.1]">
+            <BlurWordReveal text={HEADLINE_LINE_1} delay={0.1} className="block pb-1" />
+            <BlurWordReveal
               text={HEADLINE_LINE_2}
-              className="bg-[linear-gradient(120deg,#ffffff_0%,var(--color-secondary-light)_50%,var(--color-secondary)_100%)] bg-clip-text text-transparent"
+              delay={0.4}
+              className="bg-[linear-gradient(120deg,#ffffff_0%,var(--color-secondary-light)_50%,var(--color-secondary)_100%)] bg-clip-text text-transparent drop-shadow-none"
             />
           </h1>
 

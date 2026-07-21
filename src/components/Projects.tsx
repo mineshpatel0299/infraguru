@@ -1,13 +1,7 @@
 "use client";
 
-import React, { useRef } from 'react';
-import {
-  motion,
-  useMotionValue,
-  useMotionTemplate,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { fadeUp, staggerContainer, viewportOnce } from '@/lib/motion';
 
 type Project = {
@@ -52,30 +46,48 @@ const PROJECTS: Project[] = [
     specs: '6 Bed · 8 Bath · 11,400 Sqft',
     image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
   },
+  {
+    id: 4,
+    code: 'DWG-088-D',
+    title: 'The Onyx Lofts',
+    location: 'Tech Park District',
+    category: 'Luxury Apartments',
+    price: 'From ₹6.8 Cr',
+    specs: '3 Bed · 3 Bath · 3,800 Sqft',
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+  },
 ];
 
-const CORNERS = ['top-4 left-4', 'top-4 right-4', 'bottom-4 left-4', 'bottom-4 right-4'];
-
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+/* ── The Deed Card ────────────────────────────────────────────────────────
+   A property card styled as a sealed title deed: a photograph "folded"
+   into a certificate panel, joined by a stitched seam and closed with a
+   wax seal bearing the Infraguru monogram. Hovering breaks the seal and
+   unfurls a gold ribbon carrying the call to action — nobody files their
+   listings like this.
+------------------------------------------------------------------------- */
+function DeedCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
 
-  const mx = useMotionValue(240);
-  const my = useMotionValue(240);
-  const radius = useMotionValue(0);
-
-  const springX = useSpring(mx, { stiffness: 180, damping: 22, mass: 0.4 });
-  const springY = useSpring(my, { stiffness: 180, damping: 22, mass: 0.4 });
-  const springR = useSpring(radius, { stiffness: 110, damping: 20 });
-
-  const maskImage = useMotionTemplate`radial-gradient(circle ${springR}px at ${springX}px ${springY}px, black 45%, transparent 100%)`;
-  const reticleTransform = useMotionTemplate`translate(${springX}px, ${springY}px) translate(-50%, -50%)`;
-  const reticleOpacity = useTransform(springR, [0, 30, 340], [0, 1, 1]);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const rotateX = useSpring(rx, { stiffness: 200, damping: 22, mass: 0.5 });
+  const rotateY = useSpring(ry, { stiffness: 200, damping: 22, mass: 0.5 });
+  const liftY = useTransform(rotateX, [-6, 6], [4, -4]);
 
   function handleMove(e: React.PointerEvent<HTMLDivElement>) {
     const rect = cardRef.current?.getBoundingClientRect();
     if (!rect) return;
-    mx.set(e.clientX - rect.left);
-    my.set(e.clientY - rect.top);
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    ry.set(px * 12);
+    rx.set(-py * 12);
+  }
+
+  function reset() {
+    rx.set(0);
+    ry.set(0);
+    setHovered(false);
   }
 
   return (
@@ -83,81 +95,95 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       ref={cardRef}
       variants={fadeUp}
       onPointerMove={handleMove}
-      onPointerEnter={() => radius.set(340)}
-      onPointerLeave={() => radius.set(0)}
-      className="group relative isolate h-125 cursor-crosshair overflow-hidden rounded-2xl bg-primary-dark shadow-soft"
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={reset}
+      style={{ rotateX, rotateY, y: liftY, transformPerspective: 1200 }}
+      className="group relative rounded-[1.75rem] overflow-hidden bg-white shadow-soft transition-shadow duration-500 hover:shadow-strong"
     >
-      {/* Blueprint base layer */}
-      <div className="absolute inset-0">
-        <img
+      {/* ── Photograph panel ── */}
+      <div className="relative h-64 overflow-hidden">
+        <motion.img
           src={project.image}
-          alt=""
-          aria-hidden
-          className="h-full w-full object-cover grayscale contrast-125 brightness-75"
+          alt={project.title}
+          className="h-full w-full object-cover"
+          animate={{ scale: hovered ? 1.06 : 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         />
-        <div className="absolute inset-0 bg-primary/55 mix-blend-color" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.09)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.09)_1px,transparent_1px)] bg-size-[24px_24px] opacity-70" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(2,12,56,0.85)_0%,transparent_50%)]" />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/70 via-primary-dark/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/25 via-transparent to-transparent" />
 
-      {/* Full-colour photograph, revealed through the lens mask */}
-      <motion.div
-        className="absolute inset-0"
-        style={{ WebkitMaskImage: maskImage, maskImage }}
-      >
-        <img src={project.image} alt={project.title} className="h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(2,12,56,0.8)_0%,transparent_55%)]" />
-      </motion.div>
-
-      {/* Cursor reticle */}
-      <motion.div
-        className="pointer-events-none absolute top-0 left-0 z-20 h-16 w-16 rounded-full border border-secondary/80"
-        style={{ transform: reticleTransform, opacity: reticleOpacity }}
-      >
-        <motion.span
-          className="absolute inset-0 rounded-full border border-dashed border-secondary/40"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-        />
-        <span className="absolute top-1/2 left-1/2 h-3 w-px -translate-x-1/2 -translate-y-1/2 bg-secondary" />
-        <span className="absolute top-1/2 left-1/2 h-px w-3 -translate-x-1/2 -translate-y-1/2 bg-secondary" />
-      </motion.div>
-
-      {/* Drafting corner ticks */}
-      {CORNERS.map((pos) => (
-        <span key={pos} className={`pointer-events-none absolute z-10 h-3 w-3 ${pos}`} aria-hidden>
-          <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-white/30" />
-          <span className="absolute top-0 left-1/2 h-full w-px -translate-x-1/2 bg-white/30" />
+        <div className="absolute top-5 left-5 font-mono text-[0.68rem] tracking-[0.15em] text-white/70">
+          {String(index + 1).padStart(2, '0')} / {project.code}
+        </div>
+        <span className="absolute top-5 right-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-[0.68rem] font-bold tracking-wide text-white uppercase backdrop-blur-sm">
+          {project.category}
         </span>
-      ))}
 
-      {/* Drawing reference + category */}
-      <div className="absolute top-6 left-6 z-10 font-mono text-[0.68rem] tracking-[0.15em] text-white/60">
-        {String(index + 1).padStart(2, '0')} / {project.code}
-      </div>
-      <span className="absolute top-6 right-6 z-10 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-[0.7rem] font-bold tracking-wide text-white uppercase backdrop-blur-sm">
-        {project.category}
-      </span>
-
-      {/* Dimension callout */}
-      <div className="absolute right-6 bottom-30 z-10 hidden items-center gap-2 sm:flex">
-        <span className="h-px w-8 border-t border-dashed border-white/40" />
-        <span className="font-mono text-[0.68rem] tracking-wide text-white/70">{project.specs}</span>
-      </div>
-
-      {/* Info panel */}
-      <div className="absolute inset-x-0 bottom-0 z-10 p-7">
-        <span className="mb-2 block text-[0.78rem] font-semibold tracking-[2px] text-secondary uppercase">
+        <span className="absolute bottom-5 left-5 text-[0.78rem] font-semibold tracking-[2px] text-secondary-light uppercase">
           {project.location}
         </span>
-        <h3 className="mb-5 font-heading text-2xl text-white">{project.title}</h3>
-        <div className="flex items-center justify-between border-t border-white/15 pt-5">
-          <span className="font-mono text-[1.05rem] font-semibold text-white">{project.price}</span>
-          <button className="flex items-center gap-1.5 text-[0.88rem] font-semibold tracking-wide text-secondary uppercase transition-all duration-200 group-hover:gap-3.5">
-            Explore <span>&rarr;</span>
-          </button>
+      </div>
+
+      {/* ── Stitched seam ── */}
+      <div className="relative h-0 border-t-2 border-dashed border-primary/15">
+        <span className="absolute -top-[5px] left-6 h-[9px] w-[9px] rounded-full border-2 border-primary/15 bg-white" />
+        <span className="absolute -top-[5px] right-6 h-[9px] w-[9px] rounded-full border-2 border-primary/15 bg-white" />
+      </div>
+
+      {/* ── Certificate panel ── */}
+      <div className="relative px-7 pt-8 pb-7 bg-[linear-gradient(160deg,var(--color-bg-soft)_0%,#ffffff_55%)]">
+        {/* faint guilloché security texture */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(45deg, var(--color-primary) 0px, var(--color-primary) 1px, transparent 1px, transparent 10px)',
+          }}
+        />
+
+        <h3 className="relative mb-1 font-heading text-2xl text-primary-dark">{project.title}</h3>
+        <p className="relative mb-6 font-mono text-[0.72rem] tracking-[0.1em] text-muted uppercase">
+          {project.specs}
+        </p>
+
+        <div className="relative flex items-center justify-between border-t border-hairline pt-5">
+          <div>
+            <span className="block text-[0.65rem] font-bold tracking-[0.2em] text-muted/70 uppercase">
+              Certified Value
+            </span>
+            <span className="font-mono text-[1.1rem] font-semibold text-primary-dark">
+              {project.price}
+            </span>
+          </div>
+
+          {/* ribbon CTA, unfurls from behind the seal */}
+          <motion.button
+            initial={false}
+            animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 16 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-[0.75rem] font-semibold tracking-wide text-white uppercase shadow-[0_8px_20px_rgba(3,46,151,0.25)]"
+          >
+            View Deed <span>&rarr;</span>
+          </motion.button>
         </div>
       </div>
+
+      {/* ── Wax seal, centred on the seam ── */}
+      <motion.div
+        className="absolute left-1/2 top-64 z-10 -translate-x-1/2 -translate-y-1/2"
+        animate={{ rotate: hovered ? 28 : 0, scale: hovered ? 0.88 : 1 }}
+        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+      >
+        <div
+          className="flex h-14 w-14 items-center justify-center rounded-full shadow-[0_6px_16px_rgba(0,0,0,0.35)]"
+          style={{
+            background: 'radial-gradient(circle at 32% 28%, var(--color-secondary-light) 0%, var(--color-secondary) 45%, var(--color-secondary-hover) 100%)',
+          }}
+        >
+          <img src="/g.png" alt="" aria-hidden className="h-8 w-8 object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]" />
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -197,18 +223,18 @@ export default function Projects() {
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           />
-          Move your cursor over a blueprint to reveal it
+          Hover a deed to break the seal
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-3"
+          className="mx-auto grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-2 lg:max-w-5xl [perspective:1500px]"
           variants={staggerContainer(0.12)}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
         >
           {PROJECTS.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+            <DeedCard key={project.id} project={project} index={i} />
           ))}
         </motion.div>
       </div>

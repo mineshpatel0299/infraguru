@@ -6,30 +6,30 @@ import { fadeUp, viewportOnce } from '@/lib/motion';
 
 const TESTIMONIALS = [
   {
-    name: 'Arjun Mehta',
-    role: 'First-Time Homebuyer',
+    name: 'Rajesh Kumar',
+    role: 'Homebuyer',
     quote:
-      'Infraguru made buying our first home effortless. Every visit, every document, every negotiation — handled with total transparency and care.',
+      'Very happy with the service. They helped us find the perfect home within our budget. The whole process was smooth and stress-free.',
     outcome: 'Residential Purchase',
-    meta: 'Closed in 18 Days',
+    meta: 'Sector 56, Gurugram',
     image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: 'Sophia Laurent',
-    role: 'Managing Director, Laurent Capital',
+    name: 'Priya Sharma',
+    role: 'Business Owner',
     quote:
-      'From site visits to lease documentation, their team treated our commercial expansion like their own business. A true tradition of trust.',
+      'Great experience finding an office space for our new branch. The team was very professional, polite, and helpful from start to finish.',
     outcome: 'Commercial Lease',
-    meta: 'Summit Business Tower',
+    meta: 'Cyber City',
     image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: 'David Okafor',
-    role: 'Farmland Investor',
+    name: 'Amit Patel',
+    role: 'Property Investor',
     quote:
-      "Their market insight and honest guidance helped us secure a joint development deal we wouldn't have found on our own.",
-    outcome: 'Joint Development',
-    meta: 'Verdant Estate',
+      "Good investment advice and smooth paperwork. They showed us great properties with good returns. Highly recommend them.",
+    outcome: 'Investment Property',
+    meta: 'Sohna Road',
     image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
   },
 ];
