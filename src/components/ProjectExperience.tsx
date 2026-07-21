@@ -149,14 +149,15 @@ function Ruler({
   const readout = useTransform(smoothIndex, (v) => formatFeet(v));
 
   return (
-    <div
-      className="absolute inset-x-0 bottom-0 z-20 select-none px-6 pt-10 pb-5 sm:px-10"
-      style={{ background: "linear-gradient(to top, rgba(2,31,107,0.55), transparent)" }}
-    >
-      <div className="mx-auto flex max-w-4xl items-center gap-4">
-        <motion.span className="hidden shrink-0 font-mono text-[0.7rem] tracking-wide text-white/70 sm:block">
-          {readout}
-        </motion.span>
+    <div className="z-20 flex shrink-0 justify-center border-t border-white/10 bg-primary-dark px-4 pt-4 pb-8 select-none sm:px-8">
+      <div className="w-full max-w-4xl">
+        <div className="text-left font-mono text-[0.68rem] tracking-[0.15em] text-secondary-light uppercase">
+          {SECTIONS[activeIndex].label}
+        </div>
+        <div className="mt-3 flex items-center gap-4">
+          <motion.span className="hidden shrink-0 font-mono text-[0.7rem] tracking-wide text-white/70 sm:block">
+            {readout}
+          </motion.span>
 
         <div
           ref={trackRef}
@@ -205,12 +206,10 @@ function Ruler({
           </motion.div>
         </div>
 
-        <span className="hidden shrink-0 font-mono text-[0.7rem] tracking-wide text-white/70 sm:block">
-          {String(activeIndex + 1).padStart(2, "0")}/{String(N).padStart(2, "0")}
-        </span>
-      </div>
-      <div className="mx-auto mt-1 max-w-4xl text-center font-mono text-[0.68rem] tracking-[0.15em] text-secondary-light uppercase sm:text-left">
-        {SECTIONS[activeIndex].label}
+          <span className="hidden shrink-0 font-mono text-[0.7rem] tracking-wide text-white/70 sm:block">
+            {String(activeIndex + 1).padStart(2, "0")}/{String(N).padStart(2, "0")}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -779,16 +778,18 @@ function DesktopExperience({
       style={mode === "modal" ? { containerType: "size" } : undefined}
     >
       <div ref={spacerRef} style={{ height: `${N * 100}${heightUnit}` }} className="relative">
-        <div className="sticky top-0 w-full overflow-hidden" style={{ height: `100${heightUnit}` }}>
-          <TopBar project={project} mode={mode} onClose={onClose} onEnquire={() => scrollToRatio(1)} />
+        <div className="sticky top-0 flex w-full flex-col overflow-hidden" style={{ height: `100${heightUnit}` }}>
+          <div className="relative flex-1 overflow-hidden">
+            <TopBar project={project} mode={mode} onClose={onClose} onEnquire={() => scrollToRatio(1)} />
 
-          <motion.div style={{ width: `${N * 100}%`, x: xPercent }} className="flex h-full">
-            {SECTIONS.map((s, i) => (
-              <Panel key={s.key} index={i} smoothIndex={smoothIndex}>
-                <PanelBody sectionKey={s.key} project={project} related={related} smoothIndex={smoothIndex} index={i} />
-              </Panel>
-            ))}
-          </motion.div>
+            <motion.div style={{ width: `${N * 100}%`, x: xPercent }} className="flex h-full">
+              {SECTIONS.map((s, i) => (
+                <Panel key={s.key} index={i} smoothIndex={smoothIndex}>
+                  <PanelBody sectionKey={s.key} project={project} related={related} smoothIndex={smoothIndex} index={i} />
+                </Panel>
+              ))}
+            </motion.div>
+          </div>
 
           <Ruler
             smoothIndex={smoothIndex}
