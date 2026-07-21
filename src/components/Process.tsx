@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 import { fadeUp, staggerContainer, viewportOnce } from '@/lib/motion';
 
 const STEPS = [
-  { number: '01', title: 'Discovery', text: 'We listen, study the site and shape a vision aligned to your ambition.' },
-  { number: '02', title: 'Design', text: 'Architects and engineers craft precise plans balancing form and function.' },
-  { number: '03', title: 'Construction', text: 'Master builders execute with rigorous quality control at every stage.' },
-  { number: '04', title: 'Quality Assurance', text: 'Independent audits ensure every detail meets our uncompromising standard.' },
-  { number: '05', title: 'Handover', text: 'A seamless transition, backed by dedicated post-delivery support.' },
+  { number: '01', title: 'Consultation', text: 'We understand your needs, budget and goals through a personalised discussion.' },
+  { number: '02', title: 'Property Search', text: 'Curated shortlisting across residential, commercial, farmland and investment listings.' },
+  { number: '03', title: 'Site Visits', text: 'Guided visits and due diligence, backed by trusted, verified A-Grade partners.' },
+  { number: '04', title: 'Negotiation & Documentation', text: 'Expert negotiation, financing guidance and complete legal documentation.' },
+  { number: '05', title: 'Handover & Support', text: 'A seamless closing, with continued support long after your transaction.' },
 ];
 
 export default function Process() {
@@ -27,7 +27,7 @@ export default function Process() {
             How We Work
           </motion.span>
           <motion.h2 className="text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark" variants={fadeUp}>
-            A Process Built On <span className="text-gradient">Precision</span>
+            A Process Built On <span className="text-gradient">Trust</span>
           </motion.h2>
         </motion.div>
 

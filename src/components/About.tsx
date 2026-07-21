@@ -175,7 +175,7 @@ export default function About() {
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               className="text-[1.2rem] lg:text-[1.35rem] leading-[1.8] text-muted max-w-xl font-light"
             >
-              At Infraguru, we've built a track record of transforming capital into enduring wealth. Our curated real estate portfolio spans premium residential, commercial and strategic investment-grade assets — each selected for its long-term value potential.
+              At Infraguru, we&apos;ve built a track record of transforming capital into enduring wealth. Our curated real estate portfolio spans premium residential, commercial and strategic investment-grade assets — each selected for its long-term value potential.
             </motion.p>
 
             {/* Stats grid */}

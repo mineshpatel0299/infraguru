@@ -4,10 +4,10 @@ import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
 
-const HEADLINE_LINE_1 = "Shaping Skylines,";
-const HEADLINE_LINE_2 = "Engineering Trust";
+const HEADLINE_LINE_1 = "Your Trusted Partner In";
+const HEADLINE_LINE_2 = "Real Estate & Investment";
 
-const MARQUEE_ITEMS = ['Residential', 'Commercial', 'Infrastructure', 'Hospitality', 'Urban Planning'];
+const MARQUEE_ITEMS = ['Residential', 'Commercial', 'Farmland', 'Rentals', 'Investment', 'Joint Development'];
 
 const container: Variants = {
   hidden: {},
@@ -101,7 +101,7 @@ export default function Hero() {
         {/* Edge vertical tag */}
         <div className="pointer-events-none absolute top-24 left-4 z-10 hidden lg:block">
           <span className="block [writing-mode:vertical-rl] text-[0.7rem] tracking-[4px] text-white/40 uppercase">
-            Est. 2011 — A Tradition of Trust
+            Est. 2021 — Gurgaon, Haryana
           </span>
         </div>
 
@@ -119,7 +119,7 @@ export default function Hero() {
           animate={{ y: [0, -12, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <span className="font-heading text-3xl text-white">15+</span>
+          <span className="font-heading text-3xl text-white">10+</span>
           <span className="text-[0.6rem] tracking-[2px] text-white/60 uppercase">Years</span>
         </motion.div>
 
