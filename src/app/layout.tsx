@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import SealTransitionProvider from "@/components/SealTransition";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SealTransitionProvider>{children}</SealTransitionProvider>
+      </body>
     </html>
   );
 }
