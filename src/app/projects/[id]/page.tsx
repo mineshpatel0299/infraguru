@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PROJECTS, getProjectById } from "@/lib/projects";
-import ProjectDetail from "@/components/ProjectDetail";
+import ProjectExperience from "@/components/ProjectExperience";
+import Footer from "@/components/Footer";
 
 export function generateStaticParams() {
   return PROJECTS.map((p) => ({ id: String(p.id) }));
@@ -39,5 +40,10 @@ export default async function ProjectPage({
 
   const related = PROJECTS.filter((p) => p.id !== project.id).slice(0, 3);
 
-  return <ProjectDetail project={project} related={related} />;
+  return (
+    <main>
+      <ProjectExperience project={project} related={related} mode="page" />
+      <Footer />
+    </main>
+  );
 }

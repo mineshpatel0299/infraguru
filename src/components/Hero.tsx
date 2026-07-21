@@ -118,22 +118,10 @@ export default function Hero() {
         </div>
 
         {/* Floating dashed ring */}
-        <motion.div
-          className="pointer-events-none absolute top-28 right-10 z-10 hidden h-28 w-28 rounded-full border border-dashed border-secondary/50 sm:block lg:top-36 lg:right-24"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-          aria-hidden
-        />
+        
 
         {/* Floating years badge */}
-        <motion.div
-          className="pointer-events-none absolute top-40 right-16 z-10 hidden flex-col items-center justify-center sm:flex lg:top-48 lg:right-32"
-          animate={{ y: [0, -12, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <span className="font-heading text-3xl text-white">10+</span>
-          <span className="text-[0.6rem] tracking-[2px] text-white/60 uppercase">Years</span>
-        </motion.div>
+    
 
         <div className="container relative z-10 mx-auto max-w-7xl px-8 pb-20 lg:pb-24">
           <motion.span

@@ -15,7 +15,6 @@ import SealLink from './SealLink';
 ------------------------------------------------------------------------- */
 function DeedCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
-  const sealRef = useRef<HTMLDivElement>(null);
   const [hovered, setHovered] = useState(false);
 
   const rx = useMotionValue(0);
@@ -43,7 +42,7 @@ function DeedCard({ project, index }: { project: Project; index: number }) {
     <SealLink
       ref={cardRef}
       href={`/projects/${project.id}`}
-      originRef={sealRef}
+      centered
       onPointerMove={handleMove}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={reset}
@@ -126,7 +125,6 @@ function DeedCard({ project, index }: { project: Project; index: number }) {
 
         {/* ── Wax seal, centred on the seam ── */}
         <motion.div
-          ref={sealRef}
           className="absolute left-1/2 top-64 z-10 -translate-x-1/2 -translate-y-1/2"
           animate={{ rotate: hovered ? 28 : 0, scale: hovered ? 0.88 : 1 }}
           transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
