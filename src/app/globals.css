@@ -1,26 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-primary: #032E97;
+  --color-primary-light: #1a4fd6;
+  --color-primary-dark: #021f6b;
+  --color-secondary: #d4af37;
+  --color-secondary-light: #f0d375;
+  --color-secondary-hover: #c49a2a;
+  --color-ink: #0a1435;
+  --color-muted: #5c6480;
+  --color-bg-soft: #f2f6ff;
+  --color-bg-soft-2: #e8eefc;
+  --color-hairline: rgba(3, 46, 151, 0.1);
+
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+
+  --shadow-soft: 0 10px 40px rgba(3, 46, 151, 0.08);
+  --shadow-medium: 0 20px 60px rgba(3, 46, 151, 0.12);
+  --shadow-strong: 0 30px 80px rgba(3, 46, 151, 0.18);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background-color: #ffffff;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  ::selection {
+    background: var(--color-secondary);
+    color: var(--color-primary-dark);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .text-gradient {
+    background: linear-gradient(120deg, var(--color-primary) 0%, #2a5fe0 45%, var(--color-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2.5 text-[0.8rem] font-semibold tracking-[3px] uppercase text-primary mb-5 before:content-[''] before:inline-block before:w-7 before:h-0.5 before:bg-secondary;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2.5 rounded bg-primary px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-white shadow-[0_12px_30px_rgba(3,46,151,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary-light hover:shadow-[0_16px_36px_rgba(3,46,151,0.32)];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2.5 rounded border-[1.5px] border-primary bg-transparent px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-primary transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary hover:text-white;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center gap-2.5 rounded bg-secondary px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-primary-dark shadow-[0_12px_30px_rgba(212,175,55,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary-hover;
+  }
+
+  .glass-panel {
+    @apply border border-primary/10 bg-white/60 backdrop-blur-2xl;
+  }
 }
