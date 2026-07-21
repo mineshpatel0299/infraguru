@@ -42,46 +42,95 @@ const CATEGORIES = [
     ),
   },
   {
-    id: 'invest',
+    id: 'lease',
     number: '04',
-    label: 'Invest',
-    title: 'Property to Invest',
+    label: 'Lease',
+    title: 'Property to Lease',
     description:
-      'Property to invest means assets specially selected for long-term returns, steady rental income and sustained capital growth.',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      'Property to lease means a land or building given for long-term use to a tenant under a lease agreement, without transferring ownership.',
+    image: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
     mark: (
-      <path d="M4.5 16.5l5.5-5.5 3.5 3.5 6-6.5M14 7.5h5.5V13" />
+      <path d="M12 4.5 18.5 8.25 18.5 15.75 12 19.5 5.5 15.75 5.5 8.25Z" />
     ),
   },
+  // {
+  //   id: 'invest',
+  //   number: '05',
+  //   label: 'Invest',
+  //   title: 'Property to Invest',
+  //   description:
+  //     'Property to invest means assets specially selected for long-term returns, steady rental income and sustained capital growth.',
+  //   image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+  //   mark: (
+  //     <path d="M4.5 16.5l5.5-5.5 3.5 3.5 6-6.5M14 7.5h5.5V13" />
+  //   ),
+  // },
+  // {
+  //   id: 'joint-development',
+  //   number: '06',
+  //   label: 'Joint Dev.',
+  //   title: 'Property for Joint Development',
+  //   description:
+  //     'Joint development is when a land owner and developer partner together to build a project and share in the benefits.',
+  //   image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+  //   mark: (
+  //     <>
+  //       <circle cx="9" cy="12" r="6" />
+  //       <circle cx="15" cy="12" r="6" />
+  //     </>
+  //   ),
+  // },
 ];
 
 export default function PropertyTypes() {
   const [active, setActive] = useState(0);
 
+  const goPrev = () => setActive((prev) => (prev - 1 + CATEGORIES.length) % CATEGORIES.length);
+  const goNext = () => setActive((prev) => (prev + 1) % CATEGORIES.length);
+
   return (
     <section id="services" className="bg-white py-36">
       <div className="container mx-auto max-w-7xl px-8">
         <motion.div
-          className="mx-auto mb-16 max-w-160 text-center"
+          className="mb-16 flex flex-col items-center justify-between gap-8 lg:flex-row lg:items-end"
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
           variants={staggerContainer(0.1)}
         >
-          <motion.span className="eyebrow justify-center" variants={fadeUp}>
-            Our Offerings
-          </motion.span>
-          <motion.h2 className="mb-5 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark" variants={fadeUp}>
-            A Property Path For <span className="text-gradient">Every Ambition</span>
-          </motion.h2>
-          <motion.p className="text-[1.1rem] leading-[1.7] text-muted" variants={fadeUp}>
-            Whichever stage you&apos;re at, Infraguru shapes the journey — from first
-            acquisition to long-term portfolio growth.
-          </motion.p>
+          <div className="max-w-160 text-center lg:text-left">
+            <motion.span className="eyebrow justify-center lg:justify-start" variants={fadeUp}>
+              Our Services
+            </motion.span>
+            <motion.h2 className="mb-5 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark" variants={fadeUp}>
+              A Property Path For <span className="text-gradient">Every Ambition</span>
+            </motion.h2>
+            <motion.p className="text-[1.1rem] leading-[1.7] text-muted" variants={fadeUp}>
+              Whichever stage you&apos;re at, Infraguru shapes the journey — from first
+              acquisition to long-term portfolio growth.
+            </motion.p>
+          </div>
+
+          <motion.div className="flex shrink-0 items-center gap-3" variants={fadeUp}>
+            <button
+              onClick={goPrev}
+              aria-label="Previous service"
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/15 text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
+            >
+              &#10094;
+            </button>
+            <button
+              onClick={goNext}
+              aria-label="Next service"
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/15 text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
+            >
+              &#10095;
+            </button>
+          </motion.div>
         </motion.div>
 
         <motion.div
-          className="flex h-[600px] flex-col gap-3 overflow-hidden lg:h-155 lg:flex-row"
+          className="flex h-[840px] flex-col gap-3 overflow-hidden sm:h-[760px] lg:h-155 lg:flex-row"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}

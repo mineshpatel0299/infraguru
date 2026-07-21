@@ -33,7 +33,7 @@ export default function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-x-0 top-4 sm:top-6 z-[100]"
+      className="fixed inset-x-0 top-8 sm:top-12 lg:top-14 z-[100]"
     >
       <div className="container relative mx-auto max-w-6xl px-4 sm:px-6">
         <nav

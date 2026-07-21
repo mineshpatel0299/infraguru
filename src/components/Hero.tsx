@@ -7,7 +7,6 @@ import Navbar from './Navbar';
 const HEADLINE_LINE_1 = "Your Trusted Partner In";
 const HEADLINE_LINE_2 = "Real Estate & Investment";
 
-const MARQUEE_ITEMS = ['Residential', 'Commercial', 'Farmland', 'Rentals', 'Investment', 'Joint Development'];
 
 const container: Variants = {
   hidden: {},
@@ -86,8 +85,8 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* Scrim */}
-        <div className="absolute inset-0 z-1 bg-[linear-gradient(180deg,rgba(2,16,64,0.05)_0%,rgba(2,16,64,0.1)_55%,rgba(2,12,56,0.75)_100%)]" />
+        {/* Shadow overlay for text readability (neutral, not blue) */}
+        <div className="absolute inset-x-0 bottom-0 h-[80%] z-1 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
 
         {/* Film grain */}
         <div
@@ -163,21 +162,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Marquee strip */}
-        <div className="relative z-10 overflow-hidden border-t border-white/10 bg-black/20 py-3.5 backdrop-blur-sm">
-          <motion.div
-            className="flex w-max items-center gap-10 whitespace-nowrap"
-            animate={{ x: ['0%', '-50%'] }}
-            transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-          >
-            {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
-              <span key={i} className="flex items-center gap-10 text-[0.78rem] font-medium tracking-[3px] text-white/50 uppercase">
-                {item}
-                <span className="text-secondary/60">&#9670;</span>
-              </span>
-            ))}
-          </motion.div>
-        </div>
       </div>
     </section>
   );

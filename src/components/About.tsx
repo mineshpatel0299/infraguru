@@ -180,10 +180,10 @@ export default function About() {
 
             {/* Stats grid */}
             <div className="grid grid-cols-2 gap-4 mt-14">
-              <StatBadge value="500" suffix="Cr+" label="Assets Under Management" delay={0.2} />
-              <StatBadge value="15+" suffix="" label="Years of Excellence" delay={0.35} />
-              <StatBadge value="1,200+" suffix="" label="Families Served" delay={0.5} />
-              <StatBadge value="98" suffix="%" label="Client Retention Rate" delay={0.65} />
+              <StatBadge value="77" suffix="+" label="Properties Listed" delay={0.2} />
+              <StatBadge value="350" suffix="+" label="Properties Sold" delay={0.35} />
+              <StatBadge value="500" suffix="+" label="Satisfied Clients" delay={0.5} />
+              <StatBadge value="25" suffix="" label="Realtor Awards" delay={0.65} />
             </div>
 
             {/* CTA */}

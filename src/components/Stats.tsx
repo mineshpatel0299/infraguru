@@ -6,10 +6,10 @@ import { fadeUp, staggerContainer, viewportOnce } from '@/lib/motion';
 import Counter from './Counter';
 
 const STATS = [
-  { value: 15, suffix: '+', label: 'Years of Excellence' },
-  { value: 240, suffix: '+', label: 'Projects Delivered' },
-  { value: 2, suffix: 'B+', label: 'Value Delivered ($)' },
-  { value: 50, suffix: '+', label: 'Global Awards' },
+  { value: 77, suffix: '+', label: 'Properties Listed' },
+  { value: 350, suffix: '+', label: 'Properties Sold' },
+  { value: 500, suffix: '+', label: 'Satisfied Clients' },
+  { value: 25, suffix: '', label: 'Realtor Awards' },
 ];
 
 export default function Stats() {
