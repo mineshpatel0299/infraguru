@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -9,8 +10,8 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-
-const NAV_LINKS = ["About", "Service", "Portfolio", "Careers"];
+import SampleNavbar from "@/components/sample/SampleNavbar";
+import SampleFooter from "@/components/sample/SampleFooter";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -24,47 +25,50 @@ const cardVariants = {
 const SOCIAL_LINKS = ["Facebook", "LinkedIn", "Instagram"];
 
 const PORTFOLIO_ITEMS = [
-  { id: "urban-design", title: "Urban Design", image: "/hero-poster.jpg" },
-  { id: "interiors", title: "Interiors", image: "/premium-hero-monolith.png" },
-  { id: "architecture", title: "Architecture", image: "https://picsum.photos/seed/infraguru-architecture/480/640" },
-  { id: "landscape", title: "Landscape", image: "https://picsum.photos/seed/infraguru-landscape/480/640" },
-  { id: "retail", title: "Retail", image: "https://picsum.photos/seed/infraguru-retail/480/640" },
-  { id: "arts-team", title: "Arts Team", image: "https://picsum.photos/seed/infraguru-arts/480/640" },
-  { id: "graphics", title: "Graphics", image: "https://picsum.photos/seed/infraguru-graphics/480/640" },
-  { id: "3d-object-rendering", title: "3D Object Rendering", image: "https://picsum.photos/seed/infraguru-3d/480/640" },
+  { id: "buy", title: "Buy", image: "/hero-poster.jpg" },
+  { id: "sell", title: "Sell", image: "/premium-hero-monolith.png" },
+  { id: "rent", title: "Rent", image: "https://picsum.photos/seed/infraguru-rent/480/640" },
+  { id: "lease", title: "Lease", image: "https://picsum.photos/seed/infraguru-lease/480/640" },
+  { id: "residential", title: "Residential", image: "https://picsum.photos/seed/infraguru-residential/480/640" },
+  { id: "commercial", title: "Commercial", image: "https://picsum.photos/seed/infraguru-commercial/480/640" },
+  { id: "consulting", title: "Consulting", image: "https://picsum.photos/seed/infraguru-consulting/480/640" },
+  { id: "infrastructure", title: "Infrastructure", image: "https://picsum.photos/seed/infraguru-infra/480/640" },
 ];
 
 const PROJECT_SHOWCASE = [
   {
-    id: "sky-hal",
-    title: "Sky Hal",
+    id: "azure-residences",
+    slug: "the-azure-residences",
+    title: "The Azure Residences",
     image: "/hero-poster.jpg",
     variant: "stats" as const,
-    stats: ["124 850 m²", "1 300 apartments", "900 parking spaces"],
-    tags: ["Public Buildings", "Implemented"],
+    stats: ["6,200 Sqft avg.", "11 Signature Homes", "340 m Private Shoreline"],
+    tags: ["Residential", "Coastal Bay"],
   },
   {
-    id: "architecture-note",
-    title: "Architecture",
-    image: "https://picsum.photos/seed/infraguru-arch-note/480/640",
+    id: "summit-business-tower",
+    slug: "summit-business-tower",
+    title: "Summit Business Tower",
+    image: "https://picsum.photos/seed/infraguru-summit/480/640",
     variant: "note" as const,
     description:
-      "We provide comprehensive management services through the development, design and construction phases of general building projects.",
+      "32 storeys of column-free floor plates engineered to LEED Platinum standards, rising above Downtown Core.",
   },
   {
-    id: "business-center",
-    title: "Business Center",
+    id: "verdant-estate",
+    slug: "verdant-estate",
+    title: "Verdant Estate",
     image: "/premium-hero-monolith.png",
     variant: "note" as const,
     description:
-      "The building's facades are designed with glass mirror panels that reflect the sky clouds for lightness of the building.",
+      "Six-bedroom villas set across Whispering Pines, built for long-term legacy and generational value.",
   },
 ];
 
 const PROJECT_ROWS = [
-  { id: "restaurant", title: "Restaurant", category: "Public Buildings", status: "Implemented", area: "600 m²" },
-  { id: "business-center-row", title: "Business center", category: "Public Buildings", status: "Implemented", area: "1 800 m²" },
-  { id: "care-ambulatory", title: "Care Ambulatory", category: "Public Buildings", status: "Implemented", area: "600 m²" },
+  { id: "azure-residences-row", slug: "the-azure-residences", title: "The Azure Residences", category: "Residential", status: "From ₹4.2 Cr", area: "6,200 Sqft" },
+  { id: "summit-business-tower-row", slug: "summit-business-tower", title: "Summit Business Tower", category: "Commercial", status: "From ₹8.5 Cr", area: "210,000 Sqft" },
+  { id: "onyx-lofts-row", slug: "the-onyx-lofts", title: "The Onyx Lofts", category: "Luxury Apartments", status: "From ₹6.8 Cr", area: "3,800 Sqft" },
 ];
 
 const projectContainerVariants = {
@@ -92,6 +96,8 @@ const projectRowVariants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
+const MotionLink = motion.create(Link);
+
 function ArrowUpRightIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
@@ -102,20 +108,6 @@ function ArrowUpRightIcon({ className = "h-4 w-4" }: { className?: string }) {
 
 export default function SamplePage() {
   const aboutRef = useRef<HTMLElement>(null);
-
-  const pinWrapperRef = useRef<HTMLDivElement>(null);
-  const [pinWrapperNode, setPinWrapperNode] = useState<HTMLDivElement | null>(null);
-  const setPinWrapperRef = (node: HTMLDivElement | null) => {
-    pinWrapperRef.current = node;
-    setPinWrapperNode(node);
-  };
-  const pinWrapperTarget = useMemo(() => ({ current: pinWrapperNode }), [pinWrapperNode]);
-  const { scrollYProgress: overlapProgress } = useScroll({
-    target: pinWrapperTarget,
-    offset: ["start start", "end end"],
-  });
-  const rawOverlayY = useTransform(overlapProgress, [0, 1], ["100%", "0%"]);
-  const overlayY = useSpring(rawOverlayY, { stiffness: 60, damping: 22, mass: 0.6 });
 
   // Horizontal cursor-following preview section
   const previewRef = useRef<HTMLElement>(null);
@@ -161,22 +153,7 @@ export default function SamplePage() {
 
   return (
     <main className="theme-aurum min-h-screen bg-white p-3 sm:p-4 lg:p-5">
-      {/* Navbar */}
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-2 py-4 sm:px-4">
-        <img src="/logo.png" alt="Brand Logo" className="h-12 w-auto object-contain" />
-
-        <div className="hidden items-center gap-10 text-[0.8rem] font-medium tracking-wide text-aurum-ink/70 md:flex">
-          {NAV_LINKS.map((link) => (
-            <a key={link} href={`#${link.toLowerCase()}`} className="transition-colors hover:text-aurum-gold-dark">
-              {link}
-            </a>
-          ))}
-        </div>
-
-        <a href="#contact" className="aurum-btn-gold px-6! py-2.5! text-[0.65rem]!">
-          Book a Call
-        </a>
-      </nav>
+      <SampleNavbar />
 
       {/* Hero */}
       <div className="relative mt-2 h-[calc(100svh-6rem)] min-h-130 w-full overflow-hidden rounded-[28px] bg-aurum-ink sm:rounded-[36px] lg:rounded-[44px]">
@@ -200,7 +177,7 @@ export default function SamplePage() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="max-w-xs text-[0.8rem] leading-relaxed text-aurum-cream/60"
           >
-            Turner is a North America based multi-brand construction company and real estate agency operating in Korea market segments.
+
           </motion.p>
 
           <motion.h1
@@ -209,9 +186,9 @@ export default function SamplePage() {
             transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl text-[clamp(1.8rem,4.5vw,3.4rem)] font-normal text-aurum-cream"
           >
-            The best way to predict
+            Your Trusted Partner In
             <br />
-            the future is to invent it
+            Real Estate &amp; Investment
           </motion.h1>
         </div>
       </div>
@@ -227,10 +204,10 @@ export default function SamplePage() {
           className="relative overflow-hidden rounded-2xl bg-aurum-paper px-8 py-10"
         >
           <span className="aurum-eyebrow absolute top-6 right-6 rounded-full border border-aurum-hairline px-3 py-1 text-[0.6rem] text-aurum-muted">
-            +12%
+            350+
           </span>
-          <div className="aurum-num text-5xl text-aurum-ink sm:text-6xl">10 K</div>
-          <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Happy homeowners &amp; investors</p>
+          <div className="aurum-num text-5xl text-aurum-ink sm:text-6xl">500+</div>
+          <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Satisfied clients &amp; investors</p>
         </motion.div>
 
         <motion.div
@@ -241,8 +218,8 @@ export default function SamplePage() {
           viewport={{ once: true, amount: 0.4 }}
           className="rounded-2xl bg-aurum-paper px-8 py-10"
         >
-          <div className="aurum-num text-5xl text-aurum-ink sm:text-6xl">$12 Bn</div>
-          <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Assets developed to date</p>
+          <div className="aurum-num text-5xl text-aurum-ink sm:text-6xl">350+</div>
+          <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Properties sold to date</p>
         </motion.div>
 
         <motion.div
@@ -253,19 +230,19 @@ export default function SamplePage() {
           viewport={{ once: true, amount: 0.4 }}
           className="rounded-2xl bg-linear-to-br from-aurum-ink via-aurum-ink-soft to-aurum-ink px-8 py-10"
         >
-          <div className="aurum-num text-5xl text-aurum-gold sm:text-6xl">18+</div>
+          <div className="aurum-num text-5xl text-aurum-gold sm:text-6xl">15+</div>
           <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-cream/50 uppercase">Years building legacies</p>
         </motion.div>
       </div>
 
-      {/* About: pinned while its internal image swaps, then releases into whatever follows */}
-      <div ref={setPinWrapperRef} className="relative mt-3 h-[220vh] sm:mt-4">
+      {/* About: pinned while the page scrolls past, then releases into whatever follows */}
+      <div className="relative mt-3 h-[220vh] sm:mt-4">
         <section
           ref={aboutRef}
           className="sticky top-0 mx-auto max-w-7xl scroll-smooth rounded-[28px] bg-aurum-cream px-6 py-12 sm:rounded-[36px] sm:px-10 sm:py-16 lg:px-14"
         >
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12">
-            {/* Left: intro copy + image overlap (only this image changes) */}
+            {/* Left: intro copy + image */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -273,28 +250,15 @@ export default function SamplePage() {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             >
               <p className="max-w-xs text-[0.85rem] leading-relaxed text-aurum-muted">
-                We provide comprehensive management services through the development, design and construction phases of general building projects.
+                Fifteen years of turning capital into enduring wealth through a curated portfolio built for long-term value.
               </p>
 
               <div className="relative mt-6 h-105 overflow-hidden rounded-2xl sm:h-120">
-                {/* Base image */}
                 <img
                   src="/premium-hero-monolith.png"
                   alt="Lounge interior with skyline view"
                   className="absolute inset-0 h-full w-full object-cover"
                 />
-
-                {/* Overlay image: slides up from below to fully cover the base image */}
-                <motion.div
-                  style={{ y: overlayY }}
-                  className="absolute inset-0 overflow-hidden will-change-transform"
-                >
-                  <img
-                    src="https://picsum.photos/seed/infraguru-about/640/420"
-                    alt="Featured project detail"
-                    className="h-full w-full object-cover"
-                  />
-                </motion.div>
               </div>
             </motion.div>
 
@@ -319,7 +283,7 @@ export default function SamplePage() {
                         <path d="M8 5v14l11-7z" />
                       </svg>
                     </span>
-                    Learn More About
+                    Why Infraguru
                   </button>
                 </div>
 
@@ -336,17 +300,12 @@ export default function SamplePage() {
               <div className="mt-10">
                 <span className="aurum-eyebrow">About</span>
 
-                <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  <p className="text-[0.85rem] leading-relaxed text-aurum-muted">
-                    The company has earned recognition for undertaking large, complex projects, fostering innovation, embracing emerging technologies, and making a difference for their clients, employees and community.
-                  </p>
-                  <p className="text-[0.85rem] leading-relaxed text-aurum-muted">
-                    Turner offers clients the accessibility and support of a local firm with the stability and resources of a multi-national organization.
-                  </p>
-                </div>
+                <p className="mt-4 max-w-md text-[0.85rem] leading-relaxed text-aurum-muted">
+                  RERA-backed and transparent, Infraguru handles every deal like a signature piece — deliberate, and built to last.
+                </p>
 
                 <h2 className="mt-8 max-w-xl text-[clamp(1.5rem,3vw,2.3rem)] font-normal text-aurum-ink">
-                  Our vision is to be the highest value provider of global construction services and technical expertise.
+                  Where Vision Meets Value.
                 </h2>
               </div>
             </motion.div>
@@ -398,7 +357,7 @@ export default function SamplePage() {
             href="#contact"
             className="inline-flex items-center gap-2 text-[0.75rem] font-semibold tracking-[0.15em] text-aurum-gold-light uppercase transition-colors hover:text-aurum-gold"
           >
-            Book a Discovery Call <span>&#8599;</span>
+            Book a Consultation <span>&#8599;</span>
           </a>
         </div>
 
@@ -433,6 +392,16 @@ export default function SamplePage() {
       {/* Projects: showcase cards + project list, staggered reveal on scroll */}
       <section className="relative z-10 mt-3 rounded-[28px] bg-aurum-cream px-6 py-16 sm:mt-4 sm:rounded-[36px] sm:px-10 sm:py-24 lg:px-14">
         <div className="mx-auto max-w-7xl">
+          <div className="mb-10 max-w-lg sm:mb-14">
+            <span className="aurum-eyebrow">Our Portfolio</span>
+            <h2 className="mt-4 text-[clamp(1.6rem,3.5vw,2.6rem)] font-normal text-aurum-ink">
+              Destinations in the Making
+            </h2>
+            <p className="mt-3 text-[0.85rem] leading-relaxed text-aurum-muted">
+              A hand-picked portfolio of extraordinary developments, engineered for permanence and designed for legacy.
+            </p>
+          </div>
+
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -457,14 +426,15 @@ export default function SamplePage() {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-aurum-ink/90 via-aurum-ink/25 to-aurum-ink/10" />
 
-                {card.variant === "note" && (
-                  <a
-                    href="#"
-                    className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-aurum-cream/90 text-aurum-ink transition-transform duration-300 group-hover:scale-110"
-                  >
-                    <ArrowUpRightIcon />
-                  </a>
-                )}
+                <Link
+                  href={`/sample/projects/${card.slug}`}
+                  aria-label={`View ${card.title}`}
+                  className="absolute inset-0 z-20"
+                />
+
+                <span className="pointer-events-none absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-aurum-cream/90 text-aurum-ink transition-transform duration-300 group-hover:scale-110">
+                  <ArrowUpRightIcon />
+                </span>
 
                 <div className="absolute inset-x-0 bottom-0 p-6">
                   {card.variant === "stats" ? (
@@ -509,9 +479,9 @@ export default function SamplePage() {
             className="mt-3 divide-y divide-aurum-hairline overflow-hidden rounded-2xl bg-aurum-ink/2 sm:mt-4"
           >
             {PROJECT_ROWS.map((row) => (
-              <motion.a
+              <MotionLink
                 key={row.id}
-                href="#"
+                href={`/sample/projects/${row.slug}`}
                 variants={projectRowVariants}
                 className="group flex flex-col gap-2 px-6 py-5 transition-colors duration-300 hover:bg-aurum-ink/5 sm:flex-row sm:items-center sm:justify-between sm:px-8"
               >
@@ -520,15 +490,15 @@ export default function SamplePage() {
                   Category: {row.category}
                 </span>
                 <span className="text-[0.7rem] tracking-wide text-aurum-muted uppercase sm:w-48">
-                  Status: {row.status}
+                  Price: {row.status}
                 </span>
                 <span className="text-[0.7rem] tracking-wide text-aurum-muted uppercase sm:w-52">
-                  Building area {row.area}
+                  Saleable area {row.area}
                 </span>
                 <span className="flex h-8 w-8 items-center justify-center rounded-full border border-aurum-hairline text-aurum-muted transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">
                   <ArrowUpRightIcon className="h-3.5 w-3.5" />
                 </span>
-              </motion.a>
+              </MotionLink>
             ))}
           </motion.div>
         </div>
@@ -547,10 +517,10 @@ export default function SamplePage() {
           >
             <div>
               <h2 className="font-heading text-4xl leading-tight text-aurum-cream sm:text-5xl">
-                Let's work <br /><em className="text-aurum-gold-light">together.</em>
+                Your legacy <br /><em className="text-aurum-gold-light">awaits.</em>
               </h2>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-aurum-cream/60">
-                Tell us about your project, and we will get back to you with a tailored solution.
+                Connect with our private advisors to schedule an exclusive consultation on your next property.
               </p>
             </div>
 
@@ -570,13 +540,13 @@ export default function SamplePage() {
                 </span>
                 <input
                   type="text"
-                  placeholder="Briefly describe your requirements"
+                  placeholder="Buy, sell, rent or invest — tell us more"
                   className="mt-2 w-full border-b border-aurum-cream/20 bg-transparent py-2.5 text-base text-aurum-cream placeholder:text-aurum-cream/20 focus:border-aurum-gold focus:outline-none focus:ring-0"
                 />
               </label>
 
-              <button type="submit" className="aurum-btn-gold mt-4 w-fit px-8 py-3.5 text-[0.75rem]">
-                Send Message
+              <button type="submit" className="aurum-btn-gold mt-4 w-fit rounded-full px-8 py-3.5 text-[0.75rem]">
+                Request Consultation
               </button>
             </form>
           </motion.div>
@@ -596,29 +566,29 @@ export default function SamplePage() {
                 <div>
                   <span className="text-[0.7rem] font-medium tracking-widest text-aurum-muted uppercase">Email</span>
                   <a
-                    href="mailto:building@gmail.com"
+                    href="mailto:info@infraguru.in"
                     className="mt-2 block font-heading text-2xl text-aurum-ink transition-colors hover:text-aurum-gold sm:text-3xl"
                   >
-                    building@gmail.com
+                    info@infraguru.in
                   </a>
                 </div>
-                
+
                 <div>
                   <span className="text-[0.7rem] font-medium tracking-widest text-aurum-muted uppercase">Phone</span>
                   <a
-                    href="tel:+12075550139"
+                    href="tel:+919090656575"
                     className="mt-2 block font-heading text-2xl text-aurum-ink transition-colors hover:text-aurum-gold sm:text-3xl"
                   >
-                    (207) 555-0139
+                    +91 90 90 65 65 75
                   </a>
                 </div>
 
                 <div>
                   <span className="text-[0.7rem] font-medium tracking-widest text-aurum-muted uppercase">Office</span>
                   <address className="mt-2 block font-sans text-base not-italic leading-relaxed text-aurum-ink/70">
-                    123 Architect Way<br />
-                    Suite 450<br />
-                    New York, NY 10001
+                    Tower B-3, Spaze Itech Park<br />
+                    Sector-49<br />
+                    Gurugram, Haryana
                   </address>
                 </div>
               </div>
@@ -639,73 +609,7 @@ export default function SamplePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="mt-3 rounded-t-[28px] bg-aurum-ink px-6 pt-14 pb-8 sm:mt-4 sm:rounded-t-[36px] sm:px-10 sm:pt-20 lg:px-14">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
-            <div className="col-span-2 sm:col-span-1">
-              <img
-                src="/logo.png"
-                alt="Brand Logo"
-                className="h-10 w-auto object-contain brightness-0 invert"
-              />
-              <p className="mt-4 max-w-50 text-[0.8rem] leading-relaxed text-aurum-cream/50">
-                A tradition of trust in real estate and construction, building legacies since 2011.
-              </p>
-            </div>
-
-            <div>
-              <span className="text-[0.65rem] tracking-[0.25em] text-aurum-cream/40 uppercase">Explore</span>
-              <ul className="mt-4 space-y-3">
-                {NAV_LINKS.map((link) => (
-                  <li key={link}>
-                    <a
-                      href={`#${link.toLowerCase()}`}
-                      className="text-sm text-aurum-cream/70 transition-colors hover:text-aurum-gold-light"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <span className="text-[0.65rem] tracking-[0.25em] text-aurum-cream/40 uppercase">Contact</span>
-              <ul className="mt-4 space-y-3 text-sm text-aurum-cream/70">
-                <li>building@gmail.com</li>
-                <li>(207) 555-0139</li>
-                <li>Gurgaon, Haryana</li>
-              </ul>
-            </div>
-
-            <div>
-              <span className="text-[0.65rem] tracking-[0.25em] text-aurum-cream/40 uppercase">Follow</span>
-              <ul className="mt-4 space-y-3">
-                {SOCIAL_LINKS.map((s) => (
-                  <li key={s}>
-                    <a href="#" className="text-sm text-aurum-cream/70 transition-colors hover:text-aurum-gold-light">
-                      {s}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-16 flex flex-col gap-4 border-t border-aurum-cream/10 pt-6 text-[0.7rem] text-aurum-cream/40 sm:flex-row sm:items-center sm:justify-between">
-            <span>© {new Date().getFullYear()} Infraguru. All rights reserved.</span>
-            <div className="flex gap-6">
-              <a href="#" className="transition-colors hover:text-aurum-cream/70">
-                Privacy Policy
-              </a>
-              <a href="#" className="transition-colors hover:text-aurum-cream/70">
-                Terms of Service
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SampleFooter />
     </main>
   );
 }
