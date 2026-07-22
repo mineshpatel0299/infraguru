@@ -107,7 +107,7 @@ export default function Footer() {
       >
         <motion.div variants={fadeUp} className="col-span-2 lg:col-span-1">
           <a href="#hero" className="inline-block mb-6">
-            <PremiumLogo variant="light" />
+            <img src="/logo2.png" alt="Infraguru Logo" className="h-14 w-auto object-contain brightness-0 invert" />
           </a>
           <p className="mb-6 max-w-[280px] text-[0.9rem] leading-[1.8] text-aurum-cream/45">
             A tradition of trust — engineering premium infrastructure and real estate legacies since 2011.
