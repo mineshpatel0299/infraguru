@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   motion,
   useMotionValueEvent,
@@ -45,8 +46,12 @@ function useIsDesktop() {
 
 function formatFeet(v: number) {
   const total = Math.max(0, v) * (N - 1) * 12;
-  const feet = Math.floor(total / 12);
-  const inches = Math.round(total % 12);
+  let feet = Math.floor(total / 12);
+  let inches = Math.round(total % 12);
+  if (inches === 12) {
+    inches = 0;
+    feet += 1;
+  }
   return `${feet}'-${inches}"`;
 }
 
@@ -269,30 +274,112 @@ function TopBar({
 
 /* ── Gallery card: a fanned print that drifts as its panel comes into focus ── */
 
-function GalleryCard({
-  src,
-  index,
-  cfg,
-  dist,
-}: {
-  src: string;
-  index: number;
-  cfg: { rotate: number; x: number; y: number; z: number };
-  dist: MotionValue<number>;
-}) {
-  const cardX = useTransform(dist, (d) => `calc(-50% + ${cfg.x}px + ${d * (24 + index * 10)}px)`);
-  const cardY = useTransform(dist, (d) => `calc(-50% + ${cfg.y}px + ${d * 12}px)`);
+/* ── Fullscreen lightbox: portals past every ancestor (modal frame included) ── */
 
+function ExpandBadge() {
   return (
-    <motion.div
-      style={{ left: "50%", top: "50%", x: cardX, y: cardY, rotate: cfg.rotate, zIndex: cfg.z }}
-      className="absolute h-[70%] w-[46%] overflow-hidden rounded-2xl border-4 border-white shadow-strong"
+    <span className="absolute right-3 bottom-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4">
+        <path d="M9 3H3v6M15 3h6v6M15 21h6v-6M9 21H3v-6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
+
+function GalleryLightbox({
+  images,
+  title,
+  initialIndex,
+  onClose,
+}: {
+  images: string[];
+  title: string;
+  initialIndex: number;
+  onClose: () => void;
+}) {
+  const [index, setIndex] = useState(initialIndex);
+
+  const go = useCallback(
+    (delta: number) => {
+      setIndex((i) => (i + delta + images.length) % images.length);
+    },
+    [images.length]
+  );
+
+  useEffect(() => {
+    const prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "ArrowLeft") go(-1);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.documentElement.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose, go]);
+
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-500 flex items-center justify-center bg-primary-dark/95 backdrop-blur-xl"
+      onClick={onClose}
     >
-      <img src={src} alt="" className="h-full w-full object-cover" />
-      <span className="absolute bottom-2 left-2 rounded-full bg-black/40 px-2 py-0.5 font-mono text-[0.6rem] text-white/90 backdrop-blur-sm">
-        {String(index + 1).padStart(2, "0")}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute top-6 right-6 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white backdrop-blur-xl transition-colors hover:bg-white/15"
+      >
+        &#10005;
+      </button>
+
+      <span className="absolute top-7 left-7 font-mono text-[0.7rem] tracking-[0.15em] text-white/60 uppercase">
+        {title} &mdash; {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
       </span>
-    </motion.div>
+
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              go(-1);
+            }}
+            aria-label="Previous image"
+            className="absolute top-1/2 left-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white backdrop-blur-xl transition-colors hover:bg-white/15 sm:left-8"
+          >
+            &#8249;
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              go(1);
+            }}
+            aria-label="Next image"
+            className="absolute top-1/2 right-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white backdrop-blur-xl transition-colors hover:bg-white/15 sm:right-8"
+          >
+            &#8250;
+          </button>
+        </>
+      )}
+
+      <motion.img
+        key={index}
+        src={images[index]}
+        alt={`${title} view ${index + 1}`}
+        onClick={(e) => e.stopPropagation()}
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-strong"
+      />
+    </div>,
+    document.body
   );
 }
 
@@ -426,36 +513,48 @@ function AmenitiesPanel({ project }: { project: Project }) {
   );
 }
 
-function GalleryPanel({
-  project,
-  smoothIndex,
-  index,
-}: {
-  project: Project;
-  smoothIndex: MotionValue<number>;
-  index: number;
-}) {
-  const dist = useTransform(smoothIndex, (v) => v - index);
+function GalleryPanel({ project }: { project: Project }) {
   const imgs = project.gallery.slice(0, 4);
-  const configs = [
-    { rotate: -6, x: -140, y: 10, z: 10 },
-    { rotate: -2, x: -46, y: -18, z: 20 },
-    { rotate: 3, x: 52, y: 6, z: 20 },
-    { rotate: 7, x: 148, y: -12, z: 10 },
-  ];
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden bg-white px-6 pt-24 pb-28 sm:px-12">
-      <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 text-center">
+    <div className="flex h-full flex-col bg-white px-6 pt-24 pb-8 sm:px-12 lg:px-16">
+      <div className="mb-6 shrink-0 text-center">
         <Eyebrow mark="03">Gallery</Eyebrow>
         <h2 className="text-[clamp(1.6rem,2.6vw,2.4rem)] text-primary-dark">Every Angle, Considered</h2>
       </div>
 
-      <div className="relative mt-16 h-[54vh] w-full max-w-3xl">
+      <div className="mx-auto grid w-full min-h-0 max-w-5xl flex-1 grid-cols-4 grid-rows-2 gap-3">
         {imgs.map((src, i) => (
-          <GalleryCard key={i} src={src} index={i} cfg={configs[i % configs.length]} dist={dist} />
+          <button
+            key={i}
+            type="button"
+            onClick={() => setLightboxIndex(i)}
+            aria-label={`View ${project.title} photo ${i + 1} full screen`}
+            className={`group relative min-h-0 overflow-hidden rounded-2xl ${i === 0 ? "col-span-2 row-span-2" : ""}`}
+          >
+            <img
+              src={src}
+              alt={`${project.title} view ${i + 1}`}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="absolute bottom-3 left-3 font-mono text-[0.64rem] tracking-[0.15em] text-white/0 transition-colors duration-300 group-hover:text-white/85">
+              {String(i + 1).padStart(2, "0")} / {String(imgs.length).padStart(2, "0")}
+            </span>
+            <ExpandBadge />
+          </button>
         ))}
       </div>
+
+      {lightboxIndex !== null && (
+        <GalleryLightbox
+          images={imgs}
+          title={project.title}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
     </div>
   );
 }
@@ -643,14 +742,10 @@ function PanelBody({
   sectionKey,
   project,
   related,
-  smoothIndex,
-  index,
 }: {
   sectionKey: SectionKey;
   project: Project;
   related: Project[];
-  smoothIndex: MotionValue<number>;
-  index: number;
 }) {
   switch (sectionKey) {
     case "hero":
@@ -660,7 +755,7 @@ function PanelBody({
     case "amenities":
       return <AmenitiesPanel project={project} />;
     case "gallery":
-      return <GalleryPanel project={project} smoothIndex={smoothIndex} index={index} />;
+      return <GalleryPanel project={project} />;
     case "blueprint":
       return <BlueprintPanel />;
     case "location":
@@ -785,7 +880,7 @@ function DesktopExperience({
             <motion.div style={{ width: `${N * 100}%`, x: xPercent }} className="flex h-full">
               {SECTIONS.map((s, i) => (
                 <Panel key={s.key} index={i} smoothIndex={smoothIndex}>
-                  <PanelBody sectionKey={s.key} project={project} related={related} smoothIndex={smoothIndex} index={i} />
+                  <PanelBody sectionKey={s.key} project={project} related={related} />
                 </Panel>
               ))}
             </motion.div>
@@ -838,6 +933,7 @@ function MobileExperience({
   onClose?: () => void;
 }) {
   const enquireRef = useRef<HTMLDivElement>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
     <div className={mode === "modal" ? "no-scrollbar h-full w-full overflow-y-auto overscroll-contain bg-white" : "w-full bg-white"}>
@@ -948,12 +1044,30 @@ function MobileExperience({
         </motion.h2>
         <div className="flex flex-col gap-4">
           {project.gallery.map((src, i) => (
-            <motion.div key={i} variants={fadeUp} className="relative h-56 overflow-hidden rounded-2xl">
+            <motion.button
+              key={i}
+              type="button"
+              variants={fadeUp}
+              onClick={() => setLightboxIndex(i)}
+              aria-label={`View ${project.title} photo ${i + 1} full screen`}
+              className="group relative h-56 overflow-hidden rounded-2xl text-left"
+            >
               <img src={src} alt={`${project.title} view ${i + 1}`} className="h-full w-full object-cover" />
-            </motion.div>
+              <div className="absolute inset-0 bg-primary-dark/0 transition-colors group-active:bg-primary-dark/20" />
+              <ExpandBadge />
+            </motion.button>
           ))}
         </div>
       </MobileSection>
+
+      {lightboxIndex !== null && (
+        <GalleryLightbox
+          images={project.gallery}
+          title={project.title}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
 
       <MobileSection tint="dark">
         <motion.div variants={fadeUp}>
