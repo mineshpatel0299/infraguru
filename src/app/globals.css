@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -21,6 +23,24 @@
   --shadow-soft: 0 10px 40px rgba(3, 46, 151, 0.08);
   --shadow-medium: 0 20px 60px rgba(3, 46, 151, 0.12);
   --shadow-strong: 0 30px 80px rgba(3, 46, 151, 0.18);
+
+  /* ── Aurum theme — editorial luxury variant (used only under /premium) ── */
+  --color-aurum-cream: #ffffff; /* pure white for light sections */
+  --color-aurum-cream-2: #fafafa;
+  --color-aurum-paper: #f4f4f4;
+  --color-aurum-ink: #1c1102; /* dark brown */
+  --color-aurum-ink-soft: #38240a;
+  --color-aurum-emerald: #1c1102;
+  --color-aurum-emerald-light: #38240a;
+  --color-aurum-emerald-pale: #fafafa;
+  --color-aurum-gold: #EC9C00;
+  --color-aurum-gold-light: #FFCA99;
+  --color-aurum-gold-dark: #B97A00;
+  --color-aurum-muted: #895900;
+  --color-aurum-hairline: rgba(28, 17, 2, 0.16);
+
+  --font-aurum-heading: 'Fraunces', serif;
+  --font-aurum-body: 'Manrope', sans-serif;
 }
 
 @layer base {
@@ -78,6 +98,48 @@
 
   .glass-panel {
     @apply border border-primary/10 bg-white/60 backdrop-blur-2xl;
+  }
+
+  /* ── Aurum theme primitives ── */
+  .theme-aurum {
+    font-family: var(--font-aurum-body);
+    color: var(--color-aurum-cream);
+    background-color: var(--color-aurum-ink);
+  }
+
+  .theme-aurum h1,
+  .theme-aurum h2,
+  .theme-aurum h3,
+  .theme-aurum h4 {
+    font-family: var(--font-aurum-heading);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.08;
+  }
+
+  .aurum-eyebrow {
+    @apply inline-flex items-center gap-3 text-[0.72rem] font-semibold tracking-[0.32em] uppercase text-aurum-gold-dark;
+  }
+
+  .aurum-rule {
+    @apply h-px w-full bg-aurum-hairline;
+  }
+
+  .aurum-btn {
+    @apply inline-flex items-center gap-3 border border-aurum-ink px-8 py-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-aurum-ink transition-all duration-300 hover:bg-aurum-ink hover:text-aurum-cream;
+  }
+
+  .aurum-btn-solid {
+    @apply inline-flex items-center gap-3 bg-aurum-emerald px-8 py-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-aurum-cream transition-all duration-300 hover:bg-aurum-ink;
+  }
+
+  .aurum-btn-gold {
+    @apply inline-flex items-center gap-3 bg-aurum-gold px-8 py-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-aurum-ink transition-all duration-300 hover:bg-aurum-gold-dark hover:text-aurum-cream;
+  }
+
+  .aurum-num {
+    font-family: var(--font-aurum-heading);
+    font-optical-sizing: auto;
   }
 }
 
