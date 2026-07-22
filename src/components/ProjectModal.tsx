@@ -24,31 +24,16 @@ export default function ProjectModal({ project, related }: { project: Project; r
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-200 flex items-center justify-center p-0 md:p-8 lg:p-12" style={{ perspective: 2400 }}>
-        {/* Backdrop: deep primary wash, a faint blueprint grid, and a vignette pulling focus to center */}
+        {/* Backdrop: transparent, just a soft blur — the homepage stays visible behind it */}
         <motion.div
           key="backdrop"
-          className="absolute inset-0 bg-primary-dark/80 backdrop-blur-md"
+          className="absolute inset-0 backdrop-blur-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
           onClick={close}
-        >
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-[0.06]"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
-              backgroundSize: "44px 44px",
-            }}
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(2,15,60,0.6) 100%)" }}
-          />
-        </motion.div>
+        />
 
         {/* Ambient gold glow floating behind the frame */}
         <motion.div
@@ -74,16 +59,6 @@ export default function ProjectModal({ project, related }: { project: Project; r
             aria-hidden
             className="pointer-events-none absolute inset-[10px] z-30 hidden rounded-[1.35rem] border border-secondary-light/30 md:block"
           />
-
-          {/* Deed tag: the project's drawing code, pinned like a folder label */}
-          <div className="pointer-events-none absolute -top-2.5 left-9 z-30 hidden -rotate-2 md:block">
-            <div className="flex items-center gap-2 rounded-t-lg border border-b-0 border-secondary/40 bg-primary-dark px-4 py-1.5 shadow-[0_-6px_18px_rgba(0,0,0,0.3)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
-              <span className="font-mono text-[0.62rem] tracking-[0.15em] text-secondary-light uppercase">
-                {project.code}
-              </span>
-            </div>
-          </div>
 
           <ProjectExperience project={project} related={related} mode="modal" onClose={close} />
         </motion.div>
