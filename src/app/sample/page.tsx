@@ -13,12 +13,19 @@ import {
 import SampleNavbar from "@/components/sample/SampleNavbar";
 import SampleFooter from "@/components/sample/SampleFooter";
 
+// Stat cards fan in from the sides: first card from the left, last from the
+// right, with the middle card rising up from below.
 const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: (i: number) => ({
+    opacity: 0,
+    x: i === 0 ? -70 : i === 2 ? 70 : 0,
+    y: i === 1 ? 40 : 0,
+  }),
   visible: (i: number) => ({
     opacity: 1,
+    x: 0,
     y: 0,
-    transition: { duration: 0.7, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: 0.8, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
 
@@ -244,10 +251,10 @@ export default function SamplePage() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-12">
             {/* Left: intro copy + image */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <p className="max-w-xs text-[0.85rem] leading-relaxed text-aurum-muted">
                 Fifteen years of turning capital into enduring wealth through a curated portfolio built for long-term value.
@@ -264,10 +271,10 @@ export default function SamplePage() {
 
             {/* Right: image pair + about copy + vision statement — stays put */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative aspect-4/5 overflow-hidden rounded-2xl">
