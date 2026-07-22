@@ -68,28 +68,28 @@ export default function Footer() {
 
       {/* CTA Band */}
       <motion.div
-        className="relative z-10 mx-auto max-w-7xl px-6 sm:px-10 pt-24"
+        className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-12 sm:pt-24"
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={viewportOnce}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-sm p-12 lg:p-16">
+        <div className="relative overflow-hidden rounded-2xl sm:rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-sm p-6 sm:p-12 lg:p-16">
           {/* Gold top border accent */}
-          <div className="absolute top-0 left-12 right-12 h-[2px] bg-gradient-to-r from-transparent via-secondary to-transparent" />
+          <div className="absolute top-0 left-6 right-6 sm:left-12 sm:right-12 h-[2px] bg-gradient-to-r from-transparent via-secondary to-transparent" />
           {/* Subtle shimmer in corner */}
           <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-secondary/10 blur-[60px] pointer-events-none" />
-          
-          <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
+
+          <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 sm:gap-10">
             <div className="max-w-xl">
-              <span className="inline-flex items-center gap-3 text-[0.7rem] font-bold tracking-[0.25em] uppercase text-secondary mb-4">
+              <span className="inline-flex items-center gap-3 text-[0.7rem] font-bold tracking-[0.25em] uppercase text-secondary mb-3 sm:mb-4">
                 <span className="w-6 h-px bg-secondary" />
                 Take The Next Step
               </span>
-              <h2 className="font-heading text-[clamp(2rem,4vw,3rem)] text-white font-medium leading-tight">
+              <h2 className="font-heading text-[clamp(1.6rem,6vw,3rem)] text-white font-medium leading-tight">
                 Your Legacy Awaits
               </h2>
-              <p className="mt-3 text-[1rem] leading-[1.7] text-white/50">
+              <p className="mt-3 text-[0.9rem] sm:text-[1rem] leading-[1.7] text-white/50">
                 Connect with our private advisors to schedule an exclusive consultation.
               </p>
             </div>
@@ -100,7 +100,7 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="min-w-[260px] rounded-full border border-white/15 bg-white/8 px-6 py-3.5 text-[0.9rem] text-white placeholder-white/30 focus:border-secondary/50 focus:outline-none transition-colors duration-200 backdrop-blur-sm"
+                className="min-w-0 sm:min-w-[260px] rounded-full border border-white/15 bg-white/8 px-6 py-3.5 text-[0.9rem] text-white placeholder-white/30 focus:border-secondary/50 focus:outline-none transition-colors duration-200 backdrop-blur-sm"
               />
               <button
                 type="submit"
@@ -114,30 +114,30 @@ export default function Footer() {
       </motion.div>
 
       {/* Divider */}
-      <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-10 mt-16">
+      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 mt-8 sm:mt-16">
         <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
       {/* Main Footer Grid */}
       <motion.div
-        className="relative z-10 container mx-auto max-w-7xl px-6 sm:px-10 py-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr]"
+        className="relative z-10 container mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 sm:py-16 grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-12 lg:grid-cols-[1.6fr_1fr_1fr_1fr]"
         variants={staggerContainer(0.1)}
         initial="hidden"
         whileInView="visible"
         viewport={viewportOnce}
       >
         {/* Brand Column */}
-        <motion.div variants={fadeUp}>
-          <a href="#hero" className="inline-block mb-8">
+        <motion.div variants={fadeUp} className="col-span-2 lg:col-span-1">
+          <a href="#hero" className="inline-block mb-5 sm:mb-8">
             <Image
               src="/logo.png"
               alt="Infraguru"
               width={180}
               height={58}
-              className="h-14 w-auto object-contain brightness-0 invert"
+              className="h-10 sm:h-14 w-auto object-contain brightness-0 invert"
             />
           </a>
-          <p className="mb-8 max-w-[280px] text-[0.92rem] leading-[1.8] text-white/45">
+          <p className="mb-5 sm:mb-8 max-w-[280px] text-[0.85rem] sm:text-[0.92rem] leading-[1.8] text-white/45">
             A tradition of trust — engineering premium infrastructure and real estate legacies since 2011.
           </p>
           <div className="flex gap-3">
@@ -157,15 +157,15 @@ export default function Footer() {
         {/* Link Columns */}
         {LINK_COLUMNS.map((col) => (
           <motion.div key={col.title} variants={fadeUp}>
-            <h4 className="mb-6 text-[0.7rem] font-bold tracking-[0.25em] text-white/30 uppercase">
+            <h4 className="mb-3 sm:mb-6 text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.25em] text-white/30 uppercase">
               {col.title}
             </h4>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-2 sm:gap-3">
               {col.links.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-[0.95rem] text-white/55 transition-all duration-200 hover:text-secondary hover:translate-x-1 inline-flex items-center gap-2 group"
+                    className="text-[0.85rem] sm:text-[0.95rem] text-white/55 transition-all duration-200 hover:text-secondary hover:translate-x-1 inline-flex items-center gap-2 group"
                   >
                     <span className="w-0 h-px bg-secondary transition-all duration-200 group-hover:w-3" />
                     {link.label}
@@ -177,11 +177,11 @@ export default function Footer() {
         ))}
 
         {/* Contact Column */}
-        <motion.div variants={fadeUp}>
-          <h4 className="mb-6 text-[0.7rem] font-bold tracking-[0.25em] text-white/30 uppercase">
+        <motion.div variants={fadeUp} className="col-span-2 lg:col-span-1">
+          <h4 className="mb-3 sm:mb-6 text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.25em] text-white/30 uppercase">
             Contact
           </h4>
-          <ul className="flex flex-col gap-3 text-[0.95rem] text-white/55">
+          <ul className="flex flex-col gap-2 sm:gap-3 text-[0.85rem] sm:text-[0.95rem] text-white/55">
             <li className="flex items-start gap-2.5">
               <span className="mt-1 text-secondary text-xs">◆</span>
               <span>Tower B-3, Spaze Itech Park<br />Sector-49, Gurugram, Haryana</span>
@@ -207,15 +207,15 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="relative z-10 border-t border-white/8">
-        <div className="mx-auto max-w-7xl px-6 sm:px-10 py-6 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-[0.8rem] text-white/30">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-5 sm:py-6 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+          <span className="text-[0.75rem] sm:text-[0.8rem] text-white/30">
             © {new Date().getFullYear()} Infraguru. All rights reserved.
           </span>
-          <div className="flex items-center gap-8">
-            <a href="#" className="text-[0.8rem] text-white/30 hover:text-secondary transition-colors duration-200">
+          <div className="flex items-center gap-5 sm:gap-8">
+            <a href="#" className="text-[0.75rem] sm:text-[0.8rem] text-white/30 hover:text-secondary transition-colors duration-200">
               Privacy Policy
             </a>
-            <a href="#" className="text-[0.8rem] text-white/30 hover:text-secondary transition-colors duration-200">
+            <a href="#" className="text-[0.75rem] sm:text-[0.8rem] text-white/30 hover:text-secondary transition-colors duration-200">
               Terms of Service
             </a>
           </div>

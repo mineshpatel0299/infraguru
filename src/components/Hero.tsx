@@ -123,9 +123,9 @@ export default function Hero() {
         {/* Floating years badge */}
     
 
-        <div className="container relative z-10 mx-auto max-w-7xl px-8 pb-20 lg:pb-24">
+        <div className="container relative z-10 mx-auto max-w-7xl px-5 pb-10 sm:px-8 sm:pb-20 lg:pb-24">
           <motion.span
-            className="mb-6 inline-flex items-center gap-2.5 text-[0.8rem] font-semibold tracking-[3px] text-secondary-light uppercase before:inline-block before:h-0.5 before:w-7 before:bg-secondary"
+            className="mb-3 inline-flex items-center gap-2 text-[0.65rem] font-semibold tracking-[2px] text-secondary-light uppercase before:inline-block before:h-0.5 before:w-5 before:bg-secondary sm:mb-6 sm:gap-2.5 sm:text-[0.8rem] sm:tracking-[3px] sm:before:w-7"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
@@ -133,7 +133,7 @@ export default function Hero() {
             Infraguru — A Tradition of Trust
           </motion.span>
 
-          <h1 className="mb-8 max-w-4xl text-[clamp(2.8rem,3.2vw+2rem,5.6rem)] font-medium tracking-[-1.5px] text-white leading-[1.1]">
+          <h1 className="mb-5 max-w-4xl text-[clamp(2.1rem,7vw+0.5rem,5.6rem)] font-medium tracking-[-1px] text-white leading-[1.15] sm:mb-8 sm:tracking-[-1.5px] sm:leading-[1.1]">
             <BlurWordReveal text={HEADLINE_LINE_1} delay={0.1} className="block pb-1" />
             <BlurWordReveal
               text={HEADLINE_LINE_2}
@@ -143,21 +143,21 @@ export default function Hero() {
           </h1>
 
           <motion.div
-            className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center"
+            className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.3 }}
           >
             <a
               href="#projects"
-              className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-secondary px-8 py-3.5 text-sm font-bold tracking-wider whitespace-nowrap text-primary-dark uppercase transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_35px_5px_rgba(212,175,55,0.45)]"
+              className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-secondary px-6 py-3 text-xs font-bold tracking-wider whitespace-nowrap text-primary-dark uppercase transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_35px_5px_rgba(212,175,55,0.45)] sm:px-8 sm:py-3.5 sm:text-sm"
             >
               Explore Projects
               <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
             </a>
             <a
               href="#about"
-              className="inline-flex items-center justify-center gap-2.5 rounded-full border-[1.5px] border-white/40 px-8 py-3.5 text-sm font-semibold tracking-wider whitespace-nowrap text-white uppercase backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white/10"
+              className="hidden items-center justify-center gap-2.5 rounded-full border-[1.5px] border-white/40 px-8 py-3.5 text-sm font-semibold tracking-wider whitespace-nowrap text-white uppercase backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white/10 sm:inline-flex"
             >
               Our Story
             </a>
