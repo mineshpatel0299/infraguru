@@ -108,6 +108,13 @@
     background-color: var(--color-aurum-ink);
   }
 
+  /* ── Sample page variant: swap the aurum theme's dark brown for a neutral
+     charcoal, keeping every other aurum token unchanged ── */
+  .theme-aurum.theme-aurum-blue {
+    --color-aurum-ink: #34353a;
+    --color-aurum-ink-soft: #46474d;
+  }
+
   .theme-aurum h1,
   .theme-aurum h2,
   .theme-aurum h3,

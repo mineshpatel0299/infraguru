@@ -11,7 +11,7 @@ export default function SampleNavbar({ homeHref = "/sample" }: { homeHref?: stri
         <img src="/logo.png" alt="Brand Logo" className="h-12 w-auto object-contain" />
       </Link>
 
-      <div className="hidden items-center gap-10 text-[0.8rem] font-medium tracking-wide text-aurum-ink/70 md:flex">
+      <div className="hidden items-center gap-10 text-[0.8rem] font-light tracking-wide text-aurum-ink/70 md:flex">
         {NAV_LINKS.map((link) => (
           <Link
             key={link}

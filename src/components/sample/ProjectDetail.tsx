@@ -44,7 +44,7 @@ export default function ProjectDetail({
   related: Project[];
 }) {
   return (
-    <main className="theme-aurum min-h-screen bg-white p-3 sm:p-4 lg:p-5">
+    <main className="theme-aurum theme-aurum-blue min-h-screen bg-white p-3 sm:p-4 lg:p-5">
       <SampleNavbar homeHref="/sample" />
 
       {/* Hero */}
@@ -62,7 +62,7 @@ export default function ProjectDetail({
         {/* Back link */}
         <Link
           href="/sample#projects"
-          className="absolute top-6 left-6 z-10 inline-flex items-center gap-2 rounded-full bg-aurum-cream/10 px-4 py-2 text-[0.7rem] font-semibold tracking-widest text-aurum-cream uppercase backdrop-blur-sm transition-colors hover:bg-aurum-cream/20 sm:top-8 sm:left-10"
+          className="absolute top-6 left-6 z-10 inline-flex items-center gap-2 rounded-full bg-aurum-cream/10 px-4 py-2 text-[0.7rem] font-light tracking-widest text-aurum-cream uppercase backdrop-blur-sm transition-colors hover:bg-aurum-cream/20 sm:top-8 sm:left-10"
         >
           <span className="rotate-180 inline-block">
             <ArrowUpRightIcon className="h-3.5 w-3.5" />
@@ -70,7 +70,7 @@ export default function ProjectDetail({
           All Projects
         </Link>
 
-        <span className="absolute top-6 right-6 z-10 rounded-full border border-aurum-cream/25 bg-aurum-cream/10 px-4 py-2 text-[0.65rem] font-semibold tracking-widest text-aurum-cream uppercase backdrop-blur-sm sm:top-8 sm:right-10">
+        <span className="absolute top-6 right-6 z-10 rounded-full border border-aurum-cream/25 bg-aurum-cream/10 px-4 py-2 text-[0.65rem] font-light tracking-widest text-aurum-cream uppercase backdrop-blur-sm sm:top-8 sm:right-10">
           {project.category}
         </span>
 
@@ -79,7 +79,7 @@ export default function ProjectDetail({
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-[0.7rem] font-semibold tracking-[0.25em] text-aurum-gold-light uppercase"
+            className="text-[0.7rem] font-light tracking-[0.25em] text-aurum-gold-light uppercase"
           >
             {project.code} — {project.location}
           </motion.span>
@@ -88,7 +88,7 @@ export default function ProjectDetail({
             initial={{ opacity: 0, x: -60 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
-            className="max-w-3xl text-[clamp(1.8rem,4.5vw,3.4rem)] font-normal text-aurum-cream"
+            className="max-w-3xl text-[clamp(1.8rem,4.5vw,3.4rem)] font-light text-aurum-cream"
           >
             {project.title}
           </motion.h1>
@@ -124,7 +124,7 @@ export default function ProjectDetail({
             className="rounded-2xl bg-aurum-paper px-6 py-6 sm:px-7 sm:py-7"
           >
             <span className="aurum-eyebrow text-[0.6rem]">{item.label}</span>
-            <div className="mt-2 font-heading text-lg text-aurum-ink sm:text-xl">{item.value}</div>
+            <div className="mt-2 font-aurum-heading text-lg text-aurum-ink sm:text-xl">{item.value}</div>
           </motion.div>
         ))}
       </motion.div>
@@ -143,7 +143,7 @@ export default function ProjectDetail({
             </motion.span>
             <motion.h2
               variants={fadeUp}
-              className="mt-4 max-w-xl text-[clamp(1.5rem,3vw,2.3rem)] font-normal text-aurum-ink"
+              className="mt-4 max-w-xl text-[clamp(1.5rem,3vw,2.3rem)] font-light text-aurum-ink"
             >
               {project.tagline}
             </motion.h2>
@@ -161,16 +161,16 @@ export default function ProjectDetail({
 
             <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center gap-4 border-t border-aurum-hairline pt-8">
               <div>
-                <span className="block text-[0.65rem] font-semibold tracking-[0.2em] text-aurum-muted/70 uppercase">
+                <span className="block text-[0.65rem] font-light tracking-[0.2em] text-aurum-muted/70 uppercase">
                   Architect
                 </span>
-                <span className="font-heading text-base text-aurum-ink">{project.architect}</span>
+                <span className="font-aurum-heading text-base text-aurum-ink">{project.architect}</span>
               </div>
               <div className="ml-auto">
-                <span className="block text-[0.65rem] font-semibold tracking-[0.2em] text-aurum-muted/70 uppercase">
+                <span className="block text-[0.65rem] font-light tracking-[0.2em] text-aurum-muted/70 uppercase">
                   Developer
                 </span>
-                <span className="font-heading text-base text-aurum-ink">{project.developer}</span>
+                <span className="font-aurum-heading text-base text-aurum-ink">{project.developer}</span>
               </div>
             </motion.div>
           </motion.div>
@@ -194,7 +194,7 @@ export default function ProjectDetail({
                   className="flex items-center justify-between border-b border-aurum-hairline py-4"
                 >
                   <span className="text-[0.85rem] text-aurum-muted">{h.label}</span>
-                  <span className="font-heading text-base text-aurum-ink">{h.value}</span>
+                  <span className="font-aurum-heading text-base text-aurum-ink">{h.value}</span>
                 </motion.div>
               ))}
             </div>
@@ -213,7 +213,7 @@ export default function ProjectDetail({
           >
             <motion.span
               variants={fadeUp}
-              className="text-[0.72rem] font-semibold tracking-[0.32em] uppercase text-aurum-gold"
+              className="text-[0.72rem] font-light tracking-[0.32em] uppercase text-aurum-gold"
             >
               Amenities
             </motion.span>
@@ -237,7 +237,7 @@ export default function ProjectDetail({
           >
             <motion.span
               variants={fadeUp}
-              className="text-[0.72rem] font-semibold tracking-[0.32em] uppercase text-aurum-gold"
+              className="text-[0.72rem] font-light tracking-[0.32em] uppercase text-aurum-gold"
             >
               Nearby
             </motion.span>
@@ -249,7 +249,7 @@ export default function ProjectDetail({
                   className="flex items-center justify-between border-b border-aurum-cream/10 py-4"
                 >
                   <span className="text-[0.85rem] text-aurum-cream/70">{l.label}</span>
-                  <span className="font-heading text-sm text-aurum-gold-light">{l.distance}</span>
+                  <span className="font-aurum-heading text-sm text-aurum-gold-light">{l.distance}</span>
                 </motion.div>
               ))}
             </div>
@@ -293,14 +293,14 @@ export default function ProjectDetail({
           transition={{ duration: 0.8, ease: EASE }}
           className="relative overflow-hidden rounded-[28px] bg-aurum-paper px-8 py-14 text-center sm:rounded-[36px] sm:px-16 sm:py-20"
         >
-          <span className="block font-heading text-6xl leading-none text-aurum-hairline" aria-hidden>
+          <span className="block font-aurum-heading text-6xl leading-none text-aurum-hairline" aria-hidden>
             &ldquo;
           </span>
-          <p className="mx-auto mt-4 max-w-2xl font-heading text-[1.3rem] leading-[1.6] text-aurum-ink italic sm:text-[1.6rem]">
+          <p className="mx-auto mt-4 max-w-2xl font-aurum-heading text-[1.3rem] leading-[1.6] text-aurum-ink italic sm:text-[1.6rem]">
             {project.testimonial.quote}
           </p>
           <div className="mt-6">
-            <div className="font-heading text-lg text-aurum-gold-dark italic">{project.testimonial.author}</div>
+            <div className="font-aurum-heading text-lg text-aurum-gold-dark italic">{project.testimonial.author}</div>
             <div className="mt-1 text-[0.8rem] text-aurum-muted">{project.testimonial.role}</div>
           </div>
         </motion.div>
@@ -312,13 +312,13 @@ export default function ProjectDetail({
           <div className="mb-10 flex items-end justify-between sm:mb-14">
             <div>
               <span className="aurum-eyebrow">More From The Portfolio</span>
-              <h2 className="mt-4 text-[clamp(1.5rem,3vw,2.2rem)] font-normal text-aurum-ink">
+              <h2 className="mt-4 text-[clamp(1.5rem,3vw,2.2rem)] font-light text-aurum-ink">
                 Related Deeds
               </h2>
             </div>
             <Link
               href="/sample#projects"
-              className="hidden items-center gap-2 text-[0.75rem] font-semibold tracking-[0.15em] text-aurum-gold-dark uppercase transition-colors hover:text-aurum-gold sm:inline-flex"
+              className="hidden items-center gap-2 text-[0.75rem] font-light tracking-[0.15em] text-aurum-gold-dark uppercase transition-colors hover:text-aurum-gold sm:inline-flex"
             >
               View All <ArrowUpRightIcon className="h-3.5 w-3.5" />
             </Link>
@@ -347,10 +347,10 @@ export default function ProjectDetail({
                     <ArrowUpRightIcon />
                   </span>
                   <div className="absolute inset-x-0 bottom-0 p-6">
-                    <span className="text-[0.65rem] font-semibold tracking-[0.2em] text-aurum-gold-light uppercase">
+                    <span className="text-[0.65rem] font-light tracking-[0.2em] text-aurum-gold-light uppercase">
                       {p.category}
                     </span>
-                    <h3 className="mt-1 font-heading text-xl text-aurum-cream">{p.title}</h3>
+                    <h3 className="mt-1 font-aurum-heading text-xl text-aurum-cream">{p.title}</h3>
                     <span className="mt-1 block text-[0.75rem] text-aurum-cream/60">{p.price}</span>
                   </div>
                 </Link>
@@ -369,7 +369,7 @@ export default function ProjectDetail({
           transition={{ duration: 0.8, ease: EASE }}
           className="relative flex flex-col items-center gap-6 overflow-hidden rounded-[28px] bg-aurum-ink px-8 py-14 text-center sm:rounded-[36px] sm:px-12 sm:py-20"
         >
-          <h2 className="font-heading text-3xl leading-tight text-aurum-cream sm:text-4xl">
+          <h2 className="font-aurum-heading text-3xl leading-tight text-aurum-cream sm:text-4xl">
             Interested in <em className="text-aurum-gold-light">{project.title}?</em>
           </h2>
           <p className="max-w-md text-sm leading-relaxed text-aurum-cream/60">

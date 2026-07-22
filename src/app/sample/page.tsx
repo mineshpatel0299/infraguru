@@ -152,7 +152,7 @@ export default function SamplePage() {
   const topRadiusPx = useTransform(topRadius, (v) => `${v}vw`);
 
   return (
-    <main className="theme-aurum min-h-screen bg-white p-3 sm:p-4 lg:p-5">
+    <main className="theme-aurum theme-aurum-blue min-h-screen bg-white p-3 sm:p-4 lg:p-5">
       <SampleNavbar />
 
       {/* Hero */}
@@ -184,7 +184,7 @@ export default function SamplePage() {
             initial={{ opacity: 0, x: -80 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-2xl text-[clamp(1.8rem,4.5vw,3.4rem)] font-normal text-aurum-cream"
+            className="max-w-2xl text-[clamp(1.8rem,4.5vw,3.4rem)] font-light text-aurum-cream"
           >
             Your Trusted Partner In
             <br />
@@ -206,7 +206,7 @@ export default function SamplePage() {
           <span className="aurum-eyebrow absolute top-6 right-6 rounded-full border border-aurum-hairline px-3 py-1 text-[0.6rem] text-aurum-muted">
             350+
           </span>
-          <div className="aurum-num text-5xl text-aurum-ink sm:text-6xl">500+</div>
+          <div className="aurum-num font-light text-5xl text-aurum-ink sm:text-6xl">500+</div>
           <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Satisfied clients &amp; investors</p>
         </motion.div>
 
@@ -218,7 +218,7 @@ export default function SamplePage() {
           viewport={{ once: true, amount: 0.4 }}
           className="rounded-2xl bg-aurum-paper px-8 py-10"
         >
-          <div className="aurum-num text-5xl text-aurum-ink sm:text-6xl">350+</div>
+          <div className="aurum-num font-light text-5xl text-aurum-ink sm:text-6xl">350+</div>
           <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Properties sold to date</p>
         </motion.div>
 
@@ -230,7 +230,7 @@ export default function SamplePage() {
           viewport={{ once: true, amount: 0.4 }}
           className="rounded-2xl bg-linear-to-br from-aurum-ink via-aurum-ink-soft to-aurum-ink px-8 py-10"
         >
-          <div className="aurum-num text-5xl text-aurum-gold sm:text-6xl">15+</div>
+          <div className="aurum-num font-light text-5xl text-aurum-gold sm:text-6xl">15+</div>
           <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-cream/50 uppercase">Years building legacies</p>
         </motion.div>
       </div>
@@ -277,7 +277,7 @@ export default function SamplePage() {
                     className="h-full w-full object-cover"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-aurum-ink/70 via-transparent to-transparent" />
-                  <button className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-aurum-cream/90 py-1.5 pr-4 pl-1.5 text-[0.65rem] font-semibold tracking-wide text-aurum-ink backdrop-blur-sm">
+                  <button className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-aurum-cream/90 py-1.5 pr-4 pl-1.5 text-[0.65rem] font-light tracking-wide text-aurum-ink backdrop-blur-sm">
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-aurum-ink text-aurum-cream">
                       <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3 translate-x-px">
                         <path d="M8 5v14l11-7z" />
@@ -304,7 +304,7 @@ export default function SamplePage() {
                   RERA-backed and transparent, Infraguru handles every deal like a signature piece — deliberate, and built to last.
                 </p>
 
-                <h2 className="mt-8 max-w-xl text-[clamp(1.5rem,3vw,2.3rem)] font-normal text-aurum-ink">
+                <h2 className="mt-8 max-w-xl text-[clamp(1.5rem,3vw,2.3rem)] font-light text-aurum-ink">
                   Where Vision Meets Value.
                 </h2>
               </div>
@@ -320,7 +320,7 @@ export default function SamplePage() {
         style={{ borderTopLeftRadius: topRadiusPx, borderTopRightRadius: topRadiusPx }}
         className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden rounded-b-[36px] bg-aurum-ink px-6 py-10 mt-[-70vh] sm:mt-[-90vh] sm:px-10 sm:py-14 lg:px-14"
       >
-        <span className="text-[0.7rem] font-semibold tracking-[0.3em] text-aurum-cream/70 uppercase">
+        <span className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase">
           What We Do
         </span>
 
@@ -336,17 +336,17 @@ export default function SamplePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 1.1, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                className={`cursor-pointer font-heading text-2xl uppercase transition-colors duration-500 sm:text-3xl lg:text-4xl ${
+                className={`cursor-pointer font-aurum-heading font-light text-2xl uppercase transition-colors duration-500 sm:text-3xl lg:text-4xl ${
                   activeItem === i ? "text-aurum-cream" : "text-aurum-cream/40"
                 }`}
               >
                 {item.title}
-                <sup className="ml-1 text-[0.65rem] font-sans tracking-wide sm:text-xs">
+                <sup className="ml-1 text-[0.65rem] tracking-wide sm:text-xs">
                   0{i + 1}
                 </sup>
               </motion.span>
               {i < PORTFOLIO_ITEMS.length - 1 && (
-                <span className="font-heading text-2xl text-aurum-cream/20 sm:text-3xl lg:text-4xl">/</span>
+                <span className="font-aurum-heading font-light text-2xl text-aurum-cream/20 sm:text-3xl lg:text-4xl">/</span>
               )}
             </React.Fragment>
           ))}
@@ -355,7 +355,7 @@ export default function SamplePage() {
         <div className="mt-10 flex justify-end sm:mt-14">
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 text-[0.75rem] font-semibold tracking-[0.15em] text-aurum-gold-light uppercase transition-colors hover:text-aurum-gold"
+            className="inline-flex items-center gap-2 text-[0.75rem] font-light tracking-[0.15em] text-aurum-gold-light uppercase transition-colors hover:text-aurum-gold"
           >
             Book a Consultation <span>&#8599;</span>
           </a>
@@ -394,7 +394,7 @@ export default function SamplePage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 max-w-lg sm:mb-14">
             <span className="aurum-eyebrow">Our Portfolio</span>
-            <h2 className="mt-4 text-[clamp(1.6rem,3.5vw,2.6rem)] font-normal text-aurum-ink">
+            <h2 className="mt-4 text-[clamp(1.6rem,3.5vw,2.6rem)] font-light text-aurum-ink">
               Destinations in the Making
             </h2>
             <p className="mt-3 text-[0.85rem] leading-relaxed text-aurum-muted">
@@ -439,7 +439,7 @@ export default function SamplePage() {
                 <div className="absolute inset-x-0 bottom-0 p-6">
                   {card.variant === "stats" ? (
                     <>
-                      <h3 className="font-heading text-2xl text-aurum-cream">{card.title}</h3>
+                      <h3 className="font-aurum-heading font-light text-2xl text-aurum-cream">{card.title}</h3>
                       <div className="mt-4 space-y-2.5">
                         {card.stats.map((s) => (
                           <div key={s} className="text-[0.95rem] text-aurum-cream/80">
@@ -460,7 +460,7 @@ export default function SamplePage() {
                     </>
                   ) : (
                     <>
-                      <h3 className="font-heading text-2xl text-aurum-cream">{card.title}</h3>
+                      <h3 className="font-aurum-heading font-light text-2xl text-aurum-cream">{card.title}</h3>
                       <p className="mt-3 max-w-55 text-[0.8rem] leading-relaxed text-aurum-cream/60">
                         {card.description}
                       </p>
@@ -485,7 +485,7 @@ export default function SamplePage() {
                 variants={projectRowVariants}
                 className="group flex flex-col gap-2 px-6 py-5 transition-colors duration-300 hover:bg-aurum-ink/5 sm:flex-row sm:items-center sm:justify-between sm:px-8"
               >
-                <span className="font-heading text-lg text-aurum-ink sm:w-48">{row.title}</span>
+                <span className="font-aurum-heading font-light text-lg text-aurum-ink sm:w-48">{row.title}</span>
                 <span className="text-[0.7rem] tracking-wide text-aurum-muted uppercase sm:w-52">
                   Category: {row.category}
                 </span>
@@ -516,7 +516,7 @@ export default function SamplePage() {
             className="relative flex flex-col justify-between overflow-hidden rounded-[28px] bg-aurum-ink px-8 py-12 sm:rounded-[36px] sm:px-12 sm:py-16"
           >
             <div>
-              <h2 className="font-heading text-4xl leading-tight text-aurum-cream sm:text-5xl">
+              <h2 className="font-aurum-heading font-light text-4xl leading-tight text-aurum-cream sm:text-5xl">
                 Your legacy <br /><em className="text-aurum-gold-light">awaits.</em>
               </h2>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-aurum-cream/60">
@@ -526,7 +526,7 @@ export default function SamplePage() {
 
             <form className="mt-12 flex flex-col gap-8 sm:mt-16" onSubmit={(e) => e.preventDefault()}>
               <label className="block">
-                <span className="text-[0.7rem] font-medium tracking-widest text-aurum-cream/50 uppercase">Email</span>
+                <span className="text-[0.7rem] font-light tracking-widest text-aurum-cream/50 uppercase">Email</span>
                 <input
                   type="email"
                   placeholder="you@example.com"
@@ -535,7 +535,7 @@ export default function SamplePage() {
               </label>
 
               <label className="block">
-                <span className="text-[0.7rem] font-medium tracking-widest text-aurum-cream/50 uppercase">
+                <span className="text-[0.7rem] font-light tracking-widest text-aurum-cream/50 uppercase">
                   Project Details
                 </span>
                 <input
@@ -560,32 +560,32 @@ export default function SamplePage() {
             className="flex flex-col justify-between rounded-[28px] bg-aurum-paper px-8 py-12 sm:rounded-[36px] sm:px-12 sm:py-16"
           >
             <div>
-              <h2 className="font-heading text-4xl text-aurum-ink sm:text-5xl">Contact Us</h2>
+              <h2 className="font-aurum-heading font-light text-4xl text-aurum-ink sm:text-5xl">Contact Us</h2>
               
               <div className="mt-12 flex flex-col gap-8">
                 <div>
-                  <span className="text-[0.7rem] font-medium tracking-widest text-aurum-muted uppercase">Email</span>
+                  <span className="text-[0.7rem] font-light tracking-widest text-aurum-muted uppercase">Email</span>
                   <a
                     href="mailto:info@infraguru.in"
-                    className="mt-2 block font-heading text-2xl text-aurum-ink transition-colors hover:text-aurum-gold sm:text-3xl"
+                    className="mt-2 block font-aurum-heading font-light text-2xl text-aurum-ink transition-colors hover:text-aurum-gold sm:text-3xl"
                   >
                     info@infraguru.in
                   </a>
                 </div>
 
                 <div>
-                  <span className="text-[0.7rem] font-medium tracking-widest text-aurum-muted uppercase">Phone</span>
+                  <span className="text-[0.7rem] font-light tracking-widest text-aurum-muted uppercase">Phone</span>
                   <a
                     href="tel:+919090656575"
-                    className="mt-2 block font-heading text-2xl text-aurum-ink transition-colors hover:text-aurum-gold sm:text-3xl"
+                    className="mt-2 block font-aurum-heading font-light text-2xl text-aurum-ink transition-colors hover:text-aurum-gold sm:text-3xl"
                   >
                     +91 90 90 65 65 75
                   </a>
                 </div>
 
                 <div>
-                  <span className="text-[0.7rem] font-medium tracking-widest text-aurum-muted uppercase">Office</span>
-                  <address className="mt-2 block font-sans text-base not-italic leading-relaxed text-aurum-ink/70">
+                  <span className="text-[0.7rem] font-light tracking-widest text-aurum-muted uppercase">Office</span>
+                  <address className="mt-2 block text-base not-italic leading-relaxed text-aurum-ink/70">
                     Tower B-3, Spaze Itech Park<br />
                     Sector-49<br />
                     Gurugram, Haryana
@@ -599,7 +599,7 @@ export default function SamplePage() {
                 <a
                   key={s}
                   href="#"
-                  className="text-[0.7rem] font-medium tracking-widest text-aurum-muted uppercase transition-colors hover:text-aurum-ink"
+                  className="text-[0.7rem] font-light tracking-widest text-aurum-muted uppercase transition-colors hover:text-aurum-ink"
                 >
                   {s}
                 </a>
