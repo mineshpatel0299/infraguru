@@ -17,9 +17,9 @@ const PARTNER_LOGOS = [
 
 export default function Partners() {
   return (
-    <section className="bg-white py-12 border-b border-hairline overflow-hidden">
+    <section className="bg-white py-20 lg:py-28 border-b border-hairline overflow-hidden">
       <div className="container mx-auto px-6 mb-8 text-center">
-        <span className="text-xs font-bold tracking-[0.2em] uppercase text-muted">
+        <span className="text-xs font-semibold tracking-[0.2em] uppercase text-muted">
           Trusted by Industry Leaders
         </span>
       </div>

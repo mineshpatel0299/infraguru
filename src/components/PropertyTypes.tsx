@@ -89,10 +89,10 @@ export default function PropertyTypes() {
   const goNext = () => setActive((prev) => (prev + 1) % CATEGORIES.length);
 
   return (
-    <section id="services" className="bg-white py-36">
+    <section id="services" className="bg-white py-40 lg:py-56">
       <div className="container mx-auto max-w-7xl px-8">
         <motion.div
-          className="mb-16 flex flex-col items-center justify-between gap-8 lg:flex-row lg:items-end"
+          className="mb-16 flex flex-col items-center justify-between gap-12 lg:gap-16 lg:flex-row lg:items-end"
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
@@ -102,7 +102,7 @@ export default function PropertyTypes() {
             <motion.span className="eyebrow justify-center lg:justify-start" variants={fadeUp}>
               Our Services
             </motion.span>
-            <motion.h2 className="mb-5 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark" variants={fadeUp}>
+            <motion.h2 className="mb-5 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark font-light tracking-tight" variants={fadeUp}>
               A Property Path For <span className="text-gradient">Every Ambition</span>
             </motion.h2>
             <motion.p className="text-[1.1rem] leading-[1.7] text-muted" variants={fadeUp}>

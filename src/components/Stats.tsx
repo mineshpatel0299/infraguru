@@ -14,7 +14,7 @@ const STATS = [
 
 export default function Stats() {
   return (
-    <section id="stats" className="relative overflow-hidden bg-[linear-gradient(120deg,var(--color-primary-dark)_0%,var(--color-primary)_55%,#1a4fd6_100%)] py-24">
+    <section id="stats" className="relative overflow-hidden bg-[linear-gradient(120deg,var(--color-primary-dark)_0%,var(--color-primary)_55%,#1a4fd6_100%)] py-32 lg:py-48">
       <div className="pointer-events-none absolute inset-0 opacity-50" aria-hidden>
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.12)_1.5px,transparent_1.5px)] bg-size-[26px_26px]" />
         <div className="absolute -top-40 -right-30 h-95 w-95 rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.35),transparent_70%)]" />

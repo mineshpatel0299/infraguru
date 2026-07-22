@@ -80,7 +80,7 @@ export default function Testimonials() {
   const current = TESTIMONIALS[active];
 
   return (
-    <section id="testimonials" className="relative overflow-hidden bg-bg-soft py-36">
+    <section id="testimonials" className="relative overflow-hidden bg-bg-soft py-40 lg:py-56">
       <div className="container mx-auto max-w-7xl px-8">
         <motion.div
           className="mb-16 text-center"
@@ -90,7 +90,7 @@ export default function Testimonials() {
           variants={fadeUp}
         >
           <span className="eyebrow justify-center">Case Files</span>
-          <h2 className="text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark">
+          <h2 className="text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark font-light tracking-tight">
             Every Deal, A Story Of <span className="text-gradient">Trust</span>
           </h2>
         </motion.div>
@@ -165,7 +165,7 @@ export default function Testimonials() {
             <button
               key={t.name}
               onClick={() => setActive(i)}
-              className={`rounded-lg border px-5 py-2.5 text-[0.72rem] font-bold tracking-[1.5px] uppercase transition-all duration-300 ${
+              className={`rounded-lg border px-5 py-2.5 text-[0.72rem] font-semibold tracking-[1.5px] uppercase transition-all duration-300 ${
                 i === active
                   ? 'border-primary/15 bg-white text-primary shadow-soft'
                   : 'border-transparent text-muted hover:text-primary'

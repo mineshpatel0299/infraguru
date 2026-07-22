@@ -150,8 +150,7 @@ export default function Footer() {
         <motion.div variants={fadeUp} className="col-span-2 lg:col-span-1">
           <h4 className="mb-6 text-[0.68rem] font-bold tracking-[0.25em] text-aurum-cream/30 uppercase">Contact</h4>
           <ul className="flex flex-col gap-3 text-[0.92rem] text-aurum-cream/55">
-            <li className="flex items-start gap-2.5">
-              <span className="mt-1 text-aurum-gold text-xs">&#9670;</span>
+            <li>
               <span>Tower B-3, Spaze Itech Park<br />Sector-49, Gurugram, Haryana</span>
             </li>
             <li>

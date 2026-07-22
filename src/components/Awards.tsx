@@ -46,7 +46,7 @@ const AWARDS = [
 
 export default function Awards() {
   return (
-    <section id="awards" className="relative bg-bg-soft py-24 lg:py-36 overflow-hidden">
+    <section id="awards" className="relative bg-bg-soft py-32 lg:py-48 overflow-hidden">
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         
         {/* Header */}
@@ -60,7 +60,7 @@ export default function Awards() {
           <motion.span variants={fadeUp} className="eyebrow mx-auto justify-center">
             Recognized Excellence
           </motion.span>
-          <motion.h2 variants={fadeUp} className="mt-4 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark">
+          <motion.h2 variants={fadeUp} className="mt-4 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark font-light tracking-tight">
             Awards & <span className="text-gradient italic font-light">Honors</span>
           </motion.h2>
           <motion.p variants={fadeUp} className="mt-6 text-[1.1rem] leading-[1.7] text-muted max-w-2xl mx-auto">
@@ -70,7 +70,7 @@ export default function Awards() {
 
         {/* Masonry Grid */}
         <motion.div 
-          className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6"
+          className="columns-1 sm:columns-2 lg:columns-3 gap-12 lg:gap-16 lg:gap-12 space-y-6"
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}

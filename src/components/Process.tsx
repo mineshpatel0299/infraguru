@@ -117,14 +117,14 @@ export default function Process() {
       <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
         <div className="container mx-auto mb-16 max-w-7xl px-8 text-center">
           <span className="eyebrow justify-center">How We Work</span>
-          <h2 className="text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark">
+          <h2 className="text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark font-light tracking-tight">
             A Process Built On <span className="text-gradient">Trust</span>
           </h2>
         </div>
 
         <div className="w-full overflow-hidden pl-8 lg:pl-20">
           <motion.div ref={containerRef} style={{ x }} className="w-max">
-            <div className="relative flex gap-14 sm:gap-16">
+            <div className="relative flex gap-20 sm:gap-32">
               <TrackLine progress={progress} />
               {STEPS.map((step, i) => (
                 <StepCard key={step.number} step={step} isActive={activeIndex === i} />

@@ -69,7 +69,7 @@ function DeedCard({ project, index }: { project: Project; index: number }) {
           <div className="absolute top-5 left-5 font-mono text-[0.68rem] tracking-[0.15em] text-white/70">
             {String(index + 1).padStart(2, '0')} / {project.code}
           </div>
-          <span className="absolute top-5 right-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-[0.68rem] font-bold tracking-wide text-white uppercase backdrop-blur-sm">
+          <span className="absolute top-5 right-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-[0.68rem] font-semibold tracking-wide text-white uppercase backdrop-blur-sm">
             {project.category}
           </span>
 
@@ -103,7 +103,7 @@ function DeedCard({ project, index }: { project: Project; index: number }) {
 
           <div className="relative flex items-center justify-between border-t border-hairline pt-5">
             <div>
-              <span className="block text-[0.65rem] font-bold tracking-[0.2em] text-muted/70 uppercase">
+              <span className="block text-[0.65rem] font-semibold tracking-[0.2em] text-muted/70 uppercase">
                 Certified Value
               </span>
               <span className="font-mono text-[1.1rem] font-semibold text-primary-dark">
@@ -145,7 +145,7 @@ function DeedCard({ project, index }: { project: Project; index: number }) {
 
 export default function Projects() {
   return (
-    <section id="projects" className="bg-bg-soft py-36">
+    <section id="projects" className="bg-bg-soft py-40 lg:py-56">
       <div className="container mx-auto max-w-7xl px-8">
         <motion.div
           className="mx-auto mb-8 max-w-160 text-center"
@@ -157,7 +157,7 @@ export default function Projects() {
           <motion.span className="eyebrow justify-center" variants={fadeUp}>
             Our Portfolio
           </motion.span>
-          <motion.h2 className="mb-5 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark" variants={fadeUp}>
+          <motion.h2 className="mb-5 text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark font-light tracking-tight" variants={fadeUp}>
             Destinations in the Making
           </motion.h2>
           <motion.p className="text-[1.1rem] leading-[1.7] text-muted" variants={fadeUp}>

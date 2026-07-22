@@ -80,9 +80,9 @@ export default function Footer() {
           {/* Subtle shimmer in corner */}
           <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-secondary/10 blur-[60px] pointer-events-none" />
 
-          <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 sm:gap-10">
+          <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-12 lg:gap-16 lg:gap-12 sm:gap-10">
             <div className="max-w-xl">
-              <span className="inline-flex items-center gap-3 text-[0.7rem] font-bold tracking-[0.25em] uppercase text-secondary mb-3 sm:mb-4">
+              <span className="inline-flex items-center gap-3 text-[0.7rem] font-semibold tracking-[0.25em] uppercase text-secondary mb-3 sm:mb-4">
                 <span className="w-6 h-px bg-secondary" />
                 Take The Next Step
               </span>
@@ -104,7 +104,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="shrink-0 rounded-full bg-secondary px-8 py-3.5 text-[0.8rem] font-bold tracking-[0.12em] text-primary-dark uppercase transition-all duration-300 hover:-translate-y-0.5 hover:bg-secondary-hover hover:shadow-[0_12px_30px_rgba(212,175,55,0.4)]"
+                className="shrink-0 rounded-full bg-secondary px-8 py-3.5 text-[0.8rem] font-semibold tracking-[0.12em] text-primary-dark uppercase transition-all duration-300 hover:-translate-y-0.5 hover:bg-secondary-hover hover:shadow-[0_12px_30px_rgba(212,175,55,0.4)]"
               >
                 Request Consultation
               </button>
@@ -120,7 +120,7 @@ export default function Footer() {
 
       {/* Main Footer Grid */}
       <motion.div
-        className="relative z-10 container mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 sm:py-16 grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-12 lg:grid-cols-[1.6fr_1fr_1fr_1fr]"
+        className="relative z-10 container mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 sm:py-24 grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-12 lg:grid-cols-[1.6fr_1fr_1fr_1fr]"
         variants={staggerContainer(0.1)}
         initial="hidden"
         whileInView="visible"
@@ -157,7 +157,7 @@ export default function Footer() {
         {/* Link Columns */}
         {LINK_COLUMNS.map((col) => (
           <motion.div key={col.title} variants={fadeUp}>
-            <h4 className="mb-3 sm:mb-6 text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.25em] text-white/30 uppercase">
+            <h4 className="mb-3 sm:mb-6 text-[0.65rem] sm:text-[0.7rem] font-semibold tracking-[0.25em] text-white/30 uppercase">
               {col.title}
             </h4>
             <ul className="flex flex-col gap-2 sm:gap-3">
@@ -178,12 +178,11 @@ export default function Footer() {
 
         {/* Contact Column */}
         <motion.div variants={fadeUp} className="col-span-2 lg:col-span-1">
-          <h4 className="mb-3 sm:mb-6 text-[0.65rem] sm:text-[0.7rem] font-bold tracking-[0.25em] text-white/30 uppercase">
+          <h4 className="mb-3 sm:mb-6 text-[0.65rem] sm:text-[0.7rem] font-semibold tracking-[0.25em] text-white/30 uppercase">
             Contact
           </h4>
           <ul className="flex flex-col gap-2 sm:gap-3 text-[0.85rem] sm:text-[0.95rem] text-white/55">
-            <li className="flex items-start gap-2.5">
-              <span className="mt-1 text-secondary text-xs">◆</span>
+            <li>
               <span>Tower B-3, Spaze Itech Park<br />Sector-49, Gurugram, Haryana</span>
             </li>
             <li>
@@ -211,7 +210,7 @@ export default function Footer() {
           <span className="text-[0.75rem] sm:text-[0.8rem] text-white/30">
             © {new Date().getFullYear()} Infraguru. All rights reserved.
           </span>
-          <div className="flex items-center gap-5 sm:gap-8">
+          <div className="flex items-center gap-5 sm:gap-12 lg:gap-16">
             <a href="#" className="text-[0.75rem] sm:text-[0.8rem] text-white/30 hover:text-secondary transition-colors duration-200">
               Privacy Policy
             </a>

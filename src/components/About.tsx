@@ -57,7 +57,7 @@ function FoilHeadline() {
     <h2
       ref={ref}
       onMouseMove={handleMove}
-      className="relative select-none text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark"
+      className="relative select-none text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark font-light tracking-tight"
     >
       {text}
       <motion.span
@@ -151,7 +151,7 @@ export default function About() {
         <div className="absolute -top-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-[radial-gradient(circle,var(--color-bg-soft)_0%,transparent_70%)] opacity-80" />
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-7xl px-8 py-28 lg:py-36">
+      <div className="relative z-10 container mx-auto max-w-7xl px-8 py-28 lg:py-40 lg:py-56">
         {/* ── Section header ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -226,11 +226,11 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={viewportOnce}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="mt-10 flex flex-wrap items-center gap-6"
+              className="mt-10 flex flex-wrap items-center gap-12 lg:gap-16 lg:gap-12"
             >
               <a
                 href="#projects"
-                className="group relative inline-flex items-center gap-3 px-10 py-4 bg-primary text-white text-[0.8rem] font-bold tracking-[0.15em] uppercase rounded-full transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-[0_16px_40px_rgba(3,46,151,0.3)]"
+                className="group relative inline-flex items-center gap-3 px-10 py-4 bg-primary text-white text-[0.8rem] font-semibold tracking-[0.15em] uppercase rounded-full transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-[0_16px_40px_rgba(3,46,151,0.3)]"
               >
                 Explore Portfolio
                 <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>

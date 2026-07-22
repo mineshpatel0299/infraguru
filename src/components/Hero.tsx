@@ -123,7 +123,7 @@ export default function Hero() {
         {/* Floating years badge */}
     
 
-        <div className="container relative z-10 mx-auto max-w-7xl px-5 pb-10 sm:px-8 sm:pb-20 lg:pb-24">
+        <div className="container relative z-10 mx-auto max-w-7xl px-5 pb-6 sm:px-8 sm:pb-12 lg:pb-16">
           <motion.span
             className="mb-3 inline-flex items-center gap-2 text-[0.65rem] font-semibold tracking-[2px] text-secondary-light uppercase before:inline-block before:h-0.5 before:w-5 before:bg-secondary sm:mb-6 sm:gap-2.5 sm:text-[0.8rem] sm:tracking-[3px] sm:before:w-7"
             initial={{ opacity: 0, x: -20 }}
@@ -133,12 +133,12 @@ export default function Hero() {
             Infraguru — A Tradition of Trust
           </motion.span>
 
-          <h1 className="mb-5 max-w-4xl text-[clamp(2.1rem,7vw+0.5rem,5.6rem)] font-medium tracking-[-1px] text-white leading-[1.15] sm:mb-8 sm:tracking-[-1.5px] sm:leading-[1.1]">
-            <BlurWordReveal text={HEADLINE_LINE_1} delay={0.1} className="block pb-1" />
+          <h1 className="mb-5 max-w-none text-[clamp(1.6rem,5vw,5.6rem)] font-light tracking-tight text-white leading-[1.15] sm:mb-8 sm:tracking-[-1.5px] sm:leading-[1.1]">
+            <BlurWordReveal text={HEADLINE_LINE_1} delay={0.1} className="block pb-1 flex-nowrap whitespace-nowrap" />
             <BlurWordReveal
               text={HEADLINE_LINE_2}
               delay={0.4}
-              className="bg-[linear-gradient(120deg,#ffffff_0%,var(--color-secondary-light)_50%,var(--color-secondary)_100%)] bg-clip-text text-transparent drop-shadow-none"
+              className="flex-nowrap whitespace-nowrap bg-[linear-gradient(120deg,#ffffff_0%,var(--color-secondary-light)_50%,var(--color-secondary)_100%)] bg-clip-text text-transparent drop-shadow-none"
             />
           </h1>
 
