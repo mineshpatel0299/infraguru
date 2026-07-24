@@ -1,26 +1,61 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const NAV_LINKS = ["About", "Services", "Portfolio", "Process"];
 
-export default function SampleNavbar({ homeHref = "/sample" }: { homeHref?: string }) {
+export default function SampleNavbar({
+  homeHref = "/sample",
+  transparent = false,
+}: {
+  homeHref?: string;
+  /** Overlays a full-bleed hero: fixed position, transparent until scrolled, light text. */
+  transparent?: boolean;
+}) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!transparent) return;
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [transparent]);
+
+  const overlay = transparent && !scrolled;
 
   return (
-    <nav className="sticky top-0 z-50 mx-auto flex max-w-7xl items-center justify-between rounded-full bg-white/85 px-3 py-3 backdrop-blur-md sm:px-4 sm:py-4">
+    <motion.nav
+      initial={transparent ? { opacity: 0, y: -16 } : false}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: transparent ? 1.8 : 0, ease: [0.16, 1, 0.3, 1] }}
+      className={`z-50 flex w-full items-center justify-between px-4 py-3 transition-colors duration-500 sm:px-8 sm:py-4 lg:px-14 ${
+        transparent ? "fixed top-0" : "sticky top-0"
+      } ${overlay ? "bg-transparent" : "bg-white/90 backdrop-blur-md"}`}
+    >
       <Link href="/sample" onClick={() => setOpen(false)}>
-        <img src="/logo.png" alt="Brand Logo" className="h-9 w-auto object-contain sm:h-12" />
+        <img
+          src="/logo.png"
+          alt="Brand Logo"
+          className={`h-9 w-auto object-contain sm:h-12 ${
+            overlay ? "brightness-0 invert drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]" : ""
+          }`}
+        />
       </Link>
 
-      <div className="hidden items-center gap-10 text-[0.8rem] font-light tracking-wide text-aurum-ink/70 md:flex">
+      <div
+        className={`hidden items-center gap-10 text-[0.8rem] font-light tracking-wide md:flex ${
+          overlay ? "text-aurum-cream/90" : "text-aurum-ink/70"
+        }`}
+      >
         {NAV_LINKS.map((link) => (
           <Link
             key={link}
             href={`${homeHref}#${link.toLowerCase()}`}
-            className="transition-colors hover:text-aurum-gold-dark"
+            className={`transition-colors ${overlay ? "hover:text-aurum-gold-light" : "hover:text-aurum-gold-dark"}`}
           >
             {link}
           </Link>
@@ -40,7 +75,9 @@ export default function SampleNavbar({ homeHref = "/sample" }: { homeHref?: stri
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-aurum-hairline text-aurum-ink md:hidden"
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border md:hidden ${
+            overlay ? "border-aurum-cream/40 text-aurum-cream" : "border-aurum-hairline text-aurum-ink"
+          }`}
         >
           <span className="relative flex h-3 w-4 flex-col justify-between">
             <motion.span
@@ -112,6 +149,6 @@ export default function SampleNavbar({ homeHref = "/sample" }: { homeHref?: stri
           </>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }
