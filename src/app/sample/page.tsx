@@ -581,26 +581,6 @@ export default function SamplePage() {
         </motion.div>
         <div className="absolute inset-0 z-1 bg-linear-to-t from-black/60 via-black/10 to-black/30" />
 
-        {/* Intro flourish: brand mark + watermark word flank the square
-            before it expands, then fade out as the final layout fades in. */}
-        <motion.div
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
-          transition={{ duration: 0.5, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
-          className="pointer-events-none absolute inset-0 z-10 hidden items-center justify-center sm:flex"
-        >
-          <div className="relative h-[32vh] w-[32vh]">
-            <span className="absolute right-[90%] bottom-[56%] whitespace-nowrap text-right font-aurum-heading text-[clamp(2.2rem,5.5vw,4.5rem)] leading-[0.95] font-light text-aurum-cream">
-              Infraguru
-              <br />
-              Realty
-            </span>
-            <span className="absolute top-[58%] left-[88%] whitespace-nowrap font-aurum-heading text-[clamp(2.2rem,5.5vw,4.5rem)] leading-none font-light text-aurum-cream/90">
-              Legacy
-            </span>
-          </div>
-        </motion.div>
-
         {/* Top row: brand badge (left) + quick stats (right) — sits below the fixed, transparent nav */}
         {/* <div className="absolute inset-x-0 top-20 z-10 flex items-start justify-between gap-4 px-6 sm:top-24 sm:px-10 lg:px-14">
           <motion.div
@@ -632,7 +612,7 @@ export default function SamplePage() {
         </div> */}
 
         {/* Bottom content */}
-        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-row items-end justify-between gap-4 px-6 pb-24 sm:gap-8 sm:px-10 sm:pb-28 lg:px-14 lg:pb-32">
+        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-row items-end justify-between gap-4 px-6 pb-8 sm:gap-8 sm:px-10 sm:pb-10 lg:px-14 lg:pb-12">
           {/* Left: heading, team, blurb */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
