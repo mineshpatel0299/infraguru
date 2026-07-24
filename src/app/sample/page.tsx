@@ -612,13 +612,13 @@ export default function SamplePage() {
         </div> */}
 
         {/* Bottom content */}
-        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-row items-end justify-between gap-4 px-6 pb-8 sm:gap-8 sm:px-10 sm:pb-10 lg:px-14 lg:pb-12">
+        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-start justify-start gap-4 px-6 pb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-8 sm:px-10 sm:pb-10 lg:px-14 lg:pb-12">
           {/* Left: heading, team, blurb */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 1.85, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-[65%] sm:max-w-md lg:max-w-xl"
+            className="max-w-full sm:max-w-md lg:max-w-xl"
           >
             <motion.span
               initial={{ opacity: 0 }}
@@ -694,7 +694,7 @@ export default function SamplePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 2.05, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-end gap-4"
+            className="flex w-full flex-row items-center justify-between gap-3 sm:w-auto sm:flex-col sm:items-end sm:justify-normal sm:gap-4"
           >
             <motion.a
               href="#contact"
@@ -759,7 +759,7 @@ export default function SamplePage() {
           whileHover={{ y: -6 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="relative overflow-hidden rounded-2xl bg-aurum-paper px-8 py-10"
+          className="relative overflow-hidden rounded-2xl bg-aurum-paper px-6 py-8 sm:px-8 sm:py-10"
         >
           <span className="aurum-eyebrow absolute top-6 right-6 rounded-full border border-aurum-hairline px-3 py-1 text-[0.6rem] text-aurum-muted">
             Trusted
@@ -778,7 +778,7 @@ export default function SamplePage() {
           whileHover={{ y: -6 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="rounded-2xl bg-aurum-paper px-8 py-10"
+          className="rounded-2xl bg-aurum-paper px-6 py-8 sm:px-8 sm:py-10"
         >
           <div className="aurum-num font-light text-5xl text-aurum-ink sm:text-6xl">
             <AnimatedCounter value={350} suffix="+" />
@@ -794,7 +794,7 @@ export default function SamplePage() {
           whileHover={{ y: -6 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="rounded-2xl bg-linear-to-br from-aurum-ink via-aurum-ink-soft to-aurum-ink px-8 py-10"
+          className="rounded-2xl bg-linear-to-br from-aurum-ink via-aurum-ink-soft to-aurum-ink px-6 py-8 sm:px-8 sm:py-10"
         >
           <div className="aurum-num font-light text-5xl text-aurum-gold sm:text-6xl">
             <AnimatedCounter value={15} suffix="+" />
@@ -814,14 +814,7 @@ export default function SamplePage() {
         >
           {/* Giant drifting numeral watermark, clipped to its own layer so it
               never spills past the section's rounded corners */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px] sm:rounded-[36px]">
-            <motion.span
-              style={{ y: aboutWatermarkY }}
-              className="aurum-num absolute -top-10 right-0 text-[42vw] leading-none font-light text-aurum-ink/5 select-none sm:-top-16 sm:text-[24vw]"
-            >
-              15
-            </motion.span>
-          </div>
+         
 
           <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:items-end md:gap-10">
             {/* Left: image card with white center-split curtain reveal */}
