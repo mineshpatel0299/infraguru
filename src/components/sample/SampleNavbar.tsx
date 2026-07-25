@@ -32,6 +32,7 @@ export default function SampleNavbar({
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(!transparent);
 
+  const [scrolled, setScrolled] = useState(false);
   const [isLightSection, setIsLightSection] = useState(false);
 
   useEffect(() => {
@@ -43,6 +44,8 @@ export default function SampleNavbar({
 
     const evaluate = () => {
       const heroExpanded = heroProgress.get() >= 0.95;
+      const isScrolled = window.scrollY > 50;
+      setScrolled(isScrolled);
 
       // Check if inside portfolio section
       const portfolioEl = document.getElementById("portfolio");
@@ -137,34 +140,44 @@ export default function SampleNavbar({
         animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : -16 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ pointerEvents: visible ? "auto" : "none" }}
-        className="fixed top-0 inset-x-0 z-50 flex w-full flex-col items-center justify-center py-3 sm:py-4 border-b border-white/20 bg-black/25 backdrop-blur-xl transition-all duration-500 shadow-2xl"
+        className={`fixed top-0 inset-x-0 z-50 flex w-full flex-col items-center justify-center py-3 sm:py-4 border-b transition-all duration-500 shadow-2xl backdrop-blur-xl ${
+          isLightSection && scrolled
+            ? "bg-white/80 border-black/10 text-aurum-ink"
+            : "bg-black/25 border-white/20 text-white"
+        }`}
       >
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className="absolute top-4 right-6 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 text-white bg-black/30 backdrop-blur-md md:hidden"
+          className={`absolute top-4 right-6 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border backdrop-blur-md md:hidden ${
+            isLightSection && scrolled ? "border-black/20 text-aurum-ink bg-white/50" : "border-white/30 text-white bg-black/30"
+          }`}
         >
           <BurgerLines open={open} />
         </button>
 
-        {/* Centered Brand Logo */}
+        {/* Centered Brand Logo — logo.png from public folder */}
         <Link href="/sample" onClick={() => setOpen(false)} className="mb-2 sm:mb-3">
           <img
             src="/logo.png"
-            alt="Brand Logo"
-            className="h-10 sm:h-12 w-auto object-contain brightness-0 invert drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
+            alt="Infraguru Logo"
+            className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
           />
         </Link>
 
         {/* Centered Nav Links Row */}
-        <div className="hidden md:flex items-center gap-10 lg:gap-14 text-white">
+        <div className="hidden md:flex items-center gap-10 lg:gap-14">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
               href={link.hash ? `${homeHref}#${link.hash}` : homeHref}
-              className="text-[0.75rem] sm:text-[0.8rem] font-medium tracking-[0.25em] text-white/90 uppercase transition-colors hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+              className={`text-[0.75rem] sm:text-[0.8rem] font-medium tracking-[0.25em] uppercase transition-colors ${
+                isLightSection && scrolled
+                  ? "text-aurum-ink/90 hover:text-black"
+                  : "text-white/90 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+              }`}
             >
               {link.label}
             </Link>
