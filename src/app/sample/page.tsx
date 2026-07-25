@@ -719,7 +719,7 @@ export default function SamplePage() {
             <div className="flex flex-col h-full min-h-[440px] sm:min-h-[520px]">
               <div className="relative h-full w-full overflow-hidden">
                 <motion.img
-                  src="/premium-hero-monolith.png"
+                  src="/about.jpg"
                   alt="Signature interior with skyline view"
                   className="absolute inset-0 h-full w-full object-cover"
                   style={{ scale: aboutImageScale }}
