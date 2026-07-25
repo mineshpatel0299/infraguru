@@ -34,10 +34,10 @@ const cardVariants = {
   }),
 };
 
-// Hidden for now — bring back once it filters something real.
-const SHOW_LOCATION_CHIP = false;
-
-const HERO_HEADING_LINES = ["Your Trusted Partner In", "Real Estate & Investment"];
+// How far (in viewport heights) the hero's box-to-full-bleed expansion is
+// scrubbed across. The sticky frame itself is always 100svh; this is the
+// *extra* scroll distance beyond that before the section releases.
+const HERO_SCROLL_VH = 180;
 
 const PORTFOLIO_ITEMS = [
   { id: "buy", title: "Buy", image: "/hero-poster.jpg" },
@@ -72,6 +72,24 @@ const PORTFOLIO_CARDS = PROJECTS.map((project) => ({
     value: h.value,
   })),
 }));
+
+const VALUE_PROPS = [
+  {
+    icon: "shield",
+    title: "RERA Verified",
+    description: "Every listing is legally vetted and RERA-certified, so you can commit with total confidence.",
+  },
+  {
+    icon: "headphones",
+    title: "Dedicated Advisors",
+    description: "A personal relationship manager guides you from the first shortlist to the final signature.",
+  },
+  {
+    icon: "route",
+    title: "End-to-End Support",
+    description: "From site visits to registration, we stay by your side through every step of the journey.",
+  },
+] as const;
 
 const ABOUT_WORDS =
   "RERA-backed and transparent, Infraguru handles every deal like a signature piece — deliberate, considered, and built to outlast trends, turning fifteen years of expertise into a legacy every client can stand on."
@@ -108,42 +126,6 @@ function ArrowUpRightIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
       <path d="M7 17L17 7M9 7h8v8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PinIcon({ className = "h-4 w-4" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className}>
-      <path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11Z" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="12" cy="10" r="2.2" />
-    </svg>
-  );
-}
-
-function ChevronDownIcon({ className = "h-3.5 w-3.5" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-      <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function BookmarkIcon({ className = "h-4 w-4" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className}>
-      <path d="M7 4.5h10a1 1 0 0 1 1 1V20l-6-4-6 4V5.5a1 1 0 0 1 1-1Z" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function ShareIcon({ className = "h-4 w-4" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className}>
-      <circle cx="18" cy="5.5" r="2.2" />
-      <circle cx="6" cy="12" r="2.2" />
-      <circle cx="18" cy="18.5" r="2.2" />
-      <path d="m8 10.8 8-4.2M8 13.2l8 4.2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -214,6 +196,25 @@ function RefreshIcon({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
+function ShieldCheckIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className}>
+      <path d="M12 3.5 5 6v5.5c0 4.6 3 7.9 7 9 4-1.1 7-4.4 7-9V6l-7-2.5Z" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="m9 12 2 2 4-4.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function RouteIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className}>
+      <circle cx="5" cy="6" r="2" />
+      <path d="M5 8v3a4 4 0 0 0 4 4h6a4 4 0 0 1 4 4v1" strokeLinecap="round" />
+      <circle cx="19" cy="20" r="2" />
+    </svg>
+  );
+}
+
 const FEATURE_ICONS: Record<string, (props: { className?: string }) => React.JSX.Element> = {
   sliders: SlidersIcon,
   phone: PhoneIcon,
@@ -221,6 +222,12 @@ const FEATURE_ICONS: Record<string, (props: { className?: string }) => React.JSX
   monitor: MonitorIcon,
   radar: RadarIcon,
   refresh: RefreshIcon,
+};
+
+const VALUE_PROP_ICONS: Record<string, (props: { className?: string }) => React.JSX.Element> = {
+  shield: ShieldCheckIcon,
+  headphones: HeadsetIcon,
+  route: RouteIcon,
 };
 
 // A single word that sharpens into focus as `progress` sweeps through `range` —
@@ -433,6 +440,25 @@ function PortfolioCard({
 }
 
 export default function SamplePage() {
+  // Hero: pinned while the page scrolls past, scrubbing the framed image open
+  // to full-bleed. Text stays put (same fixed position throughout) — only
+  // the box around it grows, and the copy shifts from ink to cream as the
+  // image spreads underneath it.
+  const heroWrapperRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroWrapperRef,
+    offset: ["start start", "end end"],
+  });
+  const heroInsetY = useTransform(heroProgress, [0, 1], ["19vh", "0vh"]);
+  const heroInsetX = useTransform(heroProgress, [0, 1], ["21vw", "0vw"]);
+  // Switches late on purpose: the text sits at a fixed position while the
+  // box grows underneath it, so flipping to cream has to wait until the
+  // box's edge has actually swept past the text — otherwise there's a
+  // window where cream text is still sitting over the plain white page,
+  // and reads as invisible. 0.58 is where insetX (21vw shrinking to 0)
+  // drops below the text's 8% inset, i.e. where the image edge reaches it.
+  const heroTextColor = useTransform(heroProgress, [0.58, 0.68], ["#0e0d09", "#faf9f7"]);
+
   const aboutRef = useRef<HTMLElement>(null);
 
   // About: scroll-scrubbed reveal, tracked across the full pinned duration
@@ -552,275 +578,111 @@ export default function SamplePage() {
 
   return (
     <main className="theme-aurum theme-aurum-blue min-h-screen bg-white">
-      <SampleNavbar transparent />
+      <SampleNavbar transparent heroProgress={heroProgress} />
 
-      {/* Hero — lands as a small square on black (nav included), then expands
-          to a full-bleed, edge-to-edge frame with the nav floating on top. */}
-      <div className="relative h-svh min-h-130 w-full overflow-hidden bg-black">
-        {/* Video reveal: starts as a small centered square and expands to
-            fill the frame. The growing box itself is clipped (not just the
-            video inside it), so the crop resolves smoothly instead of a
-            rectangle visibly stretching into shape. */}
-        <motion.div
-          initial={{ width: "32vh", height: "32vh", borderRadius: "32px" }}
-          animate={{ width: "100%", height: "100%", borderRadius: "0px" }}
-          transition={{ duration: 1.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden"
-        >
-          <motion.video
-            src="/h.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover"
-            initial={{ scale: 1.3 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          />
-        </motion.div>
-        <div className="absolute inset-0 z-1 bg-linear-to-t from-black/60 via-black/10 to-black/30" />
-
-        {/* Top row: brand badge (left) + quick stats (right) — sits below the fixed, transparent nav */}
-        {/* <div className="absolute inset-x-0 top-20 z-10 flex items-start justify-between gap-4 px-6 sm:top-24 sm:px-10 lg:px-14">
+      {/* Hero — lands as a small framed image on white, text overlapping its
+          edges. Scrolling scrubs the frame open to full-bleed; the copy
+          never moves, it just shifts from ink to cream as the image spreads
+          underneath it. */}
+      <div ref={heroWrapperRef} className="relative w-full" style={{ height: `calc(${HERO_SCROLL_VH}vh + 100svh)` }}>
+        <div className="sticky top-0 h-svh min-h-130 w-full overflow-hidden bg-white">
           <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 2, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 rounded-full bg-aurum-cream/90 px-4 py-2 text-[0.65rem] font-light tracking-widest text-aurum-ink uppercase backdrop-blur-md"
+            style={{
+              top: heroInsetY,
+              bottom: heroInsetY,
+              left: heroInsetX,
+              right: heroInsetX,
+            }}
+            className="absolute overflow-hidden"
           >
-            <motion.span
-              animate={{ scale: [1, 1.4, 1], opacity: [1, 0.4, 1] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="h-1.5 w-1.5 rounded-full bg-aurum-gold"
-            />
-            RERA Certified &middot; Est. 2011
+            <img src="/fhero.png" alt="Exceptional living begins" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/10 to-black/20" />
+          </motion.div>
+
+          {/* Copy: fixed within the sticky frame, unaffected by the box's own
+              growth — only its color is scroll-driven. */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            style={{ color: heroTextColor }}
+            className="pointer-events-none absolute left-[8%] top-[27%] max-w-[70%] font-aurum-heading text-[clamp(1.9rem,6vw,4.4rem)] leading-[1.05] font-light drop-shadow-[0_4px_18px_rgba(0,0,0,0.35)] sm:max-w-[48%]"
+          >
+            <span className="block">Exceptional</span>
+            <span className="block">LIVING</span>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: -16 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 2.1, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden items-center gap-4 rounded-full bg-white/10 px-5 py-2.5 text-[0.7rem] font-light tracking-wide text-aurum-cream backdrop-blur-md sm:flex"
+            transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ color: heroTextColor }}
+            className="pointer-events-none absolute right-[8%] top-[64%] font-aurum-heading text-[clamp(1.9rem,6vw,4.4rem)] leading-[1.05] font-light drop-shadow-[0_4px_18px_rgba(0,0,0,0.35)]"
           >
-            <span>15+ Years</span>
-            <span className="h-3 w-px bg-aurum-cream/30" />
-            <span>500+ Clients</span>
-            <span className="h-3 w-px bg-aurum-cream/30" />
-            <span>350+ Properties</span>
-          </motion.div>
-        </div> */}
-
-        {/* Bottom content */}
-        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-start justify-start gap-4 px-6 pb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-8 sm:px-10 sm:pb-10 lg:px-14 lg:pb-12">
-          {/* Left: heading, team, blurb */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 1.85, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-full sm:max-w-md lg:max-w-xl"
-          >
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 2 }}
-              className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-gold-light uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
-            >
-              Infraguru
-            </motion.span>
-
-            <h1 className="mt-3 text-[clamp(1.6rem,4.2vw,3rem)] font-light text-aurum-cream drop-shadow-[0_4px_20px_rgba(0,0,0,0.55)]">
-              {HERO_HEADING_LINES.map((line, li) => (
-                <span key={line} className="block overflow-hidden py-1">
-                  {line.split(" ").map((word, wi) => (
-                    <motion.span
-                      key={word}
-                      initial={{ opacity: 0, y: "100%", filter: "blur(6px)" }}
-                      animate={{ opacity: 1, y: "0%", filter: "blur(0px)" }}
-                      transition={{
-                        duration: 0.7,
-                        delay: 2 + (li * HERO_HEADING_LINES[0].split(" ").length + wi) * 0.07,
-                        ease: [0.16, 1, 0.3, 1],
-                      }}
-                      className="mr-[0.28em] inline-block"
-                    >
-                      {word}
-                    </motion.span>
-                  ))}
-                </span>
-              ))}
-            </h1>
-
-            {/* Team avatar stack — each face slides in from the left, one after another */}
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex -space-x-3">
-                {["advisor-1", "advisor-2", "advisor-3", "advisor-4"].map((seed, i) => (
-                  <motion.img
-                    key={seed}
-                    src={`https://picsum.photos/seed/infraguru-${seed}/64/64`}
-                    alt=""
-                    initial={{ opacity: 0, x: -24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 2.25 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                    className="h-9 w-9 rounded-full border-2 border-aurum-ink object-cover"
-                  />
-                ))}
-                <motion.span
-                  initial={{ opacity: 0, x: -24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 2.25 + 4 * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-aurum-ink bg-aurum-gold text-[0.6rem] font-light text-aurum-ink"
-                >
-                  +12
-                </motion.span>
-              </div>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 2.25 + 5 * 0.12 }}
-                className="text-[0.7rem] font-light tracking-wide text-aurum-cream/70 uppercase"
-              >
-                Meet Our Team
-              </motion.span>
-            </div>
-
-            <p className="mt-5 max-w-md text-[0.8rem] leading-relaxed text-aurum-cream/60">
-              From first enquiry to keys-in-hand, our advisors guide every acquisition with RERA-backed transparency.
-            </p>
-          </motion.div>
-
-          {/* Right: CTA, watermark word, location */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 2.05, ease: [0.16, 1, 0.3, 1] }}
-            className="flex w-full flex-row items-center justify-between gap-3 sm:w-auto sm:flex-col sm:items-end sm:justify-normal sm:gap-4"
-          >
-            <motion.a
-              href="#contact"
-              className="aurum-btn-gold relative overflow-hidden rounded-full px-7! py-3! text-[0.65rem]!"
-            >
-              <span className="relative z-10">Book a Consultation</span>
-
-              {/* Glass/semi-transparent center-split curtain reveal overlays */}
-              <motion.div
-                initial={{ x: "0%" }}
-                animate={{ x: "-100%" }}
-                transition={{ duration: 1.8, delay: 1.5, ease: [0.25, 1, 0.5, 1] }}
-                className="absolute top-0 bottom-0 left-0 w-1/2 z-20 bg-aurum-gold/90 backdrop-blur-md"
-              />
-              <motion.div
-                initial={{ x: "0%" }}
-                animate={{ x: "100%" }}
-                transition={{ duration: 1.8, delay: 1.5, ease: [0.25, 1, 0.5, 1] }}
-                className="absolute top-0 bottom-0 right-0 w-1/2 z-20 bg-aurum-gold/90 backdrop-blur-md"
-              />
-            </motion.a>
-
-            {/* <span className="font-aurum-heading text-[clamp(2rem,6vw,4rem)] leading-none font-light text-aurum-cream/90 drop-shadow-[0_4px_20px_rgba(0,0,0,0.55)]">
-              Legacy
-            </span> */}
-
-            <div className="flex items-center gap-2">
-              {SHOW_LOCATION_CHIP && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-2 text-[0.7rem] font-light text-aurum-cream backdrop-blur-md">
-                  <PinIcon className="h-3.5 w-3.5 text-aurum-gold-light" />
-                  Bengaluru, India
-                  <ChevronDownIcon className="h-3 w-3 text-aurum-cream/60" />
-                </span>
-              )}
-              <button
-                type="button"
-                aria-label="Save"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-aurum-cream backdrop-blur-md transition-colors hover:bg-white/20"
-              >
-                <BookmarkIcon className="h-3.5 w-3.5" />
-              </button>
-              <button
-                type="button"
-                aria-label="Share"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-aurum-cream backdrop-blur-md transition-colors hover:bg-white/20"
-              >
-                <ShareIcon className="h-3.5 w-3.5" />
-              </button>
-            </div>
+            Begins.
           </motion.div>
         </div>
       </div>
 
       <div className="p-3 sm:p-4 lg:p-5">
-      {/* Stat strip */}
-      <div className="mx-auto mt-3 grid max-w-7xl grid-cols-1 gap-3 sm:mt-4 sm:grid-cols-3">
+      {/* Value props: what searching with Infraguru actually gets you */}
+      <div className="mx-auto mt-3 max-w-7xl sm:mt-4">
         <motion.div
-          custom={0}
-          variants={cardVariants}
-          initial="hidden"
-          whileInView="visible"
-          whileHover={{ y: -6 }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="relative overflow-hidden rounded-2xl bg-aurum-paper px-6 py-8 sm:px-8 sm:py-10"
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto max-w-3xl text-center"
         >
-          <span className="aurum-eyebrow absolute top-6 right-6 rounded-full border border-aurum-hairline px-3 py-1 text-[0.6rem] text-aurum-muted">
-            Trusted
-          </span>
-          <div className="aurum-num font-light text-5xl text-aurum-ink sm:text-6xl">
-            <AnimatedCounter value={500} suffix="+" />
-          </div>
-          <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Satisfied clients &amp; investors</p>
+          <h2 className="text-[clamp(1.15rem,2.4vw,1.75rem)] font-semibold whitespace-normal text-aurum-ink sm:whitespace-nowrap">
+            Your search for the perfect home ends here.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-[0.9rem] leading-relaxed text-aurum-muted">
+            Discover thoughtfully curated properties that match your lifestyle, aspirations, and investment goals.
+          </p>
         </motion.div>
 
-        <motion.div
-          custom={1}
-          variants={cardVariants}
-          initial="hidden"
-          whileInView="visible"
-          whileHover={{ y: -6 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="rounded-2xl bg-aurum-paper px-6 py-8 sm:px-8 sm:py-10"
-        >
-          <div className="aurum-num font-light text-5xl text-aurum-ink sm:text-6xl">
-            <AnimatedCounter value={350} suffix="+" />
-          </div>
-          <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-muted uppercase">Properties sold to date</p>
-        </motion.div>
-
-        <motion.div
-          custom={2}
-          variants={cardVariants}
-          initial="hidden"
-          whileInView="visible"
-          whileHover={{ y: -6 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="rounded-2xl bg-linear-to-br from-aurum-ink via-aurum-ink-soft to-aurum-ink px-6 py-8 sm:px-8 sm:py-10"
-        >
-          <div className="aurum-num font-light text-5xl text-aurum-gold sm:text-6xl">
-            <AnimatedCounter value={15} suffix="+" />
-          </div>
-          <p className="mt-2 text-[0.75rem] tracking-wide text-aurum-cream/50 uppercase">Years building legacies</p>
-        </motion.div>
+        <div className="mt-10 grid grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-3">
+          {VALUE_PROPS.map((prop, i) => {
+            const Icon = VALUE_PROP_ICONS[prop.icon];
+            return (
+              <motion.div
+                key={prop.title}
+                custom={i}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                whileHover={{ y: -6 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="rounded-2xl bg-aurum-paper px-6 py-8 sm:px-8 sm:py-10"
+              >
+                <Icon className="h-7 w-7 text-aurum-gold-dark" />
+                <h3 className="mt-5 font-aurum-heading text-lg font-light text-aurum-ink">{prop.title}</h3>
+                <p className="mt-2 text-[0.8rem] leading-relaxed text-aurum-muted">{prop.description}</p>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
 
       {/* About: pinned while the page scrolls past, its content scrubbing into
           focus as you move through — a single tilting image instead of a grid
           of photos, wrapped in a continuously orbiting seal. */}
-      <div ref={aboutWrapperRef} className="relative mt-3 h-[150vh] sm:mt-4 sm:h-[220vh]">
+      <div ref={aboutWrapperRef} className="relative mt-12 h-[150vh] sm:mt-16 sm:h-[200vh]">
         <section
           id="about"
           ref={aboutRef}
-          className="sticky top-0 mx-auto max-w-7xl rounded-[28px] bg-aurum-cream px-6 py-14 sm:rounded-[36px] sm:px-10 sm:py-20 lg:px-14"
+          className="sticky top-24 w-full px-4 sm:px-8 py-6 sm:py-10 flex flex-col justify-center"
         >
           {/* Giant drifting numeral watermark, clipped to its own layer so it
               never spills past the section's rounded corners */}
          
 
-          <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:items-end md:gap-10">
+          <div className="relative grid grid-cols-1 gap-6 md:grid-cols-2 md:items-stretch md:gap-8">
             {/* Left: image card with white center-split curtain reveal */}
-            <div className="flex flex-col">
-              <span className="aurum-eyebrow mb-6">Modern Architecture</span>
-              <div className="relative aspect-[9/10] w-full overflow-hidden rounded-[2rem]">
+            <div className="flex flex-col h-full min-h-[440px] sm:min-h-[520px]">
+              <div className="relative h-full w-full overflow-hidden">
                 <motion.img
                   src="/premium-hero-monolith.png"
                   alt="Signature interior with skyline view"
@@ -846,94 +708,52 @@ export default function SamplePage() {
               </div>
             </div>
 
-            {/* Right: Same size matching card with identical white center-split curtain animation */}
-            <div className="flex flex-col">
-              <div className="relative aspect-[9/10] w-full rounded-[2rem] overflow-hidden p-6 sm:p-8 md:p-10 flex flex-col justify-center gap-7 sm:gap-8">
-                {/* Blurred background image */}
-                <img
-                  src="/hero-poster.jpg"
-                  alt="Background preview"
-                  className="absolute inset-0 h-full w-full object-cover blur-xl scale-110 opacity-40"
-                />
-                {/* Light semi-transparent overlay to ensure text contrast */}
-                <div className="absolute inset-0 bg-aurum-cream/80 backdrop-blur-md" />
+            {/* Right: 3 horizontal cards in 3 rows */}
+            <div className="flex flex-col gap-4 justify-between h-full">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="relative flex items-center gap-6 bg-[#edf4fa] p-7 sm:p-9 flex-1"
+              >
+                <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
+                  <AnimatedCounter value={15} />
+                </span>
+                <p className="text-[0.85rem] sm:text-[0.9rem] text-aurum-ink font-medium max-w-[19rem] leading-relaxed">
+                  Luxurious properties available in the world's top locations
+                </p>
+              </motion.div>
 
-                {/* Content layers above background */}
-                <div className="relative z-10 flex flex-col justify-center gap-6">
-                  <motion.div 
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
-                    className="flex items-center gap-6"
-                  >
-                    <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
-                      <AnimatedCounter value={15} />
-                    </span>
-                    <p className="text-[0.85rem] text-aurum-ink font-medium max-w-[15rem] leading-relaxed">
-                      Luxurious properties available in the worlds top locations
-                    </p>
-                  </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative flex items-center gap-6 bg-[#edf4fa] p-7 sm:p-9 flex-1"
+              >
+                <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
+                  <AnimatedCounter value={63} />
+                </span>
+                <p className="text-[0.85rem] sm:text-[0.9rem] text-aurum-ink font-medium max-w-[19rem] leading-relaxed">
+                  New properties currently being constructed
+                </p>
+              </motion.div>
 
-                  <motion.div 
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="flex items-center gap-6"
-                  >
-                    <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
-                      <AnimatedCounter value={63} />
-                    </span>
-                    <p className="text-[0.85rem] text-aurum-ink font-medium max-w-[15rem] leading-relaxed">
-                      New properties currently being constructed
-                    </p>
-                  </motion.div>
-
-                  <motion.div 
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    className="flex items-center gap-6"
-                  >
-                    <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
-                      <AnimatedCounter value={96} />
-                    </span>
-                    <p className="text-[0.85rem] text-aurum-ink font-medium max-w-[15rem] leading-relaxed">
-                      Agents working around the clock to help you realize your dream home
-                    </p>
-                  </motion.div>
-
-                  <motion.a
-                    href="#houses"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="mt-1 self-start rounded-xl bg-aurum-ink px-7 py-3 text-[0.8rem] tracking-wide text-aurum-cream"
-                  >
-                    About Our Houses
-                  </motion.a>
-                </div>
-
-                {/* Section-matching center-split curtain reveal overlays on the right card as well */}
-                <motion.div
-                  initial={{ x: "0%" }}
-                  whileInView={{ x: "-100%" }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 1.8, ease: [0.25, 1, 0.5, 1] }}
-                  className="absolute top-0 bottom-0 left-0 w-1/2 z-20 bg-aurum-cream"
-                />
-                <motion.div
-                  initial={{ x: "0%" }}
-                  whileInView={{ x: "100%" }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 1.8, ease: [0.25, 1, 0.5, 1] }}
-                  className="absolute top-0 bottom-0 right-0 w-1/2 z-20 bg-aurum-cream"
-                />
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="relative flex items-center gap-6 bg-[#edf4fa] p-7 sm:p-9 flex-1"
+              >
+                <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
+                  <AnimatedCounter value={96} />
+                </span>
+                <p className="text-[0.85rem] sm:text-[0.9rem] text-aurum-ink font-medium max-w-[19rem] leading-relaxed">
+                  Agents working around the clock to help you realize your dream home
+                </p>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -945,11 +765,12 @@ export default function SamplePage() {
         ref={setPreviewRef}
         onMouseMove={handlePreviewMouseMove}
         style={{ borderTopLeftRadius: topRadiusPx, borderTopRightRadius: topRadiusPx }}
-        className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden rounded-b-[36px] bg-aurum-ink px-6 py-10 mt-[-45vh] sm:mt-[-90vh] sm:px-10 sm:py-14 lg:px-14"
+        className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden bg-aurum-ink px-6 py-10 mt-[-45vh] sm:mt-[-90vh] sm:px-10 sm:py-14 lg:px-14"
       >
         <span className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase">
           What We Do
         </span>
+       
 
         <div
           onMouseLeave={() => setActiveItem(null)}
