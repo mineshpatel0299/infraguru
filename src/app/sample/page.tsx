@@ -345,96 +345,71 @@ function PortfolioCard({
   total: number;
   progress: MotionValue<number>;
 }) {
-  const step = 1 / total;
-  const isFirst = index === 0;
-  const isLast = index === total - 1;
-  // Half-width of the ramp at each boundary, as a fraction of one card's
-  // slot — small relative to the slot so most of it is a flat hold.
-  const w = step * 0.16;
+  const step = 1 / Math.max(1, total - 1);
+  const cardStart = Math.max(0, (index - 1) * step);
+  const cardEnd = Math.min(1, index * step);
 
-  let flexInput: number[];
-  let flexOutput: number[];
-  if (isFirst) {
-    flexInput = [0, step - w, step + w];
-    flexOutput = [18, 18, 1];
-  } else if (isLast) {
-    // Left boundary is between card (index-1) and this one, which sits at
-    // index*step — using (index-1)*step here (this card's *own* left slot
-    // edge, one boundary too early) made it ramp open a full segment ahead
-    // of schedule, overlapping the previous card's entire plateau.
-    flexInput = [index * step - w, index * step + w, 1];
-    flexOutput = [1, 18, 18];
-  } else {
-    flexInput = [index * step - w, index * step + w, (index + 1) * step - w, (index + 1) * step + w];
-    flexOutput = [1, 18, 18, 1];
-  }
-
-  const rawFlex = useTransform(progress, flexInput, flexOutput);
-  const flex = useSpring(rawFlex, { stiffness: 320, damping: 34, mass: 0.35 });
-
-  // Derived straight from the flex value itself (not a second scroll range),
-  // and gated to the top of the range so only one panel's copy is legible at
-  // a time — a lower threshold left both the outgoing and incoming card
-  // readable mid-crossfade, overlapping their titles.
-  const contentOpacity = useTransform(flex, [11, 16], [0, 1]);
-  const contentY = useTransform(flex, [11, 16], [14, 0]);
+  const rawX = useTransform(
+    progress,
+    [cardStart, cardEnd],
+    [index === 0 ? "0%" : "100%", "0%"]
+  );
+  
+  const x = useSpring(rawX, { stiffness: 280, damping: 32, mass: 0.4 });
 
   return (
     <motion.div
-      style={{ flex }}
-      className="group relative h-full min-w-0 overflow-hidden border-r border-white/10 bg-black last:border-r-0"
+      style={{
+        x: index === 0 ? "0%" : x,
+        zIndex: index + 1,
+        boxShadow: "-12px 0 30px rgba(0, 0, 0, 0.12)",
+      }}
+      className="absolute inset-y-0 left-0 w-full overflow-hidden bg-white p-4 sm:p-6 flex flex-col justify-between"
     >
-      <img
-        src={card.image}
-        alt={card.title}
-        className="absolute inset-0 h-full w-full object-cover brightness-[0.55] transition-transform duration-700 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10" />
-
-      {/* Collapsed state: the letter this panel shrinks down to */}
-      <div className="absolute inset-y-0 right-0 flex w-11 items-end justify-center border-l border-white/10 bg-black/50 pb-7 backdrop-blur-sm sm:w-16 sm:pb-9">
-        <span className="font-aurum-heading text-lg font-light text-white/80 sm:text-2xl">{card.letter}</span>
+      {/* The Main Card with Image & Project Name */}
+      <div className="relative w-full flex-1 rounded-2xl overflow-hidden min-h-[320px] sm:min-h-[420px] shadow-md group">
+        <img
+          src={card.image}
+          alt={card.title}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        
+        {/* Project Name inside card */}
+        <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 z-10 flex items-end justify-between">
+          <div>
+            <span className="aurum-eyebrow text-aurum-cream/80">{card.tag}</span>
+            <h3 className="mt-1 text-2xl sm:text-4xl md:text-5xl font-light text-white uppercase tracking-tight">
+              {card.title}
+            </h3>
+          </div>
+          <span className="aurum-num text-3xl sm:text-5xl font-light text-white/60">
+            0{index + 1}
+          </span>
+        </div>
       </div>
 
-      {/* Expanded content — pinned to this panel's own left edge with a fixed
-          width, so it's revealed left-to-right as the panel opens rather
-          than reflowing with it. */}
-      <motion.div
-        style={{ opacity: contentOpacity, y: contentY }}
-        className="absolute bottom-0 left-0 z-10 w-[min(88vw,860px)] px-6 pb-6 sm:px-10 sm:pb-10"
-      >
-        <span className="text-[0.65rem] font-light tracking-[0.3em] text-aurum-gold-light uppercase">
-          {card.tag}
-        </span>
-        <h3 className="mt-2 font-aurum-heading text-2xl font-light text-white uppercase sm:text-4xl lg:text-5xl">
-          {card.title}
-        </h3>
-        <p className="mt-3 max-w-md text-[0.75rem] leading-relaxed text-white/60 sm:text-[0.8rem]">
+      {/* Details shown outside the card below it */}
+      <div className="mt-4 sm:mt-6 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-aurum-ink/10 pt-4 sm:pt-5">
+        <p className="max-w-xl text-xs sm:text-sm text-aurum-ink/75 leading-relaxed font-medium">
           {card.description}
         </p>
 
-        <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 sm:mt-8 sm:grid-cols-3 sm:gap-y-5 lg:grid-cols-6">
+        <div className="flex flex-wrap gap-5 sm:gap-8 items-center shrink-0">
           {card.features.map((feature) => {
             const Icon = FEATURE_ICONS[feature.icon];
             return (
-              <div key={feature.label} className="flex flex-col gap-2">
-                <Icon className="h-4 w-4 text-aurum-gold-light" />
+              <div key={feature.label} className="flex items-center gap-2">
+                <Icon className="h-4 w-4 text-aurum-ink/60" />
                 <div>
-                  <p className="text-[0.58rem] tracking-wide text-white/45 uppercase">{feature.label}</p>
-                  <p className="text-[0.72rem] leading-snug font-light text-white/90">{feature.value}</p>
+                  <p className="text-[0.6rem] tracking-wider text-aurum-ink/50 uppercase">{feature.label}</p>
+                  <p className="text-xs font-semibold text-aurum-ink">{feature.value}</p>
                 </div>
               </div>
             );
           })}
         </div>
-
-        <Link
-          href={`/sample/projects/${card.slug}`}
-          className="mt-6 inline-flex items-center gap-1.5 text-[0.7rem] font-light tracking-[0.15em] text-aurum-gold-light uppercase transition-colors hover:text-aurum-gold sm:mt-8"
-        >
-          View Project <ArrowUpRightIcon className="h-3.5 w-3.5" />
-        </Link>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
@@ -837,27 +812,24 @@ export default function SamplePage() {
         </motion.div>
       </motion.section>
 
-      {/* Portfolio: our signature addresses as a scroll-driven expanding
-          accordion on sm+. Each panel owns its transforms via PortfolioCard;
-          on mobile the horizontal accordion doesn't have room to breathe, so
-          it falls back to a plain stacked list instead. */}
-      <div ref={projectsContainerRef} id="portfolio" className="relative z-10 mt-3 hidden h-[380vh] sm:mt-4 sm:block">
-        <div className="sticky top-20 sm:top-24 flex h-[calc(100vh-5rem)] sm:h-[calc(100vh-6rem)] w-full flex-col justify-between overflow-hidden rounded-[28px] bg-aurum-ink p-6 text-aurum-cream sm:rounded-[36px] sm:p-10">
+      {/* Portfolio: full screen width & height horizontal scroll cards */}
+      <div ref={projectsContainerRef} id="portfolio" className="relative z-10 hidden h-[380vh] sm:block">
+        <div className="sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-white p-6 sm:p-10 text-aurum-ink">
           {/* Header row: section title + live "0X — 0N" position counter */}
           <div className="flex items-end justify-between z-20">
             <div>
-              <span className="aurum-eyebrow text-aurum-gold-light">Our Portfolio</span>
-              <h2 className="mt-3 text-[clamp(1.5rem,3vw,2.4rem)] font-light text-aurum-cream">
+              <span className="aurum-eyebrow text-aurum-muted">Our Portfolio</span>
+              <h2 className="mt-2 text-[clamp(1.5rem,3vw,2.4rem)] font-light text-aurum-ink">
                 Four Addresses, One Standard
               </h2>
             </div>
-            <span className="font-aurum-heading text-sm font-light tracking-[0.25em] text-aurum-cream/50 uppercase">
+            <span className="font-aurum-heading text-sm font-light tracking-[0.25em] text-aurum-ink/50 uppercase">
               0{activePortfolioIndex + 1} — 0{PORTFOLIO_CARDS.length}
             </span>
           </div>
 
-          {/* Expanding vertical card track — zero gaps, stacked z-indexing */}
-          <div className="relative my-4 flex flex-1 gap-0 overflow-hidden rounded-2xl border border-aurum-cream/10 bg-aurum-ink">
+          {/* Full width stacked card track */}
+          <div className="relative my-3 flex flex-1 gap-0 overflow-hidden bg-white">
             {PORTFOLIO_CARDS.map((card, idx) => (
               <PortfolioCard
                 key={card.id}
@@ -870,22 +842,22 @@ export default function SamplePage() {
           </div>
 
           {/* Bottom bar: Prev/Next jump controls */}
-          <div className="flex items-center justify-end pt-2 text-xs font-light text-aurum-cream/60 z-20">
+          <div className="flex items-center justify-end pt-1 text-xs font-light text-aurum-ink/60 z-20">
             <div className="flex items-center gap-6">
               <button
                 type="button"
                 onClick={() => goToPortfolioCard(-1)}
                 disabled={activePortfolioIndex === 0}
-                className="transition-colors hover:text-aurum-cream disabled:pointer-events-none disabled:opacity-30"
+                className="transition-colors hover:text-aurum-ink disabled:pointer-events-none disabled:opacity-30"
               >
                 Prev
               </button>
-              <div className="h-0.5 w-12 bg-aurum-cream/40" />
+              <div className="h-0.5 w-12 bg-aurum-ink/30" />
               <button
                 type="button"
                 onClick={() => goToPortfolioCard(1)}
                 disabled={activePortfolioIndex === PORTFOLIO_CARDS.length - 1}
-                className="transition-colors hover:text-aurum-cream disabled:pointer-events-none disabled:opacity-30"
+                className="transition-colors hover:text-aurum-ink disabled:pointer-events-none disabled:opacity-30"
               >
                 Next
               </button>
