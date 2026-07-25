@@ -41,12 +41,8 @@ export default function SampleNavbar({
     }
     if (!heroProgress) return;
 
-    let lastY = window.scrollY;
-
     const evaluate = () => {
-      const heroExpanded = heroProgress.get() >= 0.92;
-      const currentY = window.scrollY;
-      const scrollingUp = currentY < lastY;
+      const heroExpanded = heroProgress.get() >= 0.95;
 
       // Check if inside portfolio section
       const portfolioEl = document.getElementById("portfolio");
@@ -72,16 +68,14 @@ export default function SampleNavbar({
       setIsLightSection(inLight);
 
       // Visibility Rules:
-      // 1. Hide if hero image is not expanded
-      // 2. Hide completely inside portfolio section
-      // 3. Show only when scrolling UP (after hero expanded), hide when scrolling DOWN
+      // 1. Hidden in initial stage / while video hero is zooming into screen (heroProgress < 0.95)
+      // 2. Hidden inside portfolio section
+      // 3. Visible once video hero is completely zoomed in / expanded
       if (!heroExpanded || inPortfolio) {
         setVisible(false);
       } else {
-        setVisible(scrollingUp);
+        setVisible(true);
       }
-
-      lastY = currentY;
     };
 
     evaluate();
@@ -138,57 +132,39 @@ export default function SampleNavbar({
 
   return (
     <>
-      <motion.div
-        aria-hidden
-        initial={false}
-        animate={{ opacity: visible ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-none fixed inset-x-0 top-0 z-40 h-36 sm:h-44 transition-opacity duration-500 ${
-          isLightSection ? "bg-gradient-to-b from-white/80 to-transparent" : "bg-gradient-to-b from-black/30 to-transparent"
-        }`}
-      />
-
       <motion.nav
         initial={false}
         animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : -16 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ pointerEvents: visible ? "auto" : "none" }}
-        className="fixed top-0 z-50 flex w-full flex-col items-center gap-3 bg-transparent px-4 py-4 sm:gap-4 sm:py-6"
+        className="fixed top-0 inset-x-0 z-50 flex w-full flex-col items-center justify-center py-3 sm:py-4 border-b border-white/20 bg-black/25 backdrop-blur-xl transition-all duration-500 shadow-2xl"
       >
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          className={`absolute top-4 right-4 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border md:hidden transition-colors ${
-            isLightSection ? "border-black/30 text-aurum-ink" : "border-aurum-cream/40 text-aurum-cream"
-          } sm:top-5 sm:right-8`}
+          className="absolute top-4 right-6 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/30 text-white bg-black/30 backdrop-blur-md md:hidden"
         >
           <BurgerLines open={open} />
         </button>
 
-        <Link href="/sample" onClick={() => setOpen(false)}>
+        {/* Centered Brand Logo */}
+        <Link href="/sample" onClick={() => setOpen(false)} className="mb-2 sm:mb-3">
           <img
             src="/logo.png"
             alt="Brand Logo"
-            className={`h-10 w-auto object-contain transition-all duration-300 sm:h-14 ${
-              isLightSection ? "brightness-0" : "brightness-0 invert drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
-            }`}
+            className="h-10 sm:h-12 w-auto object-contain brightness-0 invert drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]"
           />
         </Link>
 
-        <div
-          className={`hidden items-center gap-8 text-[0.7rem] font-light tracking-[0.25em] uppercase md:flex transition-colors duration-300 ${
-            isLightSection ? "text-aurum-ink/90" : "text-aurum-cream/90"
-          }`}
-        >
+        {/* Centered Nav Links Row */}
+        <div className="hidden md:flex items-center gap-10 lg:gap-14 text-white">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.label}
               href={link.hash ? `${homeHref}#${link.hash}` : homeHref}
-              className={`transition-colors ${
-                isLightSection ? "hover:text-aurum-gold-dark" : "hover:text-aurum-gold-light"
-              }`}
+              className="text-[0.75rem] sm:text-[0.8rem] font-medium tracking-[0.25em] text-white/90 uppercase transition-colors hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
             >
               {link.label}
             </Link>

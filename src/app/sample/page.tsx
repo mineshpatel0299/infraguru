@@ -431,6 +431,7 @@ export default function SamplePage() {
   });
   const heroInsetY = useTransform(heroProgress, [0, 1], ["19vh", "0vh"]);
   const heroInsetX = useTransform(heroProgress, [0, 1], ["21vw", "0vw"]);
+  const heroVideoScale = useTransform(heroProgress, [0, 1], [1.35, 1]);
   // Switches late on purpose: the text sits at a fixed position while the
   // box grows underneath it, so flipping to cream has to wait until the
   // box's edge has actually swept past the text — otherwise there's a
@@ -573,18 +574,34 @@ export default function SamplePage() {
               left: heroInsetX,
               right: heroInsetX,
             }}
-            className="absolute overflow-hidden"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute overflow-hidden shadow-2xl"
           >
-            <img src="/fhero.png" alt="Exceptional living begins" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/10 to-black/20" />
+            <motion.video
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{ scale: heroVideoScale }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1.35 }}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-0 h-full w-full object-cover origin-center"
+            >
+              <source src="/webhero.mp4" type="video/mp4" />
+            </motion.video>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/20" />
           </motion.div>
 
-          {/* Copy: fixed within the sticky frame, unaffected by the box's own
-              growth — only its color is scroll-driven. */}
+          {/* Copy: slides in dynamically as the hero arrives —
+              "Exceptional LIVING" slides in from left to right (-x to 0),
+              "Begins." slides in from right to left (+x to 0). */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: -80 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             style={{ color: heroTextColor }}
             className="pointer-events-none absolute left-[8%] top-[27%] max-w-[70%] font-aurum-heading text-[clamp(1.9rem,6vw,4.4rem)] leading-[1.05] font-light drop-shadow-[0_4px_18px_rgba(0,0,0,0.35)] sm:max-w-[48%]"
           >
@@ -593,9 +610,9 @@ export default function SamplePage() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: 80 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
             style={{ color: heroTextColor }}
             className="pointer-events-none absolute right-[8%] top-[64%] font-aurum-heading text-[clamp(1.9rem,6vw,4.4rem)] leading-[1.05] font-light drop-shadow-[0_4px_18px_rgba(0,0,0,0.35)]"
           >
