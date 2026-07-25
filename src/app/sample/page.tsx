@@ -878,7 +878,11 @@ export default function SamplePage() {
       <div ref={projectsContainerRef} id="portfolio" className="relative z-10 hidden h-[380vh] sm:block my-24">
         <div className="sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-white p-6 sm:p-10 text-aurum-ink">
           {/* Header row: section title + live "0X — 0N" position counter */}
-          <div className="flex items-end justify-between z-20">
+          <div
+            data-aos="fade-up"
+            data-aos-duration="700"
+            className="flex items-end justify-between z-20"
+          >
             <div>
               <span className="aurum-eyebrow text-aurum-muted">Our Portfolio</span>
               <h2 className="mt-2 text-[clamp(1.5rem,3vw,2.4rem)] font-light text-aurum-ink">
@@ -936,8 +940,15 @@ export default function SamplePage() {
 
       {/* Mobile fallback: same four addresses as a plain stacked list */}
       <div className="relative z-10 my-24 rounded-[28px] bg-aurum-ink px-6 py-14 text-aurum-cream sm:hidden">
-        <span className="aurum-eyebrow text-aurum-gold-light">Our Portfolio</span>
-        <h2 className="mt-3 text-[clamp(1.5rem,6vw,2rem)] font-light text-aurum-cream">
+        <span data-aos="fade-up" data-aos-duration="600" className="aurum-eyebrow text-aurum-gold-light">
+          Our Portfolio
+        </span>
+        <h2
+          data-aos="fade-up"
+          data-aos-delay="80"
+          data-aos-duration="700"
+          className="mt-3 text-[clamp(1.5rem,6vw,2rem)] font-light text-aurum-cream"
+        >
           Four Addresses, One Standard
         </h2>
 
