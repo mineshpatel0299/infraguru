@@ -799,11 +799,7 @@ export default function SamplePage() {
         style={{ borderTopLeftRadius: topRadiusPx, borderTopRightRadius: topRadiusPx }}
         className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden bg-[#375972] px-6 py-24 mt-[-45vh] sm:mt-[-90vh] sm:px-10 lg:px-14"
       >
-        <span
-          data-aos="fade-up"
-          data-aos-duration="600"
-          className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase"
-        >
+        <span className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase">
           What We Do
         </span>
 
@@ -816,11 +812,12 @@ export default function SamplePage() {
             <React.Fragment key={item.id}>
               <span
                 onMouseEnter={() => setActiveItem(i)}
-                data-aos="fade-up"
-                data-aos-delay={i * 60}
-                data-aos-duration="700"
-                className={`cursor-pointer font-aurum-heading font-light text-2xl uppercase transition-colors duration-500 sm:text-3xl lg:text-4xl ${
-                  activeItem === i ? "text-aurum-cream" : "text-aurum-cream/40"
+                className={`cursor-pointer font-aurum-heading text-2xl uppercase transition-all duration-300 sm:text-3xl lg:text-4xl ${
+                  activeItem === null
+                    ? "font-light text-aurum-cream/90 hover:text-white"
+                    : activeItem === i
+                    ? "font-normal text-white scale-105 drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]"
+                    : "font-light text-aurum-cream/65"
                 }`}
               >
                 {item.title}
@@ -829,7 +826,7 @@ export default function SamplePage() {
                 </sup>
               </span>
               {i < PORTFOLIO_ITEMS.length - 1 && (
-                <span className="font-aurum-heading font-light text-2xl text-aurum-cream/20 sm:text-3xl lg:text-4xl">/</span>
+                <span className="font-aurum-heading font-light text-2xl text-aurum-cream/35 sm:text-3xl lg:text-4xl">/</span>
               )}
             </React.Fragment>
           ))}
@@ -838,8 +835,6 @@ export default function SamplePage() {
         <div className="mt-10 flex justify-end sm:mt-14">
           <a
             href="#contact"
-            data-aos="fade-up"
-            data-aos-duration="600"
             className="inline-flex items-center gap-2 text-[0.75rem] font-light tracking-[0.15em] text-aurum-gold-light uppercase transition-colors hover:text-aurum-gold"
           >
             Book a Consultation <span>&#8599;</span>
