@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   animate,
@@ -14,6 +14,8 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import SampleNavbar from "@/components/sample/SampleNavbar";
 import SampleFooter from "@/components/sample/SampleFooter";
 import { PROJECTS } from "@/lib/projects";
@@ -358,11 +360,28 @@ function PortfolioCard({
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-      {/* Identity mark — stays legible at any width, including the narrow
-          collapsed state, so the queue reads as labeled cards. */}
-      <span className="absolute bottom-6 left-4 sm:bottom-8 sm:left-6 font-aurum-heading text-2xl sm:text-3xl font-light text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-        {card.letter}
-      </span>
+      {/* Overlay text at bottom left inside card */}
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 z-10 max-w-lg text-white"
+          >
+            <span className="text-[0.65rem] font-medium tracking-[0.25em] text-white/80 uppercase">
+              {card.tag}
+            </span>
+            <h3 className="mt-1 font-aurum-heading text-2xl sm:text-4xl lg:text-5xl font-light text-white uppercase tracking-tight drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+              {card.title}
+            </h3>
+            <p className="mt-2 text-xs sm:text-sm text-white/85 leading-relaxed font-light drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+              {card.description}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -387,17 +406,14 @@ function ActivePortfolioInfo({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+          className="flex items-center justify-between"
         >
-          <div>
-            <span className="aurum-eyebrow text-aurum-muted">{card.tag}</span>
-            <h3 className="mt-1 text-xl sm:text-2xl font-light text-aurum-ink uppercase tracking-tight">
-              {card.title}
-            </h3>
-            <p className="mt-2 max-w-xl text-xs sm:text-sm text-aurum-ink/75 leading-relaxed font-medium">
-              {card.description}
-            </p>
-          </div>
+          <Link
+            href={`/sample/projects/${card.slug}`}
+            className="inline-flex items-center gap-2 text-xs font-light tracking-[0.2em] text-[#375972] uppercase hover:text-aurum-ink transition-colors"
+          >
+            Explore Masterplan <span>&#8599;</span>
+          </Link>
 
           <div className="flex flex-wrap gap-5 sm:gap-8 items-center shrink-0">
             {card.features.map((feature) => {
@@ -420,25 +436,33 @@ function ActivePortfolioInfo({
 }
 
 export default function SamplePage() {
-  // Hero: pinned while the page scrolls past, scrubbing the framed image open
-  // to full-bleed. Text stays put (same fixed position throughout) — only
-  // the box around it grows, and the copy shifts from ink to cream as the
-  // image spreads underneath it.
-  const heroWrapperRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroWrapperRef,
-    offset: ["start start", "end end"],
-  });
-  const heroInsetY = useTransform(heroProgress, [0, 1], ["19vh", "0vh"]);
-  const heroInsetX = useTransform(heroProgress, [0, 1], ["21vw", "0vw"]);
-  const heroVideoScale = useTransform(heroProgress, [0, 1], [1.35, 1]);
-  // Switches late on purpose: the text sits at a fixed position while the
-  // box grows underneath it, so flipping to cream has to wait until the
-  // box's edge has actually swept past the text — otherwise there's a
-  // window where cream text is still sitting over the plain white page,
-  // and reads as invisible. 0.58 is where insetX (21vw shrinking to 0)
-  // drops below the text's 8% inset, i.e. where the image edge reaches it.
-  const heroTextColor = useTransform(heroProgress, [0.58, 0.68], ["#0e0d09", "#faf9f7"]);
+  // AOS drives the simple section-level reveals below — once:false + mirror
+  // so each one animates back out on the way past too, replaying every time
+  // you land on it, not just the first.
+  useEffect(() => {
+    AOS.init({ duration: 800, easing: "ease-out-cubic", once: false, mirror: true, offset: 80 });
+  }, []);
+
+  // Hero auto-expansion after 1.5 seconds delay
+  const [isHeroExpanded, setIsHeroExpanded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsHeroExpanded(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Effective motion value for navbar detection
+  const effectiveHeroProgress = useMotionValue(0);
+
+  useEffect(() => {
+    if (isHeroExpanded) {
+      effectiveHeroProgress.set(1);
+    } else {
+      effectiveHeroProgress.set(0);
+    }
+  }, [isHeroExpanded, effectiveHeroProgress]);
 
   const aboutRef = useRef<HTMLElement>(null);
 
@@ -559,24 +583,36 @@ export default function SamplePage() {
 
   return (
     <main className="theme-aurum theme-aurum-blue min-h-screen bg-white">
-      <SampleNavbar transparent heroProgress={heroProgress} />
+      <SampleNavbar transparent heroProgress={effectiveHeroProgress} />
 
-      {/* Hero — lands as a small framed image on white, text overlapping its
-          edges. Scrolling scrubs the frame open to full-bleed; the copy
-          never moves, it just shifts from ink to cream as the image spreads
-          underneath it. */}
-      <div ref={heroWrapperRef} className="relative w-full" style={{ height: `calc(${HERO_SCROLL_VH}vh + 100svh)` }}>
-        <div className="sticky top-0 h-svh min-h-130 w-full overflow-hidden bg-white">
+      {/* Hero — lands as a small framed video card on white, stays framed for 1.5s, then automatically expands to full-bleed */}
+      <div className="relative w-full h-svh min-h-130 overflow-hidden bg-white">
+        <div className="relative h-full w-full overflow-hidden">
           <motion.div
-            style={{
-              top: heroInsetY,
-              bottom: heroInsetY,
-              left: heroInsetX,
-              right: heroInsetX,
+            initial={{
+              top: "19vh",
+              bottom: "19vh",
+              left: "21vw",
+              right: "21vw",
+              scale: 0.85,
+              opacity: 0,
             }}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            animate={{
+              top: isHeroExpanded ? "0vh" : "19vh",
+              bottom: isHeroExpanded ? "0vh" : "19vh",
+              left: isHeroExpanded ? "0vw" : "21vw",
+              right: isHeroExpanded ? "0vw" : "21vw",
+              scale: 1,
+              opacity: 1,
+            }}
+            transition={{
+              top: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
+              bottom: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
+              left: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
+              right: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
+              scale: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+              opacity: { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
+            }}
             className="absolute overflow-hidden shadow-2xl"
           >
             <motion.video
@@ -584,9 +620,8 @@ export default function SamplePage() {
               loop
               muted
               playsInline
-              style={{ scale: heroVideoScale }}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1.35 }}
+              initial={{ scale: 1.45 }}
+              animate={{ scale: isHeroExpanded ? 1.0 : 1.35 }}
               transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0 h-full w-full object-cover origin-center"
             >
@@ -600,9 +635,8 @@ export default function SamplePage() {
               "Begins." slides in from right to left (+x to 0). */}
           <motion.div
             initial={{ opacity: 0, x: -80 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, x: 0, color: isHeroExpanded ? "#faf9f7" : "#0e0d09" }}
             transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            style={{ color: heroTextColor }}
             className="pointer-events-none absolute left-[8%] top-[27%] max-w-[70%] font-aurum-heading text-[clamp(1.9rem,6vw,4.4rem)] leading-[1.05] font-light drop-shadow-[0_4px_18px_rgba(0,0,0,0.35)] sm:max-w-[48%]"
           >
             <span className="block">Exceptional</span>
@@ -611,9 +645,8 @@ export default function SamplePage() {
 
           <motion.div
             initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, x: 0, color: isHeroExpanded ? "#faf9f7" : "#0e0d09" }}
             transition={{ duration: 1.1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            style={{ color: heroTextColor }}
             className="pointer-events-none absolute right-[8%] top-[64%] font-aurum-heading text-[clamp(1.9rem,6vw,4.4rem)] leading-[1.05] font-light drop-shadow-[0_4px_18px_rgba(0,0,0,0.35)]"
           >
             Begins.
@@ -624,64 +657,47 @@ export default function SamplePage() {
       {/* Value props statement - centered vertically with ultra-premium text reveal animation */}
       <div className="w-full py-24 min-h-[45vh] flex items-center justify-center">
         <div className="mx-auto max-w-4xl px-6 text-center flex flex-col items-center justify-center">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-              },
-            }}
-            className="flex flex-col items-center"
-          >
+          <div className="flex flex-col items-center">
             {/* Eyebrow badge */}
-            <motion.span
-              variants={{
-                hidden: { opacity: 0, y: 15 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
-              }}
+            <span
+              data-aos="fade-up"
+              data-aos-duration="600"
               className="aurum-eyebrow text-[#375972] mb-4 tracking-[0.3em]"
             >
               The Perfection Standard
-            </motion.span>
+            </span>
 
             {/* Shimmering headline */}
-            <motion.h2
-              variants={{
-                hidden: { opacity: 0, y: 25, filter: "blur(8px)" },
-                visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
-              }}
+            <h2
+              data-aos="fade-up"
+              data-aos-delay="100"
+              data-aos-duration="900"
               className="text-[clamp(1.4rem,3.2vw,2.4rem)] font-light leading-snug tracking-tight text-aurum-ink"
             >
               Your search for the perfect home{" "}
               <span className="relative inline-block font-normal bg-gradient-to-r from-[#375972] via-aurum-gold to-[#375972] bg-clip-text text-transparent bg-[size:200%_auto] animate-gradient">
                 ends here.
               </span>
-            </motion.h2>
+            </h2>
 
             {/* Subtle animated divider line */}
-            <motion.div
-              variants={{
-                hidden: { scaleX: 0, opacity: 0 },
-                visible: { scaleX: 1, opacity: 1, transition: { duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] } },
-              }}
+            <div
+              data-aos="zoom-in"
+              data-aos-delay="300"
+              data-aos-duration="1200"
               className="mt-6 mb-6 h-0.5 w-16 bg-gradient-to-r from-transparent via-[#375972]/40 to-transparent"
             />
 
             {/* Paragraph fade & lift */}
-            <motion.p
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] } },
-              }}
+            <p
+              data-aos="fade-up"
+              data-aos-delay="400"
+              data-aos-duration="800"
               className="max-w-2xl text-[0.95rem] sm:text-[1.05rem] leading-relaxed text-aurum-muted font-light"
             >
               Discover thoughtfully curated properties that match your lifestyle, aspirations, and investment goals.
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -729,11 +745,10 @@ export default function SamplePage() {
 
             {/* Right: 3 horizontal cards in 3 rows */}
             <div className="flex flex-col gap-4 justify-between h-full">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+              <div
+                data-aos="fade-up"
+                data-aos-delay="100"
+                data-aos-duration="600"
                 className="relative flex items-center gap-6 bg-[#edf4fa] p-7 sm:p-9 flex-1"
               >
                 <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
@@ -742,13 +757,12 @@ export default function SamplePage() {
                 <p className="text-[0.85rem] sm:text-[0.9rem] text-aurum-ink font-medium max-w-[19rem] leading-relaxed">
                   Luxurious properties available in the world's top locations
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+              <div
+                data-aos="fade-up"
+                data-aos-delay="200"
+                data-aos-duration="600"
                 className="relative flex items-center gap-6 bg-[#edf4fa] p-7 sm:p-9 flex-1"
               >
                 <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
@@ -757,13 +771,12 @@ export default function SamplePage() {
                 <p className="text-[0.85rem] sm:text-[0.9rem] text-aurum-ink font-medium max-w-[19rem] leading-relaxed">
                   New properties currently being constructed
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+              <div
+                data-aos="fade-up"
+                data-aos-delay="300"
+                data-aos-duration="600"
                 className="relative flex items-center gap-6 bg-[#edf4fa] p-7 sm:p-9 flex-1"
               >
                 <span className="aurum-num text-5xl sm:text-6xl font-light tracking-tighter text-aurum-ink w-16 shrink-0">
@@ -772,7 +785,7 @@ export default function SamplePage() {
                 <p className="text-[0.85rem] sm:text-[0.9rem] text-aurum-ink font-medium max-w-[19rem] leading-relaxed">
                   Agents working around the clock to help you realize your dream home
                 </p>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
@@ -786,10 +799,14 @@ export default function SamplePage() {
         style={{ borderTopLeftRadius: topRadiusPx, borderTopRightRadius: topRadiusPx }}
         className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden bg-[#375972] px-6 py-24 mt-[-45vh] sm:mt-[-90vh] sm:px-10 lg:px-14"
       >
-        <span className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase">
+        <span
+          data-aos="fade-up"
+          data-aos-duration="600"
+          className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase"
+        >
           What We Do
         </span>
-       
+
 
         <div
           onMouseLeave={() => setActiveItem(null)}
@@ -797,12 +814,11 @@ export default function SamplePage() {
         >
           {PORTFOLIO_ITEMS.map((item, i) => (
             <React.Fragment key={item.id}>
-              <motion.span
+              <span
                 onMouseEnter={() => setActiveItem(i)}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 1.1, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                data-aos="fade-up"
+                data-aos-delay={i * 60}
+                data-aos-duration="700"
                 className={`cursor-pointer font-aurum-heading font-light text-2xl uppercase transition-colors duration-500 sm:text-3xl lg:text-4xl ${
                   activeItem === i ? "text-aurum-cream" : "text-aurum-cream/40"
                 }`}
@@ -811,7 +827,7 @@ export default function SamplePage() {
                 <sup className="ml-1 text-[0.65rem] tracking-wide sm:text-xs">
                   0{i + 1}
                 </sup>
-              </motion.span>
+              </span>
               {i < PORTFOLIO_ITEMS.length - 1 && (
                 <span className="font-aurum-heading font-light text-2xl text-aurum-cream/20 sm:text-3xl lg:text-4xl">/</span>
               )}
@@ -822,6 +838,8 @@ export default function SamplePage() {
         <div className="mt-10 flex justify-end sm:mt-14">
           <a
             href="#contact"
+            data-aos="fade-up"
+            data-aos-duration="600"
             className="inline-flex items-center gap-2 text-[0.75rem] font-light tracking-[0.15em] text-aurum-gold-light uppercase transition-colors hover:text-aurum-gold"
           >
             Book a Consultation <span>&#8599;</span>
@@ -925,12 +943,11 @@ export default function SamplePage() {
 
         <div className="mt-8 flex flex-col gap-4">
           {PORTFOLIO_CARDS.map((card, i) => (
-            <motion.div
+            <div
               key={card.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              data-aos="fade-up"
+              data-aos-delay={i * 80}
+              data-aos-duration="600"
               className="relative overflow-hidden rounded-2xl border border-aurum-cream/10"
             >
               <div className="relative aspect-[4/3] w-full">
@@ -963,7 +980,7 @@ export default function SamplePage() {
               >
                 View Project <ArrowUpRightIcon className="h-3.5 w-3.5" />
               </Link>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -972,7 +989,11 @@ export default function SamplePage() {
       <section className="relative z-10 w-full bg-white border-t border-b border-aurum-ink/10 my-24">
 
         {/* Full-width Map Container with Premium Overlay Card Controls */}
-        <div className="relative w-full h-[450px] sm:h-[550px] overflow-hidden bg-slate-100 shadow-inner">
+        <div
+          data-aos="zoom-in"
+          data-aos-duration="900"
+          className="relative w-full h-[450px] sm:h-[550px] overflow-hidden bg-slate-100 shadow-inner"
+        >
           <iframe
             title="Infraguru Masterplan Map"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112282.8872288325!2d77.00845347209355!3d28.42398462002341!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19d582e38859%3A0x2cf5fe8e5c64b1e!2sGurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1711200000000!5m2!1sen!2sin"
@@ -1050,11 +1071,9 @@ export default function SamplePage() {
           the footer already carries email/phone/address/social. */}
       {/* Contact CTA: full width without rounded borders */}
       <section id="contact" className="w-full my-24">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        <div
+          data-aos="fade-up"
+          data-aos-duration="800"
           className="relative w-full overflow-hidden bg-white border-t border-b border-aurum-ink/10 px-6 py-24 sm:px-12"
         >
           {/* Ambient glow */}
@@ -1094,7 +1113,7 @@ export default function SamplePage() {
               </a>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <SampleFooter />
