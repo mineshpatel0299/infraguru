@@ -324,148 +324,98 @@ function ProcessStepCard({
   );
 }
 
-// Width (as a % of a card's own width) that each not-yet-opened card peeks
-// out from behind the one ahead of it, so the resting state reads as a
-// fanned stack of cards rather than a single panel with the rest invisible.
-const STACK_PEEK_PERCENT = 15;
-
-// Shared spring for every scroll-driven motion value in a PortfolioCard (its
-// x position, and the arrival values that drive text opacity) — using one
-// config everywhere keeps them moving in lockstep instead of drifting apart.
-const PORTFOLIO_SPRING = { stiffness: 280, damping: 32, mass: 0.4 };
-
-// One panel of the "portfolio" scroll accordion. Owns its own transforms
-// (rather than being built inline inside a .map — hooks can't safely live
-// there) and reveals its copy from an overlay pinned to its own left edge,
-// so the panel can genuinely collapse to a sliver: nothing in its normal
-// flow (the feature grid included) is left to force it wide.
+// One panel of the "portfolio" accordion. Sized with real flex-grow (not an
+// absolutely-positioned full-width slide clipped by its neighbours) so every
+// card's image renders at its own actual visible width — object-cover then
+// shows a properly centred crop of the *whole* photo at any width, instead
+// of whatever arbitrary edge-sliver happened to remain uncovered.
 //
-// Each panel's flex value ramps up, holds a flat plateau at full width, then
-// ramps back down — scroll only *moves* things during the short ramp at
-// each boundary; the rest of a card's turn is a static hold, so a panel
-// visibly finishes opening and stays open before the next one takes over.
+// Cards that have already had their turn are dropped out of the row
+// entirely (see the `.slice(activeIndex)` at the call site) rather than
+// shrinking down and staying parked on the left — so whichever card is
+// active is always the leftmost, full panel, and `layout` here smoothly
+// reflows the remaining siblings into place as one wipes out.
 function PortfolioCard({
   card,
-  index,
-  total,
-  progress,
+  isActive,
 }: {
   card: (typeof PORTFOLIO_CARDS)[number];
-  index: number;
-  total: number;
-  progress: MotionValue<number>;
+  isActive: boolean;
 }) {
-  const step = 1 / Math.max(1, total - 1);
-  const cardStart = Math.max(0, (index - 1) * step);
-  const cardEnd = Math.min(1, index * step);
-
-  // Resting position (before this card's turn): a fanned stack peek rather
-  // than fully off-canvas, so cards ahead in the queue stay visible as
-  // receding slivers instead of disappearing until it's their turn.
-  const stackedX = `${Math.max(0, 100 - (total - index) * STACK_PEEK_PERCENT)}%`;
-
-  const rawX = useTransform(
-    progress,
-    [cardStart, cardEnd],
-    [index === 0 ? "0%" : stackedX, "0%"]
-  );
-
-  const x = useSpring(rawX, PORTFOLIO_SPRING);
-
-  // Text (title + detail row) only ever reads cleanly while this card sits
-  // fully open and uncovered — anywhere else, the next card's edge slices
-  // straight through it mid-word. So rather than always rendering it (and
-  // letting the covering card clip it), fade it in as this card finishes
-  // arriving and fade it back out as the next card starts sliding over it.
-  // Both fades are driven off the *same spring* as `x` itself (not raw
-  // scroll progress) — otherwise opacity reacts instantly to scroll while
-  // the card's position lags behind it, and the two visibly fall out of
-  // sync mid-scroll (text arriving/leaving before the card visually does).
-  const isFirst = index === 0;
-  const isLast = index === total - 1;
-
-  // 0→1 as THIS card arrives; constant 1 for the first card, which is open
-  // from rest and never animates in.
-  const rawArrival = isFirst
-    ? useTransform(progress, [0, 1], [1, 1])
-    : useTransform(progress, [cardStart, cardEnd], [0, 1]);
-  const arrival = useSpring(rawArrival, PORTFOLIO_SPRING);
-
-  // 0→1 as the NEXT card arrives — used only to fade this card's text out
-  // once the following card visibly starts covering it. Unused (but still
-  // computed, to keep hook order stable) when this is the last card.
-  const nextCardEnd = isLast ? cardEnd + 0.0001 : Math.min(1, cardEnd + step);
-  const rawNextArrival = useTransform(progress, [cardEnd, nextCardEnd], [0, 1]);
-  const nextArrival = useSpring(rawNextArrival, PORTFOLIO_SPRING);
-
-  const textOpacityIn = useTransform(arrival, [0.55, 1], [0, 1]);
-  const textOpacityOut = useTransform(nextArrival, [0.15, 0.55], [1, 0]);
-  const textOpacity = useTransform(
-    [textOpacityIn, textOpacityOut],
-    ([inVal, outVal]) => (isLast ? (inVal as number) : Math.min(inVal as number, outVal as number))
-  );
-
   return (
     <motion.div
-      style={{
-        x: index === 0 ? "0%" : x,
-        zIndex: index + 1,
-        boxShadow: "-12px 0 30px rgba(0, 0, 0, 0.12)",
-      }}
-      className="absolute inset-y-0 left-0 w-full overflow-hidden bg-white p-4 sm:p-6 flex flex-col justify-between"
+      layout
+      initial={{ opacity: 0, flexGrow: 0 }}
+      animate={{ opacity: 1, flexGrow: isActive ? 10 : 1 }}
+      exit={{ opacity: 0, flexGrow: 0 }}
+      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      className="relative h-full min-w-0 shrink-0 basis-0 overflow-hidden group"
     >
-      {/* The Main Card with Image & Project Name */}
-      <div className="relative w-full flex-1 rounded-2xl overflow-hidden min-h-[320px] sm:min-h-[420px] shadow-md group">
-        <img
-          src={card.image}
-          alt={card.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        
-        {/* Project Name inside card — only readable once this card has fully
-            arrived and is no longer being sliced by the next card's edge */}
+      <img
+        src={card.image}
+        alt={card.title}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+      {/* Identity mark — stays legible at any width, including the narrow
+          collapsed state, so the queue reads as labeled cards. */}
+      <span className="absolute bottom-6 left-4 sm:bottom-8 sm:left-6 font-aurum-heading text-2xl sm:text-3xl font-light text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
+        {card.letter}
+      </span>
+    </motion.div>
+  );
+}
+
+// The active card's title/tag/description/feature icons, rendered once
+// below the sliding track rather than per-card inside it — crossfades to
+// the new project's copy as `activeIndex` changes, completely decoupled
+// from the image stack's horizontal motion.
+function ActivePortfolioInfo({
+  card,
+  activeIndex,
+}: {
+  card: (typeof PORTFOLIO_CARDS)[number];
+  activeIndex: number;
+}) {
+  return (
+    <div className="relative mt-4 sm:mt-6 border-t border-aurum-ink/10 pt-4 sm:pt-5">
+      <AnimatePresence mode="wait">
         <motion.div
-          style={{ opacity: textOpacity }}
-          className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 z-10 flex items-end justify-between"
+          key={activeIndex}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
         >
           <div>
-            <span className="aurum-eyebrow text-aurum-cream/80">{card.tag}</span>
-            <h3 className="mt-1 text-2xl sm:text-4xl md:text-5xl font-light text-white uppercase tracking-tight">
+            <span className="aurum-eyebrow text-aurum-muted">{card.tag}</span>
+            <h3 className="mt-1 text-xl sm:text-2xl font-light text-aurum-ink uppercase tracking-tight">
               {card.title}
             </h3>
+            <p className="mt-2 max-w-xl text-xs sm:text-sm text-aurum-ink/75 leading-relaxed font-medium">
+              {card.description}
+            </p>
           </div>
-          <span className="aurum-num text-3xl sm:text-5xl font-light text-white/60">
-            0{index + 1}
-          </span>
-        </motion.div>
-      </div>
 
-      {/* Details shown outside the card below it — same fade as the title */}
-      <motion.div
-        style={{ opacity: textOpacity }}
-        className="mt-4 sm:mt-6 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-aurum-ink/10 pt-4 sm:pt-5"
-      >
-        <p className="max-w-xl text-xs sm:text-sm text-aurum-ink/75 leading-relaxed font-medium">
-          {card.description}
-        </p>
-
-        <div className="flex flex-wrap gap-5 sm:gap-8 items-center shrink-0">
-          {card.features.map((feature) => {
-            const Icon = FEATURE_ICONS[feature.icon];
-            return (
-              <div key={feature.label} className="flex items-center gap-2">
-                <Icon className="h-4 w-4 text-aurum-ink/60" />
-                <div>
-                  <p className="text-[0.6rem] tracking-wider text-aurum-ink/50 uppercase">{feature.label}</p>
-                  <p className="text-xs font-semibold text-aurum-ink">{feature.value}</p>
+          <div className="flex flex-wrap gap-5 sm:gap-8 items-center shrink-0">
+            {card.features.map((feature) => {
+              const Icon = FEATURE_ICONS[feature.icon];
+              return (
+                <div key={feature.label} className="flex items-center gap-2">
+                  <Icon className="h-4 w-4 text-aurum-ink/60" />
+                  <div>
+                    <p className="text-[0.6rem] tracking-wider text-aurum-ink/50 uppercase">{feature.label}</p>
+                    <p className="text-xs font-semibold text-aurum-ink">{feature.value}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </motion.div>
-    </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -654,28 +604,74 @@ export default function SamplePage() {
         </div>
       </div>
 
-      {/* Value props: what searching with Infraguru actually gets you */}
-      <div className="mx-auto max-w-7xl pt-24 sm:pt-32 pb-16 sm:pb-24">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-3xl text-center"
-        >
-          <h2 className="text-[clamp(1.25rem,2.8vw,2.1rem)] font-semibold whitespace-normal text-aurum-ink sm:whitespace-nowrap">
-            Your search for the perfect home ends here.
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-[0.95rem] leading-relaxed text-aurum-muted">
-            Discover thoughtfully curated properties that match your lifestyle, aspirations, and investment goals.
-          </p>
-        </motion.div>
+      {/* Value props statement - centered vertically with ultra-premium text reveal animation */}
+      <div className="w-full py-24 min-h-[45vh] flex items-center justify-center">
+        <div className="mx-auto max-w-4xl px-6 text-center flex flex-col items-center justify-center">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+              },
+            }}
+            className="flex flex-col items-center"
+          >
+            {/* Eyebrow badge */}
+            <motion.span
+              variants={{
+                hidden: { opacity: 0, y: 15 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+              }}
+              className="aurum-eyebrow text-[#375972] mb-4 tracking-[0.3em]"
+            >
+              The Perfection Standard
+            </motion.span>
+
+            {/* Shimmering headline */}
+            <motion.h2
+              variants={{
+                hidden: { opacity: 0, y: 25, filter: "blur(8px)" },
+                visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
+              }}
+              className="text-[clamp(1.4rem,3.2vw,2.4rem)] font-light leading-snug tracking-tight text-aurum-ink"
+            >
+              Your search for the perfect home{" "}
+              <span className="relative inline-block font-normal bg-gradient-to-r from-[#375972] via-aurum-gold to-[#375972] bg-clip-text text-transparent bg-[size:200%_auto] animate-gradient">
+                ends here.
+              </span>
+            </motion.h2>
+
+            {/* Subtle animated divider line */}
+            <motion.div
+              variants={{
+                hidden: { scaleX: 0, opacity: 0 },
+                visible: { scaleX: 1, opacity: 1, transition: { duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] } },
+              }}
+              className="mt-6 mb-6 h-0.5 w-16 bg-gradient-to-r from-transparent via-[#375972]/40 to-transparent"
+            />
+
+            {/* Paragraph fade & lift */}
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] } },
+              }}
+              className="max-w-2xl text-[0.95rem] sm:text-[1.05rem] leading-relaxed text-aurum-muted font-light"
+            >
+              Discover thoughtfully curated properties that match your lifestyle, aspirations, and investment goals.
+            </motion.p>
+          </motion.div>
+        </div>
       </div>
 
       {/* About: pinned while the page scrolls past, its content scrubbing into
           focus as you move through — a single tilting image instead of a grid
           of photos, wrapped in a continuously orbiting seal. */}
-      <div ref={aboutWrapperRef} className="relative mt-12 h-[150vh] sm:mt-16 sm:h-[200vh]">
+      <div ref={aboutWrapperRef} className="relative py-24 h-[150vh] sm:h-[200vh]">
         <section
           id="about"
           ref={aboutRef}
@@ -771,7 +767,7 @@ export default function SamplePage() {
         ref={setPreviewRef}
         onMouseMove={handlePreviewMouseMove}
         style={{ borderTopLeftRadius: topRadiusPx, borderTopRightRadius: topRadiusPx }}
-        className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden bg-[#375972] px-6 py-10 mt-[-45vh] sm:mt-[-90vh] sm:px-10 sm:py-14 lg:px-14"
+        className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden bg-[#375972] px-6 py-24 mt-[-45vh] sm:mt-[-90vh] sm:px-10 lg:px-14"
       >
         <span className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase">
           What We Do
@@ -844,7 +840,7 @@ export default function SamplePage() {
       </motion.section>
 
       {/* Portfolio: full screen width & height horizontal scroll cards */}
-      <div ref={projectsContainerRef} id="portfolio" className="relative z-10 hidden h-[380vh] sm:block">
+      <div ref={projectsContainerRef} id="portfolio" className="relative z-10 hidden h-[380vh] sm:block my-24">
         <div className="sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-white p-6 sm:p-10 text-aurum-ink">
           {/* Header row: section title + live "0X — 0N" position counter */}
           <div className="flex items-end justify-between z-20">
@@ -859,21 +855,27 @@ export default function SamplePage() {
             </span>
           </div>
 
-          {/* Full width stacked card track */}
+          {/* Full width card accordion — panels sit flush, no gap/radius, so
+              the active one reads as a single continuous surface wiping
+              across into the next as scroll hands off between cards. Cards
+              before the active index are sliced out of the row rather than
+              parked as slivers on the left, so the active card is always
+              leftmost; popLayout lets the exiting card wipe out while its
+              siblings reflow into its place in the same motion. */}
           <div className="relative my-3 flex flex-1 gap-0 overflow-hidden bg-white">
-            {PORTFOLIO_CARDS.map((card, idx) => (
-              <PortfolioCard
-                key={card.id}
-                card={card}
-                index={idx}
-                total={PORTFOLIO_CARDS.length}
-                progress={projectsScrollProgress}
-              />
-            ))}
+            <AnimatePresence mode="popLayout" initial={false}>
+              {PORTFOLIO_CARDS.slice(activePortfolioIndex).map((card, idx) => (
+                <PortfolioCard key={card.id} card={card} isActive={idx === 0} />
+              ))}
+            </AnimatePresence>
           </div>
 
+          {/* Active card's copy — outside the track, crossfades independently
+              of the image stack's slide */}
+          <ActivePortfolioInfo card={PORTFOLIO_CARDS[activePortfolioIndex]} activeIndex={activePortfolioIndex} />
+
           {/* Bottom bar: Prev/Next jump controls */}
-          <div className="flex items-center justify-end pt-1 text-xs font-light text-aurum-ink/60 z-20">
+          <div className="flex items-center justify-end mt-3 pt-2 sm:mt-4 text-xs font-light text-aurum-ink/60 z-20">
             <div className="flex items-center gap-6">
               <button
                 type="button"
@@ -898,7 +900,7 @@ export default function SamplePage() {
       </div>
 
       {/* Mobile fallback: same four addresses as a plain stacked list */}
-      <div className="relative z-10 mt-3 rounded-[28px] bg-aurum-ink px-6 py-14 text-aurum-cream sm:mt-4 sm:hidden">
+      <div className="relative z-10 my-24 rounded-[28px] bg-aurum-ink px-6 py-14 text-aurum-cream sm:hidden">
         <span className="aurum-eyebrow text-aurum-gold-light">Our Portfolio</span>
         <h2 className="mt-3 text-[clamp(1.5rem,6vw,2rem)] font-light text-aurum-cream">
           Four Addresses, One Standard
@@ -950,7 +952,7 @@ export default function SamplePage() {
       </div>
 
       {/* Ultra-Premium Interactive Location Map Section */}
-      <section className="relative z-10 w-full bg-white border-t border-b border-aurum-ink/10">
+      <section className="relative z-10 w-full bg-white border-t border-b border-aurum-ink/10 my-24">
 
         {/* Full-width Map Container with Premium Overlay Card Controls */}
         <div className="relative w-full h-[450px] sm:h-[550px] overflow-hidden bg-slate-100 shadow-inner">
@@ -970,7 +972,7 @@ export default function SamplePage() {
       </section>
 
       {/* Process: how we work, staggered reveal */}
-      <section id="process" className="relative z-10 w-full bg-[#375972] px-6 py-16 sm:px-10 sm:py-24 lg:px-14 text-white">
+      <section id="process" className="hidden relative z-10 w-full bg-[#375972] px-6 py-24 sm:px-10 lg:px-14 text-white my-24">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1030,13 +1032,13 @@ export default function SamplePage() {
       {/* CTA: single closing statement instead of a full contact form —
           the footer already carries email/phone/address/social. */}
       {/* Contact CTA: full width without rounded borders */}
-      <section id="contact" className="w-full">
+      <section id="contact" className="w-full my-24">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full overflow-hidden bg-white border-t border-b border-aurum-ink/10 px-6 py-14 sm:px-12 sm:py-20"
+          className="relative w-full overflow-hidden bg-white border-t border-b border-aurum-ink/10 px-6 py-24 sm:px-12"
         >
           {/* Ambient glow */}
           <motion.div
