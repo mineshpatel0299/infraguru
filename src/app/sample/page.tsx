@@ -348,7 +348,7 @@ function PortfolioCard({
       initial={{ opacity: 0, flexGrow: 0 }}
       animate={{ opacity: 1, flexGrow: isActive ? 10 : 1 }}
       exit={{ opacity: 0, flexGrow: 0 }}
-      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 1.1, ease: [0.65, 0, 0.35, 1] }}
       className="relative h-full min-w-0 shrink-0 basis-0 overflow-hidden group"
     >
       <img
