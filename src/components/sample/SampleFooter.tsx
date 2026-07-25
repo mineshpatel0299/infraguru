@@ -7,7 +7,7 @@ const SOCIAL_LINKS = ["Facebook", "LinkedIn", "Instagram"];
 
 export default function SampleFooter({ homeHref = "/sample" }: { homeHref?: string }) {
   return (
-    <footer className="mt-3 rounded-t-[28px] bg-aurum-ink px-6 pt-14 pb-8 sm:mt-4 sm:rounded-t-[36px] sm:px-10 sm:pt-20 lg:px-14">
+    <footer className="w-full bg-[#375972] px-6 pt-14 pb-8 sm:px-10 sm:pt-20 lg:px-14">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-4">
           <div className="col-span-2 sm:col-span-1">

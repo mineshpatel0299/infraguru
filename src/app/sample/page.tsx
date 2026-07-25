@@ -302,7 +302,7 @@ function ProcessStepCard({
   return (
     <motion.div
       style={{ y: cardY, opacity: cardOpacity }}
-      className="relative rounded-2xl bg-aurum-cream px-6 py-8"
+      className="relative bg-white px-6 py-8 shadow-sm"
     >
       <span className="aurum-num relative z-10 inline-flex h-12 w-12">
         <motion.span
@@ -313,7 +313,7 @@ function ProcessStepCard({
         </motion.span>
         <motion.span
           style={{ opacity: activeAmount, scale: circleScale }}
-          className="absolute inset-0 flex items-center justify-center rounded-full bg-aurum-ink text-sm font-light text-aurum-gold-light"
+          className="absolute inset-0 flex items-center justify-center rounded-full bg-[#375972] text-sm font-light text-white"
         >
           {step.num}
         </motion.span>
@@ -323,6 +323,16 @@ function ProcessStepCard({
     </motion.div>
   );
 }
+
+// Width (as a % of a card's own width) that each not-yet-opened card peeks
+// out from behind the one ahead of it, so the resting state reads as a
+// fanned stack of cards rather than a single panel with the rest invisible.
+const STACK_PEEK_PERCENT = 15;
+
+// Shared spring for every scroll-driven motion value in a PortfolioCard (its
+// x position, and the arrival values that drive text opacity) — using one
+// config everywhere keeps them moving in lockstep instead of drifting apart.
+const PORTFOLIO_SPRING = { stiffness: 280, damping: 32, mass: 0.4 };
 
 // One panel of the "portfolio" scroll accordion. Owns its own transforms
 // (rather than being built inline inside a .map — hooks can't safely live
@@ -349,13 +359,51 @@ function PortfolioCard({
   const cardStart = Math.max(0, (index - 1) * step);
   const cardEnd = Math.min(1, index * step);
 
+  // Resting position (before this card's turn): a fanned stack peek rather
+  // than fully off-canvas, so cards ahead in the queue stay visible as
+  // receding slivers instead of disappearing until it's their turn.
+  const stackedX = `${Math.max(0, 100 - (total - index) * STACK_PEEK_PERCENT)}%`;
+
   const rawX = useTransform(
     progress,
     [cardStart, cardEnd],
-    [index === 0 ? "0%" : "100%", "0%"]
+    [index === 0 ? "0%" : stackedX, "0%"]
   );
-  
-  const x = useSpring(rawX, { stiffness: 280, damping: 32, mass: 0.4 });
+
+  const x = useSpring(rawX, PORTFOLIO_SPRING);
+
+  // Text (title + detail row) only ever reads cleanly while this card sits
+  // fully open and uncovered — anywhere else, the next card's edge slices
+  // straight through it mid-word. So rather than always rendering it (and
+  // letting the covering card clip it), fade it in as this card finishes
+  // arriving and fade it back out as the next card starts sliding over it.
+  // Both fades are driven off the *same spring* as `x` itself (not raw
+  // scroll progress) — otherwise opacity reacts instantly to scroll while
+  // the card's position lags behind it, and the two visibly fall out of
+  // sync mid-scroll (text arriving/leaving before the card visually does).
+  const isFirst = index === 0;
+  const isLast = index === total - 1;
+
+  // 0→1 as THIS card arrives; constant 1 for the first card, which is open
+  // from rest and never animates in.
+  const rawArrival = isFirst
+    ? useTransform(progress, [0, 1], [1, 1])
+    : useTransform(progress, [cardStart, cardEnd], [0, 1]);
+  const arrival = useSpring(rawArrival, PORTFOLIO_SPRING);
+
+  // 0→1 as the NEXT card arrives — used only to fade this card's text out
+  // once the following card visibly starts covering it. Unused (but still
+  // computed, to keep hook order stable) when this is the last card.
+  const nextCardEnd = isLast ? cardEnd + 0.0001 : Math.min(1, cardEnd + step);
+  const rawNextArrival = useTransform(progress, [cardEnd, nextCardEnd], [0, 1]);
+  const nextArrival = useSpring(rawNextArrival, PORTFOLIO_SPRING);
+
+  const textOpacityIn = useTransform(arrival, [0.55, 1], [0, 1]);
+  const textOpacityOut = useTransform(nextArrival, [0.15, 0.55], [1, 0]);
+  const textOpacity = useTransform(
+    [textOpacityIn, textOpacityOut],
+    ([inVal, outVal]) => (isLast ? (inVal as number) : Math.min(inVal as number, outVal as number))
+  );
 
   return (
     <motion.div
@@ -375,8 +423,12 @@ function PortfolioCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
-        {/* Project Name inside card */}
-        <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 z-10 flex items-end justify-between">
+        {/* Project Name inside card — only readable once this card has fully
+            arrived and is no longer being sliced by the next card's edge */}
+        <motion.div
+          style={{ opacity: textOpacity }}
+          className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 z-10 flex items-end justify-between"
+        >
           <div>
             <span className="aurum-eyebrow text-aurum-cream/80">{card.tag}</span>
             <h3 className="mt-1 text-2xl sm:text-4xl md:text-5xl font-light text-white uppercase tracking-tight">
@@ -386,11 +438,14 @@ function PortfolioCard({
           <span className="aurum-num text-3xl sm:text-5xl font-light text-white/60">
             0{index + 1}
           </span>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Details shown outside the card below it */}
-      <div className="mt-4 sm:mt-6 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-aurum-ink/10 pt-4 sm:pt-5">
+      {/* Details shown outside the card below it — same fade as the title */}
+      <motion.div
+        style={{ opacity: textOpacity }}
+        className="mt-4 sm:mt-6 px-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-aurum-ink/10 pt-4 sm:pt-5"
+      >
         <p className="max-w-xl text-xs sm:text-sm text-aurum-ink/75 leading-relaxed font-medium">
           {card.description}
         </p>
@@ -409,7 +464,7 @@ function PortfolioCard({
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -599,9 +654,8 @@ export default function SamplePage() {
         </div>
       </div>
 
-      <div className="p-3 sm:p-4 lg:p-5">
       {/* Value props: what searching with Infraguru actually gets you */}
-      <div className="mx-auto mt-3 max-w-7xl sm:mt-4">
+      <div className="mx-auto max-w-7xl pt-24 sm:pt-32 pb-16 sm:pb-24">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -609,36 +663,13 @@ export default function SamplePage() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto max-w-3xl text-center"
         >
-          <h2 className="text-[clamp(1.15rem,2.4vw,1.75rem)] font-semibold whitespace-normal text-aurum-ink sm:whitespace-nowrap">
+          <h2 className="text-[clamp(1.25rem,2.8vw,2.1rem)] font-semibold whitespace-normal text-aurum-ink sm:whitespace-nowrap">
             Your search for the perfect home ends here.
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-[0.9rem] leading-relaxed text-aurum-muted">
+          <p className="mx-auto mt-5 max-w-xl text-[0.95rem] leading-relaxed text-aurum-muted">
             Discover thoughtfully curated properties that match your lifestyle, aspirations, and investment goals.
           </p>
         </motion.div>
-
-        <div className="mt-10 grid grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-3">
-          {VALUE_PROPS.map((prop, i) => {
-            const Icon = VALUE_PROP_ICONS[prop.icon];
-            return (
-              <motion.div
-                key={prop.title}
-                custom={i}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                whileHover={{ y: -6 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="rounded-2xl bg-aurum-paper px-6 py-8 sm:px-8 sm:py-10"
-              >
-                <Icon className="h-7 w-7 text-aurum-gold-dark" />
-                <h3 className="mt-5 font-aurum-heading text-lg font-light text-aurum-ink">{prop.title}</h3>
-                <p className="mt-2 text-[0.8rem] leading-relaxed text-aurum-muted">{prop.description}</p>
-              </motion.div>
-            );
-          })}
-        </div>
       </div>
 
       {/* About: pinned while the page scrolls past, its content scrubbing into
@@ -740,7 +771,7 @@ export default function SamplePage() {
         ref={setPreviewRef}
         onMouseMove={handlePreviewMouseMove}
         style={{ borderTopLeftRadius: topRadiusPx, borderTopRightRadius: topRadiusPx }}
-        className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden bg-aurum-ink px-6 py-10 mt-[-45vh] sm:mt-[-90vh] sm:px-10 sm:py-14 lg:px-14"
+        className="relative z-10 flex min-h-screen flex-col justify-center overflow-hidden bg-[#375972] px-6 py-10 mt-[-45vh] sm:mt-[-90vh] sm:px-10 sm:py-14 lg:px-14"
       >
         <span className="text-[0.7rem] font-light tracking-[0.3em] text-aurum-cream/70 uppercase">
           What We Do
@@ -918,8 +949,28 @@ export default function SamplePage() {
         </div>
       </div>
 
+      {/* Ultra-Premium Interactive Location Map Section */}
+      <section className="relative z-10 w-full bg-white border-t border-b border-aurum-ink/10">
+
+        {/* Full-width Map Container with Premium Overlay Card Controls */}
+        <div className="relative w-full h-[450px] sm:h-[550px] overflow-hidden bg-slate-100 shadow-inner">
+          <iframe
+            title="Infraguru Masterplan Map"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112282.8872288325!2d77.00845347209355!3d28.42398462002341!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19d582e38859%3A0x2cf5fe8e5c64b1e!2sGurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1711200000000!5m2!1sen!2sin"
+            width="100%"
+            height="100%"
+            style={{ border: 0, filter: "contrast(1.05) saturate(1.1)" }}
+            allowFullScreen={false}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="w-full h-full object-cover"
+          />
+
+        </div>
+      </section>
+
       {/* Process: how we work, staggered reveal */}
-      <section id="process" className="relative z-10 mt-3 rounded-[28px] bg-aurum-paper px-6 py-16 sm:mt-4 sm:rounded-[36px] sm:px-10 sm:py-24 lg:px-14">
+      <section id="process" className="relative z-10 w-full bg-[#375972] px-6 py-16 sm:px-10 sm:py-24 lg:px-14 text-white">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -929,11 +980,11 @@ export default function SamplePage() {
             className="mb-10 flex max-w-lg flex-col gap-3 sm:mb-16 sm:flex-row sm:items-end sm:justify-between"
           >
             <div>
-              <span className="aurum-eyebrow">How We Work</span>
-              <h2 className="mt-4 text-[clamp(1.6rem,3.5vw,2.6rem)] font-light text-aurum-ink">
+              <span className="aurum-eyebrow text-white/60">How We Work</span>
+              <h2 className="mt-4 text-[clamp(1.6rem,3.5vw,2.6rem)] font-light text-white">
                 A Process Built On Trust
               </h2>
-              <p className="mt-3 text-[0.85rem] leading-relaxed text-aurum-muted">
+              <p className="mt-3 text-[0.85rem] leading-relaxed text-white/75">
                 From first conversation to final handover, every step is designed to keep you informed and in control.
               </p>
             </div>
@@ -943,18 +994,18 @@ export default function SamplePage() {
               scroll past the steps below, instead of animating once on view. */}
           <div ref={processTrackRef} className="relative">
             <div className="relative mb-12 hidden lg:block">
-              <div className="h-px w-full bg-aurum-hairline" />
+              <div className="h-px w-full bg-white/20" />
               <motion.div
                 style={{ scaleX: processProgress, transformOrigin: "left" }}
-                className="absolute inset-0 h-px w-full bg-aurum-gold"
+                className="absolute inset-0 h-px w-full bg-white"
               />
               <motion.div
                 style={{ left: processMarkerLeft }}
-                className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-aurum-gold shadow-[0_0_0_5px_rgba(236,156,0,0.18)]"
+                className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_0_5px_rgba(255,255,255,0.25)]"
               />
               <motion.span
                 style={{ left: processMarkerLeft }}
-                className="absolute top-1/2 -translate-x-1/2 -translate-y-[calc(100%+14px)] text-[0.6rem] font-light tracking-widest text-aurum-gold-dark uppercase"
+                className="absolute top-1/2 -translate-x-1/2 -translate-y-[calc(100%+14px)] text-[0.6rem] font-light tracking-widest text-white/80 uppercase"
               >
                 {processPercentLabel}
               </motion.span>
@@ -978,35 +1029,32 @@ export default function SamplePage() {
       {/* Contact */}
       {/* CTA: single closing statement instead of a full contact form —
           the footer already carries email/phone/address/social. */}
-      <section id="contact" className="mt-3 sm:mt-4">
+      {/* Contact CTA: full width without rounded borders */}
+      <section id="contact" className="w-full">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mx-auto max-w-7xl overflow-hidden rounded-[28px] bg-aurum-ink px-6 py-12 sm:rounded-[36px] sm:px-12 sm:py-16"
+          className="relative w-full overflow-hidden bg-white border-t border-b border-aurum-ink/10 px-6 py-14 sm:px-12 sm:py-20"
         >
-          {/* Ambient glow, breathing gently behind the headline */}
+          {/* Ambient glow */}
           <motion.div
-            animate={{ opacity: [0.25, 0.5, 0.25], scale: [1, 1.15, 1] }}
+            animate={{ opacity: [0.15, 0.3, 0.15], scale: [1, 1.15, 1] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="pointer-events-none absolute top-1/2 left-1/4 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-aurum-gold/20 blur-3xl"
+            className="pointer-events-none absolute top-1/2 left-1/4 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-aurum-gold/15 blur-3xl"
           />
 
-          <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+          <div className="relative mx-auto max-w-7xl flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
             {/* Left: text */}
             <div className="max-w-xl">
-              <span className="aurum-eyebrow text-aurum-gold-light">Get Started</span>
+              <span className="aurum-eyebrow text-aurum-muted">Get Started</span>
 
-              <motion.h2
-                animate={{ backgroundPositionX: ["0%", "200%"] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-                className="mt-5 bg-[linear-gradient(90deg,var(--color-aurum-cream)_0%,var(--color-aurum-gold)_50%,var(--color-aurum-cream)_100%)] bg-size-[200%_100%] bg-clip-text text-[clamp(2rem,4.5vw,3.2rem)] font-light text-transparent"
-              >
+              <h2 className="mt-5 text-[clamp(2rem,4.5vw,3.2rem)] font-light text-aurum-ink leading-tight">
                 Ready To Build Your Legacy?
-              </motion.h2>
+              </h2>
 
-              <p className="mt-5 max-w-md text-sm leading-relaxed text-aurum-cream/60">
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-aurum-muted">
                 Connect with our private advisors to schedule an exclusive consultation on your next property.
               </p>
             </div>
@@ -1015,13 +1063,13 @@ export default function SamplePage() {
             <div className="flex shrink-0 flex-col items-stretch gap-4 sm:flex-row lg:flex-col lg:items-end">
               <a
                 href="mailto:info@infraguru.in"
-                className="aurum-btn-gold justify-center rounded-full px-8 py-3.5 text-[0.75rem]"
+                className="inline-flex items-center justify-center rounded-full bg-aurum-ink px-8 py-3.5 text-[0.75rem] font-medium tracking-wider text-aurum-cream uppercase transition-colors hover:bg-black"
               >
                 Book a Consultation
               </a>
               <a
                 href="tel:+919090656575"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-aurum-cream/25 px-8 py-3.5 text-[0.75rem] font-light tracking-wide text-aurum-cream uppercase transition-colors hover:border-aurum-cream/50"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-aurum-ink/20 px-8 py-3.5 text-[0.75rem] font-medium tracking-wide text-aurum-ink uppercase transition-colors hover:bg-aurum-ink/5"
               >
                 +91 90 90 65 65 75
               </a>
@@ -1031,7 +1079,6 @@ export default function SamplePage() {
       </section>
 
       <SampleFooter />
-      </div>
     </main>
   );
 }
