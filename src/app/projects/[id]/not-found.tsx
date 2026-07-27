@@ -19,7 +19,7 @@ export default function NotFound() {
         The listing you&rsquo;re looking for may have been sold, renamed, or never existed. Let&rsquo;s get you
         back to the portfolio.
       </p>
-      <SealLink href="/#projects" className="btn-primary rounded-full">
+      <SealLink href="/#project-showcase" className="btn-primary rounded-full">
         Return To Portfolio
       </SealLink>
     </main>

@@ -238,7 +238,7 @@ function TopBar({
       <div className="pointer-events-auto flex items-center gap-4">
         {mode === "page" ? (
           <SealLink
-            href="/#projects"
+            href="/#project-showcase"
             className="flex items-center gap-2 rounded-full border border-primary/10 bg-white/90 px-4 py-2 text-[0.72rem] font-semibold tracking-[0.1em] text-ink uppercase shadow-soft backdrop-blur-xl transition-colors hover:text-primary"
           >
             <span aria-hidden>&larr;</span> Portfolio
@@ -940,7 +940,7 @@ function MobileExperience({
       <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-hairline bg-white/90 px-4 py-3 backdrop-blur-xl">
         {mode === "page" ? (
           <SealLink
-            href="/#projects"
+            href="/#project-showcase"
             className="flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.1em] text-ink uppercase"
           >
             <span aria-hidden>&larr;</span> Portfolio

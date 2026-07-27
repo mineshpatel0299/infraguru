@@ -4,30 +4,28 @@ import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
 
-const HEADLINE_LINE_1 = "Your Trusted Partner In";
-const HEADLINE_LINE_2 = "Real Estate & Investment";
+const HEADLINE_LINE_1 = "LIVE THE ART";
+const HEADLINE_LINE_2 = "OF LUXURY.";
 
 
 const containerVariant: Variants = {
   hidden: { opacity: 0 },
   visible: (delay: number) => ({
     opacity: 1,
-    transition: { staggerChildren: 0.05, delayChildren: delay },
+    transition: { staggerChildren: 0.08, delayChildren: delay },
   }),
 };
 
 const wordVariant: Variants = {
-  hidden: { opacity: 0, y: 30, filter: "blur(8px)", scale: 0.95 },
+  hidden: { y: "115%", opacity: 0 },
   visible: {
+    y: "0%",
     opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    scale: 1,
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
-function BlurWordReveal({
+function SlideUpWordReveal({
   text,
   className = '',
   delay = 0.5,
@@ -38,16 +36,18 @@ function BlurWordReveal({
 }) {
   return (
     <motion.span
-      className={`inline-flex flex-wrap ${className}`}
+      className={`inline-flex flex-wrap justify-center ${className}`}
       custom={delay}
       variants={containerVariant}
       initial="hidden"
       animate="visible"
     >
       {text.split(' ').map((word, i) => (
-        <motion.span key={i} className="mr-[0.25em]" variants={wordVariant}>
-          {word}
-        </motion.span>
+        <span key={i} className="mr-[0.25em] inline-block overflow-hidden pb-[0.1em] -mb-[0.1em]">
+          <motion.span className="inline-block" variants={wordVariant}>
+            {word}
+          </motion.span>
+        </span>
       ))}
     </motion.span>
   );
@@ -74,7 +74,7 @@ export default function Hero() {
       <div
         ref={sectionRef}
         onPointerMove={handlePointerMove}
-        className="relative flex h-[calc(100svh-1.5rem)] flex-col justify-end overflow-hidden rounded-[32px] bg-primary-dark sm:h-[calc(100svh-2rem)] sm:rounded-[40px] lg:h-[calc(100svh-2.5rem)] lg:rounded-[56px]"
+        className="relative flex h-[calc(100svh-1.5rem)] flex-col items-center justify-center overflow-hidden rounded-[20px] bg-primary-dark sm:h-[calc(100svh-2rem)] sm:rounded-[24px] lg:h-[calc(100svh-2.5rem)] lg:rounded-[32px]"
       >
         {/* Cinematic background */}
         <motion.div
@@ -82,24 +82,14 @@ export default function Hero() {
           style={{ x: springX, y: springY }}
         >
           <img
-            src="/hero-poster.jpg"
-            alt="Aerial view of the city skyline"
-            className="h-full w-full object-cover sm:hidden"
-          />
-          <video
-            className="hidden h-full w-full object-cover sm:block"
-            src="/hero.mp4"
-            poster="/hero-poster.jpg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+            src="/heroi.jpg"
+            alt="Luxury Villa Background"
+            className="h-full w-full object-cover"
           />
         </motion.div>
 
         {/* Shadow overlay for text readability (neutral, not blue) */}
-        <div className="absolute inset-x-0 bottom-0 h-[80%] z-1 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-1 bg-gradient-to-b from-black/45 via-black/60 to-black/40 pointer-events-none" />
 
         {/* Film grain */}
         <div
@@ -110,56 +100,53 @@ export default function Hero() {
           }}
         />
 
-        {/* Edge vertical tag */}
-        <div className="pointer-events-none absolute top-24 left-4 z-10 hidden lg:block">
-          <span className="block [writing-mode:vertical-rl] text-[0.7rem] tracking-[4px] text-white/40 uppercase">
-            Est. 2021 — Gurgaon, Haryana
-          </span>
-        </div>
+        {/* Curtain reveal */}
+        <motion.div
+          className="pointer-events-none absolute inset-0 z-20 border-t-2 border-secondary bg-white"
+          initial={{ y: 0 }}
+          animate={{ y: '100%' }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.85, 0, 0.15, 1] }}
+        />
 
-        {/* Floating dashed ring */}
-        
-
-        {/* Floating years badge */}
-    
-
-        <div className="container relative z-10 mx-auto max-w-7xl px-5 pb-6 sm:px-8 sm:pb-12 lg:pb-16">
-          <motion.span
-            className="mb-3 inline-flex items-center gap-2 text-[0.65rem] font-semibold tracking-[2px] text-secondary-light uppercase before:inline-block before:h-0.5 before:w-5 before:bg-secondary sm:mb-6 sm:gap-2.5 sm:text-[0.8rem] sm:tracking-[3px] sm:before:w-7"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-          >
-            Infraguru — A Tradition of Trust
-          </motion.span>
-
-          <h1 className="mb-5 max-w-none text-[clamp(1.6rem,5vw,5.6rem)] font-light tracking-tight text-white leading-[1.15] sm:mb-8 sm:tracking-[-1.5px] sm:leading-[1.1]">
-            <BlurWordReveal text={HEADLINE_LINE_1} delay={0.1} className="block pb-1 flex-nowrap whitespace-nowrap" />
-            <BlurWordReveal
+        <div className="container relative z-10 mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8 mt-16 sm:mt-24 lg:mt-32">
+          <h1 className="mb-4 max-w-none text-center text-h1 font-extrabold uppercase tracking-tight text-white sm:mb-6 sm:tracking-[-1px]">
+            <SlideUpWordReveal text={HEADLINE_LINE_1} delay={1.2} className="block justify-center pb-1 flex-nowrap whitespace-nowrap" />
+            <SlideUpWordReveal
               text={HEADLINE_LINE_2}
-              delay={0.4}
-              className="flex-nowrap whitespace-nowrap bg-[linear-gradient(120deg,#ffffff_0%,var(--color-secondary-light)_50%,var(--color-secondary)_100%)] bg-clip-text text-transparent drop-shadow-none"
+              delay={1.45}
+              className="block justify-center flex-nowrap whitespace-nowrap text-white drop-shadow-none"
             />
           </h1>
 
-          <motion.div
-            className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4"
-            initial={{ opacity: 0, y: 20 }}
+          <motion.p
+            className="mb-6 max-w-lg text-body text-white/80 sm:mb-8"
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 1.3 }}
+            transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Discover breathtaking villas, timeless interiors, and stunning exteriors —
+            all curated for those who desire more than just a home.
+          </motion.p>
+
+          <motion.div
+            className="flex flex-col items-center justify-center"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 2.0, ease: [0.16, 1, 0.3, 1] }}
           >
             <a
-              href="#projects"
-              className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-secondary px-6 py-3 text-xs font-bold tracking-wider whitespace-nowrap text-primary-dark uppercase transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_35px_5px_rgba(212,175,55,0.45)] sm:px-8 sm:py-3.5 sm:text-sm"
+              href="#contact"
+              className="group inline-flex items-center gap-3 rounded-full bg-white py-2 pr-2 pl-7 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_40px_rgba(0,0,0,0.3)] sm:pl-8"
             >
-              Explore Projects
-              <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-            </a>
-            <a
-              href="#about"
-              className="hidden items-center justify-center gap-2.5 rounded-full border-[1.5px] border-white/40 px-8 py-3.5 text-sm font-semibold tracking-wider whitespace-nowrap text-white uppercase backdrop-blur-sm transition-all duration-300 hover:border-white hover:bg-white/10 sm:inline-flex"
-            >
-              Our Story
+              <span className="text-label font-bold text-black uppercase">
+                Contact Us
+              </span>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#23c4d8] text-white transition-transform duration-300 group-hover:translate-x-1 sm:h-11 sm:w-11">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </span>
             </a>
           </motion.div>
         </div>

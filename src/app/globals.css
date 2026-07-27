@@ -1,8 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -18,30 +13,39 @@
   --color-bg-soft-2: #e8eefc;
   --color-hairline: rgba(3, 46, 151, 0.1);
 
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-heading: var(--font-playfair), serif;
+  --font-body: var(--font-inter), sans-serif;
 
   --shadow-soft: 0 10px 40px rgba(3, 46, 151, 0.08);
   --shadow-medium: 0 20px 60px rgba(3, 46, 151, 0.12);
   --shadow-strong: 0 30px 80px rgba(3, 46, 151, 0.18);
 
-  /* ── Aurum theme — editorial luxury variant (used only under /premium) ── */
-  --color-aurum-cream: #ffffff; /* pure white for light sections */
-  --color-aurum-cream-2: #fafafa;
-  --color-aurum-paper: #f4f4f4;
-  --color-aurum-ink: #1c1102; /* dark brown */
-  --color-aurum-ink-soft: #38240a;
-  --color-aurum-emerald: #1c1102;
-  --color-aurum-emerald-light: #38240a;
-  --color-aurum-emerald-pale: #fafafa;
-  --color-aurum-gold: #EC9C00;
-  --color-aurum-gold-light: #FFCA99;
-  --color-aurum-gold-dark: #B97A00;
-  --color-aurum-muted: #895900;
-  --color-aurum-hairline: rgba(28, 17, 2, 0.16);
+  /* ── Type scale ── every size is a clamp(), so responsiveness is baked in
+     and no per-section sm:/md:/lg: overrides are needed. ── */
+  --text-h1: clamp(1.8rem, 4.2vw, 4.5rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
 
-  --font-aurum-heading: 'Urbanist', sans-serif;
-  --font-aurum-body: 'Urbanist', sans-serif;
+  --text-h2: clamp(1.75rem, 4.2vw, 3.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+
+  --text-h3: clamp(1.5rem, 3vw, 2.5rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.01em;
+
+  --text-h4: clamp(1rem, 1.4vw, 1.15rem);
+  --text-h4--line-height: 1.35;
+
+  --text-body: clamp(0.8rem, 1vw, 0.95rem);
+  --text-body--line-height: 1.7;
+
+  --text-caption: clamp(0.7rem, 0.85vw, 0.8rem);
+  --text-caption--line-height: 1.5;
+
+  --text-label: clamp(0.68rem, 0.8vw, 0.78rem);
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.12em;
 }
 
 @layer base {
@@ -82,75 +86,15 @@
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2.5 text-[0.8rem] font-semibold tracking-[3px] uppercase text-primary mb-5 before:content-[''] before:inline-block before:w-7 before:h-0.5 before:bg-secondary;
+    @apply inline-flex items-center gap-2.5 text-label font-semibold uppercase text-primary mb-5 before:content-[''] before:inline-block before:w-7 before:h-0.5 before:bg-secondary;
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2.5 rounded bg-primary px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-white shadow-[0_12px_30px_rgba(3,46,151,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary-light hover:shadow-[0_16px_36px_rgba(3,46,151,0.32)];
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center gap-2.5 rounded border-[1.5px] border-primary bg-transparent px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-primary transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary hover:text-white;
+    @apply inline-flex items-center gap-2.5 rounded text-label bg-primary px-8 py-3.5 font-semibold uppercase text-white shadow-[0_12px_30px_rgba(3,46,151,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary-light hover:shadow-[0_16px_36px_rgba(3,46,151,0.32)];
   }
 
   .btn-gold {
-    @apply inline-flex items-center gap-2.5 rounded bg-secondary px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-primary-dark shadow-[0_12px_30px_rgba(212,175,55,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary-hover;
-  }
-
-  .glass-panel {
-    @apply border border-primary/10 bg-white/60 backdrop-blur-2xl;
-  }
-
-  /* ── Aurum theme primitives ── */
-  .theme-aurum {
-    font-family: var(--font-aurum-body);
-    color: var(--color-aurum-cream);
-    background-color: var(--color-aurum-ink);
-  }
-
-  /* ── Sample page variant: swap the aurum theme's dark brown for a neutral
-     charcoal, keeping every other aurum token unchanged ── */
-  .theme-aurum.theme-aurum-blue {
-    --color-aurum-ink: #0e0d09;
-    --color-aurum-ink-soft: #1c1a14;
-    --color-aurum-cream: #faf9f7;
-    --color-aurum-cream-2: #f4f3ef;
-    --color-aurum-paper: #efeee8;
-  }
-
-  .theme-aurum h1,
-  .theme-aurum h2,
-  .theme-aurum h3,
-  .theme-aurum h4 {
-    font-family: var(--font-aurum-heading);
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    line-height: 1.08;
-  }
-
-  .aurum-eyebrow {
-    @apply inline-flex items-center gap-3 text-[0.72rem] font-semibold tracking-[0.32em] uppercase text-aurum-gold-dark;
-  }
-
-  .aurum-rule {
-    @apply h-px w-full bg-aurum-hairline;
-  }
-
-  .aurum-btn {
-    @apply inline-flex items-center gap-3 border border-aurum-ink px-8 py-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-aurum-ink transition-all duration-300 hover:bg-aurum-ink hover:text-aurum-cream;
-  }
-
-  .aurum-btn-solid {
-    @apply inline-flex items-center gap-3 bg-aurum-emerald px-8 py-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-aurum-cream transition-all duration-300 hover:bg-aurum-ink;
-  }
-
-  .aurum-btn-gold {
-    @apply inline-flex items-center gap-3 bg-aurum-gold px-8 py-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-aurum-ink transition-all duration-300 hover:bg-aurum-gold-dark hover:text-aurum-cream;
-  }
-
-  .aurum-num {
-    font-family: var(--font-aurum-heading);
-    font-optical-sizing: auto;
+    @apply inline-flex items-center gap-2.5 rounded text-label bg-secondary px-8 py-3.5 font-bold uppercase text-primary-dark shadow-[0_12px_30px_rgba(212,175,55,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary-hover;
   }
 }
 

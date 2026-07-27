@@ -1,247 +1,256 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import {
   motion,
   useScroll,
   useTransform,
   useSpring,
-  useInView,
-  useMotionValue,
-  useMotionTemplate,
+  type Variants,
 } from 'framer-motion';
-import { viewportOnce } from '@/lib/motion';
+import { viewportMirror } from '@/lib/motion';
 
-/* ── Pillar data ──────────────────────────────────────────────────────────── */
-const PILLARS = [
-  {
-    n: '01',
-    title: 'Vision',
-    body: 'We spot value before the skyline catches up.',
+const textContainerVariant: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.03,
+      delayChildren: 0.15,
+    },
   },
-  {
-    n: '02',
-    title: 'Trust',
-    body: 'RERA-backed, transparent, built on fifteen years of relationships.',
+};
+
+const wordAnimationVariant: Variants = {
+  hidden: { y: "105%", opacity: 0 },
+  visible: {
+    y: "0%",
+    opacity: 1,
+    transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] as const },
   },
-  {
-    n: '03',
-    title: 'Craft',
-    body: 'Every deal handled like a signature piece — deliberate, built to last.',
-  },
-] as const;
+};
 
-/* ── Cursor-tracked gold foil headline ───────────────────────────────────── */
-function FoilHeadline() {
-  const ref = useRef<HTMLHeadingElement>(null);
-  const mx = useMotionValue(50);
-  const my = useMotionValue(50);
-  const smx = useSpring(mx, { stiffness: 120, damping: 22, mass: 0.6 });
-  const smy = useSpring(my, { stiffness: 120, damping: 22, mass: 0.6 });
-  const maskImage = useMotionTemplate`radial-gradient(circle 180px at ${smx}% ${smy}%, black 0%, transparent 100%)`;
-
-  const handleMove = (e: React.MouseEvent<HTMLHeadingElement>) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    mx.set(((e.clientX - rect.left) / rect.width) * 100);
-    my.set(((e.clientY - rect.top) / rect.height) * 100);
-  };
-
-  const text = (
-    <>
-      Where Vision <span className="italic font-light">Meets Value.</span>
-    </>
-  );
-
+function StaggeredText({ text, className = "" }: { text: string; className?: string }) {
+  const words = text.split(" ");
   return (
-    <h2
-      ref={ref}
-      onMouseMove={handleMove}
-      className="relative select-none text-[clamp(2.4rem,4vw,3.4rem)] text-primary-dark font-light tracking-tight"
+    <motion.span
+      variants={textContainerVariant}
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportMirror}
+      className={`inline-flex flex-wrap ${className}`}
     >
-      {text}
-      <motion.span
-        aria-hidden
-        className="absolute inset-0 bg-gradient-to-br from-secondary-light via-secondary to-secondary-hover bg-clip-text text-transparent pointer-events-none"
-        style={{ WebkitMaskImage: maskImage as unknown as string, maskImage: maskImage as unknown as string }}
-      >
-        {text}
-      </motion.span>
-    </h2>
+      {words.map((word, i) => (
+        <span key={i} className="inline-flex overflow-hidden pb-1 -mb-1 mr-[0.25em]">
+          <motion.span variants={wordAnimationVariant} className="inline-block">
+            {word}
+          </motion.span>
+        </span>
+      ))}
+    </motion.span>
   );
 }
 
-/* ── Single scrollytelling pillar row ────────────────────────────────────── */
-function PillarRow({
-  pillar,
-  isActive,
-  onActivate,
-  index,
-}: {
-  pillar: (typeof PILLARS)[number];
-  isActive: boolean;
-  onActivate: () => void;
-  index: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={viewportOnce}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
-      className="group relative flex items-center gap-5 py-6 border-b border-hairline"
-    >
-      {/* invisible tracker: fires when this row crosses the vertical center */}
-      <motion.span
-        aria-hidden
-        onViewportEnter={onActivate}
-        viewport={{ margin: '-45% 0px -45% 0px' }}
-        className="absolute inset-0 pointer-events-none"
-      />
-      <span
-        className={`font-heading text-lg leading-none tabular-nums transition-colors duration-500 ${
-          isActive ? 'text-secondary' : 'text-primary/25'
-        }`}
-      >
-        {pillar.n}
-      </span>
-      <div className="flex-1">
-        <h3
-          className={`text-[1.3rem] transition-colors duration-500 ${
-            isActive ? 'text-primary-dark' : 'text-primary-dark/50'
-          }`}
-        >
-          {pillar.title}
-        </h3>
-        <p
-          className={`text-[0.95rem] leading-[1.6] transition-colors duration-500 ${
-            isActive ? 'text-muted' : 'text-muted/40'
-          }`}
-        >
-          {pillar.body}
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-/* ── Main Component ──────────────────────────────────────────────────────── */
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const isImageInView = useInView(imageRef, { once: true, margin: '-15%' });
-  const [activePillar, setActivePillar] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
 
-  const rawY = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
+  const rawY = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
   const parallaxY = useSpring(rawY, { stiffness: 60, damping: 20 });
 
   return (
-    <section
-      ref={sectionRef}
-      id="about"
-      className="relative bg-white overflow-hidden"
-    >
-      {/* Soft radial glow for depth */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-[radial-gradient(circle,var(--color-bg-soft)_0%,transparent_70%)] opacity-80" />
-      </div>
+    <section id="about" className="bg-white p-3 sm:p-4 lg:p-5">
+      <div
+        ref={sectionRef}
+        className="relative bg-[#faf8f5] py-12 sm:py-16 lg:py-20 overflow-hidden text-neutral-900 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px]"
+      >
+        {/* ── Soft subtle ambient background glow ── */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.8)_0%,transparent_70%)]" />
+        </div>
 
-      <div className="relative z-10 container mx-auto max-w-7xl px-8 py-28 lg:py-40 lg:py-56">
-        {/* ── Section header ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={viewportOnce}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-16 max-w-160 text-center"
-        >
-          <span className="eyebrow justify-center">Why Infraguru</span>
-          <FoilHeadline />
-          <p className="mt-5 text-[1.1rem] leading-[1.7] text-muted">
-            Fifteen years of turning capital into enduring wealth through a
-            curated portfolio built for long-term value.
-          </p>
-        </motion.div>
-
-        {/* ── Image + pillar ledger ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
-
-          {/* ── Left: visual ── */}
-          <div ref={imageRef} className="relative">
-            <motion.div
-              className="relative aspect-[4/5] rounded-3xl overflow-hidden"
-              animate={isImageInView ? { clipPath: 'inset(0% 0% 0% 0% round 1.5rem)' } : {}}
-              initial={{ clipPath: 'inset(0% 100% 0% 0% round 1.5rem)' }}
-              transition={{ duration: 1.4, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
-            >
-              <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
-                <img
-                  src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90"
-                  alt="Infraguru premium real estate"
-                  className="w-full h-[115%] -mt-[7.5%] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/70 via-primary-dark/5 to-transparent" />
-              </motion.div>
-
+        <div className="relative z-10 container mx-auto max-w-7xl px-6 sm:px-10">
+          {/* ── Top Center Stacked Images with Framer Motion Parallax & Side-by-Side Reveal ── */}
+          <div className="flex justify-center">
+            <div className="relative w-[180px] sm:w-[210px] md:w-[240px] aspect-[1/1.1]">
+              {/* Back Card (Card 2) - Slides right to sit side by side in same line after 1 second */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={viewportOnce}
-                transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute top-8 left-8 flex flex-col items-start"
+                className="absolute inset-0 z-0 rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.1)] bg-neutral-200"
+                initial={{ opacity: 0, scale: 0.9, x: "0%", y: 0, rotate: 0 }}
+                whileInView={{ opacity: 1, scale: 1, x: "53%", y: 0, rotate: 0 }}
+                viewport={viewportMirror}
+                transition={{
+                  opacity: { duration: 0.6, delay: 0.5 },
+                  scale: { duration: 1.0, delay: 1.0, ease: [0.16, 1, 0.3, 1] as const },
+                  x: { duration: 1.0, delay: 1.0, ease: [0.16, 1, 0.3, 1] as const },
+                }}
               >
-                <div className="font-heading text-[0.7rem] text-white/70 tracking-[0.2em] uppercase mb-1">Est.</div>
-                <div className="font-heading text-5xl text-white leading-none font-medium">2011</div>
+                <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
+                  <img
+                    src="/about-1.jpg"
+                    alt="Infra Guru Property Experience"
+                    className="w-full h-[120%] -mt-[10%] object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                </motion.div>
               </motion.div>
-            </motion.div>
 
-            <motion.div
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={viewportOnce}
-              transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.5 }}
-              className="absolute -right-5 top-12 bottom-12 w-[2px] bg-secondary origin-top hidden lg:block"
-            />
+              {/* Front Card (Card 1) - Slides left to sit side by side in same line after 1 second */}
+              <motion.div
+                className="relative z-10 w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.15)] bg-neutral-200"
+                initial={{ opacity: 0, y: 30, scale: 0.92, x: "0%" }}
+                whileInView={{ opacity: 1, y: 0, scale: 1, x: "-53%" }}
+                viewport={viewportMirror}
+                transition={{
+                  opacity: { duration: 0.8 },
+                  y: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+                  scale: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
+                  x: { duration: 1.0, delay: 1.0, ease: [0.16, 1, 0.3, 1] as const },
+                }}
+              >
+                <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
+                  <img
+                    src="/about-2.jpg"
+                    alt="Infra Guru Luxury Real Estate"
+                    className="w-full h-[120%] -mt-[10%] object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                </motion.div>
+              </motion.div>
+            </div>
           </div>
 
-          {/* ── Right: pillar ledger + CTA ── */}
-          <div className="flex flex-col">
-            {PILLARS.map((pillar, i) => (
-              <PillarRow
-                key={pillar.n}
-                pillar={pillar}
-                index={i}
-                isActive={activePillar === i}
-                onActivate={() => setActivePillar(i)}
-              />
-            ))}
+          {/* ── Two-Column Layout ── */}
+          <div className="mx-auto mt-8 max-w-6xl sm:mt-12 lg:mt-14">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-16 items-start">
+              
+              {/* ── Left Column ── */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportMirror}
+                transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col"
+              >
+                <div className="mb-6 font-body text-label text-neutral-500 sm:mb-8">
+                  <span className="block mb-0.5">(01)</span>
+                  <span className="block font-body font-medium text-neutral-600">About Us</span>
+                </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="mt-10 flex flex-wrap items-center gap-12 lg:gap-16 lg:gap-12"
-            >
-              <a
-                href="#projects"
-                className="group relative inline-flex items-center gap-3 px-10 py-4 bg-primary text-white text-[0.8rem] font-semibold tracking-[0.15em] uppercase rounded-full transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-[0_16px_40px_rgba(3,46,151,0.3)]"
+                <h3 className="mb-3 text-h4 font-semibold tracking-tight text-neutral-900 sm:mb-4">
+                  <StaggeredText text="A Seamless Real Estate Experience in Gurgaon" />
+                </h3>
+                <p className="max-w-sm text-body text-neutral-500 leading-relaxed">
+                  At <span className="font-semibold text-[#c26d43]">Infra Guru</span>, we believe finding your perfect home or investment property should be effortless. Established in Gurgaon, Haryana in 2021 with over 10+ years of industry expertise, our commitment to excellence and client satisfaction sets us apart.
+                </p>
+              </motion.div>
+
+              {/* ── Right Column ── */}
+              <motion.div
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportMirror}
+                transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col"
               >
-                Explore Portfolio
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 text-[0.8rem] font-semibold tracking-[0.15em] uppercase text-muted hover:text-primary-dark transition-colors duration-300"
+                {/* Long-form lead copy, not a section headline — intentionally exempt
+                    from the shared H2 scale (see typography audit). */}
+                <h2 className="mb-6 text-xl font-normal leading-[1.28] tracking-tight text-neutral-900 sm:mb-8 sm:text-2xl sm:leading-[1.3] lg:text-3xl lg:leading-[1.3]">
+                  <StaggeredText text="We handle comprehensive real estate transactions—including residential, commercial, farmland, leasing, financing, documentation, and joint ventures with well-known construction businesses." />
+                </h2>
+
+                <p className="mb-8 text-body text-neutral-500 leading-relaxed max-w-2xl">
+                  We take every step to eliminate property-buying anxiety. Connected with trustworthy A-Grade platforms and experienced industry specialists, we save you valuable time and money by providing expert recommendations before you invest.
+                </p>
+
+                <div className="flex items-center">
+                  <a
+                    href="#contact"
+                    className="group inline-flex items-center gap-4 rounded-full border border-neutral-300/80 bg-white/70 py-2 pl-6 pr-2 text-label font-semibold text-neutral-900 shadow-[0_4px_20px_rgba(0,0,0,0.04)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-neutral-400 hover:bg-white hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+                  >
+                    <span>Learn More</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#c26d43] text-white transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="7" y1="17" x2="17" y2="7" />
+                        <polyline points="7 7 17 7 17 17" />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+              </motion.div>
+
+            </div>
+          </div>
+
+          {/* ── Stats Grid (As seen in screenshot) ── */}
+          <div className="mx-auto mt-16 max-w-6xl sm:mt-20 lg:mt-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              {/* Card 1 */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportMirror}
+                transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] as const }}
+                className="flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white via-white to-[#faf7f2] p-6 sm:p-8 lg:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.03)] border border-neutral-100"
               >
-                Book a Consultation
-              </a>
-            </motion.div>
+                <div className="mb-12 sm:mb-16 lg:mb-20 font-body text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-neutral-900">
+                  100%
+                </div>
+                <div>
+                  <h4 className="mb-2 text-h4 font-semibold text-neutral-900">
+                    Client Satisfaction
+                  </h4>
+                  <p className="text-body text-neutral-500">
+                    Dedicated to relieving property-buying anxiety with transparent advice and trusted expertise.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Card 2 */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportMirror}
+                transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
+                className="flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white via-white to-[#faf7f2] p-6 sm:p-8 lg:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.03)] border border-neutral-100"
+              >
+                <div className="mb-12 sm:mb-16 lg:mb-20 font-body text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-neutral-900">
+                  10+
+                </div>
+                <div>
+                  <h4 className="mb-2 text-h4 font-semibold text-neutral-900">
+                    Years of Expertise
+                  </h4>
+                  <p className="text-body text-neutral-500">
+                    With over a decade in the industry, we bring invaluable market insights to every transaction in Gurgaon and beyond.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Card 3 */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={viewportMirror}
+                transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
+                className="flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white via-white to-[#faf7f2] p-6 sm:p-8 lg:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.03)] border border-neutral-100"
+              >
+                <div className="mb-12 sm:mb-16 lg:mb-20 font-body text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-neutral-900">
+                  500+
+                </div>
+                <div>
+                  <h4 className="mb-2 text-h4 font-semibold text-neutral-900">
+                    Properties Handled
+                  </h4>
+                  <p className="text-body text-neutral-500">
+                    Successfully facilitating residential, commercial, farmland, and rental deals across Haryana.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
