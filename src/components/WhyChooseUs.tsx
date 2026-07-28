@@ -92,32 +92,34 @@ export default function WhyChooseUs() {
   const smoothX = useSpring(x, { stiffness: 120, damping: 24, mass: 0.5 });
 
   return (
-    <section id="why-choose-us" className="bg-white p-3 sm:p-4 lg:p-5">
+    <section id="why-choose-us" className="bg-white">
       {/* ── Tall container to provide vertical scrolling distance for smooth horizontal motion ── */}
       <div ref={sectionRef} className="relative h-[350vh] w-full">
         {/* ── Sticky Viewport Container ── */}
         <div
           ref={viewportRef}
-          className="sticky top-3 sm:top-4 lg:top-5 h-[calc(100svh-1.5rem)] sm:h-[calc(100svh-2rem)] lg:h-[calc(100svh-2.5rem)] w-full overflow-hidden rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] bg-[#e6ebe5] flex flex-col justify-center py-10 sm:py-14 md:py-16 lg:py-20 px-6 sm:px-10 md:px-14 lg:px-20"
+          className="sticky top-0 h-screen w-full overflow-hidden bg-white flex flex-col justify-center py-10 sm:py-14 md:py-16 lg:py-20 px-6 sm:px-10 md:px-14 lg:px-20"
         >
           {/* ── Top Header Section (Smooth Entrance Animation Rising From Below) ── */}
           <div className="relative z-10 w-full text-center max-w-4xl mx-auto mb-8 sm:mb-10 lg:mb-14">
             <motion.div
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-3 sm:mb-4"
+              className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
             >
-              <span className="inline-block font-body text-label font-semibold uppercase text-neutral-600">
+              <div className="h-[2px] w-8 bg-gold-gradient" />
+              <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
                 WHY CHOOSE US
               </span>
+              <div className="h-[2px] w-8 bg-gold-gradient" />
             </motion.div>
 
             <motion.h2
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 45 }}
               transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="font-body text-h2 font-bold tracking-tight uppercase text-neutral-900"
+              className="font-body text-h2 font-light tracking-tight text-neutral-900 leading-tight"
             >
-              WHERE EXCELLENCE<br />
+              WHERE <span className="font-bold text-gold-gradient">EXCELLENCE</span><br />
               IS STANDARD.
             </motion.h2>
           </div>
@@ -138,22 +140,25 @@ export default function WhyChooseUs() {
                     delay: 0.25 + idx * 0.1,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className="group relative w-[85vw] sm:w-[380px] md:w-[420px] lg:w-[460px] shrink-0 rounded-[24px] sm:rounded-[28px] lg:rounded-[32px] bg-[linear-gradient(145deg,#ffffff_0%,#f5f9f6_55%,#e6ece7_100%)] p-6 sm:p-8 lg:p-10 border border-white flex flex-col justify-between min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] transition-all duration-500 hover:-translate-y-1.5 cursor-pointer"
+                  className="group relative w-[85vw] sm:w-[380px] md:w-[420px] lg:w-[460px] shrink-0 rounded-[24px] sm:rounded-[28px] lg:rounded-[32px] bg-gradient-to-br from-[#253d67] to-[#12223a] p-6 sm:p-8 lg:p-10 border border-white/10 flex flex-col justify-between min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] transition-all duration-500 hover:-translate-y-2 hover:border-amber-200/30 cursor-pointer overflow-hidden"
                 >
+                  {/* Premium internal glow effect on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 transition-all duration-500 rounded-[inherit]" />
+
                   {/* Top Left Card Number */}
-                  <div className="flex items-start justify-between">
-                    <span className="font-body text-4xl sm:text-5xl lg:text-6xl font-medium text-neutral-900 tracking-tight transition-colors duration-300 group-hover:text-primary">
+                  <div className="flex items-start justify-between relative z-10">
+                    <span className="font-body text-5xl sm:text-6xl lg:text-7xl font-bold text-white/10 tracking-tighter transition-all duration-500 group-hover:text-gold-gradient">
                       {card.number}
                     </span>
-                    <span className="h-2 w-2 rounded-full bg-neutral-300 transition-colors duration-300 group-hover:bg-primary" />
+                    <span className="h-2 w-2 rounded-full bg-white/20 transition-all duration-500 group-hover:bg-gold-gradient group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
                   </div>
 
                   {/* Middle / Bottom Content Block */}
-                  <div className="mt-10 sm:mt-12 lg:mt-16">
-                    <h3 className="font-body text-h4 font-bold tracking-tight text-neutral-900 uppercase mb-3 sm:mb-4 leading-snug">
+                  <div className="mt-10 sm:mt-12 lg:mt-16 relative z-10">
+                    <h3 className="font-body text-h4 font-medium tracking-tight text-white uppercase mb-3 sm:mb-4 leading-snug transition-all duration-500 group-hover:text-gold-gradient">
                       {card.title}
                     </h3>
-                    <p className="text-body text-neutral-600 font-normal">
+                    <p className="text-body text-white/70 font-light leading-relaxed">
                       {card.description}
                     </p>
                   </div>

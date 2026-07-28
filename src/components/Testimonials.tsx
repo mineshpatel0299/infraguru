@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeDown, scaleIn, slideRight, viewportMirror } from "@/lib/motion";
 
@@ -70,24 +71,35 @@ export default function Testimonials() {
   const card2 = TESTIMONIALS[(currentIndex + 1) % TESTIMONIALS.length];
 
   return (
-    <section id="testimonials" className="bg-white p-3 sm:p-4 lg:p-5">
-      <div className="min-h-[calc(100svh-1.5rem)] sm:min-h-[calc(100svh-2rem)] lg:h-[calc(100svh-2.5rem)] w-full rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] bg-[#faf8f5] p-6 sm:p-10 md:p-14 lg:p-16 overflow-hidden flex flex-col justify-center">
+    <section id="testimonials" className="bg-white">
+      <div className="min-h-[100svh] lg:min-h-[100svh] w-full bg-primary-dark px-6 sm:px-10 md:px-14 lg:px-16 py-20 lg:py-24 overflow-hidden flex flex-col justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-stretch h-full w-full max-h-[840px]">
           
           {/* ── LEFT COLUMN: Header & Carousel Navigation Controls ── */}
           <div className="lg:col-span-4 flex flex-col justify-between py-2 sm:py-4">
             <div>
-              {/* Massive Editorial Heading */}
-              <motion.h2
-                variants={fadeDown}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewportMirror}
-                className="font-body text-h2 font-bold tracking-tight text-neutral-900 mb-8 sm:mb-10 lg:mb-12"
+              {/* Premium Heading */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="mb-3 sm:mb-4 flex items-center justify-start gap-3"
               >
-                Voices of <br />
-                Trust, Stories <br />
-                of Success.
+                <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+                  CLIENT STORIES
+                </span>
+                <div className="h-[2px] w-8 bg-gold-gradient" />
+              </motion.div>
+
+              <motion.h2
+                initial={{ opacity: 0, y: 45 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                className="font-body text-h2 font-light tracking-tight text-white leading-tight mb-8 sm:mb-10 lg:mb-12"
+              >
+                VOICES OF <br /> <span className="font-bold text-gold-gradient">TRUST</span>
               </motion.h2>
             </div>
 
@@ -103,7 +115,7 @@ export default function Testimonials() {
               <button
                 onClick={handlePrev}
                 aria-label="Previous testimonial"
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-200/80 hover:bg-neutral-300 text-neutral-800 flex items-center justify-center transition-all duration-300 shadow-sm active:scale-95 hover:scale-105"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-300 shadow-sm active:scale-95 hover:scale-105"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -112,7 +124,7 @@ export default function Testimonials() {
               <button
                 onClick={handleNext}
                 aria-label="Next testimonial"
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white flex items-center justify-center transition-all duration-300 shadow-md active:scale-95 hover:scale-105"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gold-gradient text-neutral-950 flex items-center justify-center transition-all duration-300 shadow-md active:scale-95 hover:scale-105"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -148,9 +160,11 @@ export default function Testimonials() {
                     <span className="border border-neutral-400/50 rounded-full px-3.5 py-1 text-label font-medium text-neutral-700 font-body bg-white/40">
                       {card1.badge}
                     </span>
-                    <img
+                    <Image
                       src={card1.avatar}
                       alt={card1.name}
+                      width={48}
+                      height={48}
                       className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border-2 border-white"
                     />
                   </div>
@@ -194,9 +208,11 @@ export default function Testimonials() {
                     <span className="border border-neutral-400/50 rounded-full px-3.5 py-1 text-label font-medium text-neutral-700 font-body bg-white/40">
                       {card2.badge}
                     </span>
-                    <img
+                    <Image
                       src={card2.avatar}
                       alt={card2.name}
+                      width={48}
+                      height={48}
                       className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border-2 border-white"
                     />
                   </div>

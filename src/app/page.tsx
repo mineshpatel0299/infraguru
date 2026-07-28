@@ -1,9 +1,11 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import StickyServices from "@/components/StickyServices";
+import Stats from "@/components/Stats";
 import WhyChooseUs from "@/components/WhyChooseUs";
-import ProjectShowcase from "@/components/ProjectShowcase";
+import Services from "@/components/Services";
+import FeaturedProjects from "@/components/FeaturedProjects";
 import Testimonials from "@/components/Testimonials";
+import { DVSNetworkCTA } from "@/components/DVSNetworkCTA";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -11,11 +13,14 @@ export default function Home() {
     <main>
       <Hero />
       <About />
-      <StickyServices />
+      <Stats />
       <WhyChooseUs />
-      <ProjectShowcase />
+      <FeaturedProjects />
+      <Services />
       <Testimonials />
+      <DVSNetworkCTA />
       <Footer />
     </main>
+
   );
 }

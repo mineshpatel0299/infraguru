@@ -2,6 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 
 type Point = { x: number; y: number };
@@ -168,9 +169,11 @@ export default function SealTransitionProvider({ children }: { children: React.R
                 initial="idle"
                 animate={phase}
               >
-                <img
+                <Image
                   src="/g.png"
                   alt=""
+                  width={64}
+                  height={64}
                   className="absolute top-1/2 left-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
                 />
               </motion.div>

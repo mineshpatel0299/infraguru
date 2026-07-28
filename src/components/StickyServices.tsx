@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useRef, useState, useMemo } from 'react';
-import { motion, useScroll, useMotionValueEvent, useTransform, AnimatePresence, type Variants } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useMotionValueEvent, AnimatePresence, type Variants } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const SHOWCASE_ITEMS = [
+export const SERVICES_ITEMS = [
   {
     step: "01 —— 06",
     title: "Property to Buy",
@@ -97,68 +99,65 @@ export default function StickyServices() {
   const [prevIndex, setPrevIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
-  // 1. Track scroll progress (0 -> 1) of the section relative to the viewport
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   });
 
-  // 2. Scroll-progress points at which each item becomes active — shared by the
-  // continuous card "elevator" transform and the discrete background-slat
-  // trigger below, so the card always finishes its move exactly when the
-  // background finishes wiping to the matching image (same math, one source).
-  const stackRange = useMemo(() => {
-    const START = 0.12;
-    const END = 0.88;
-    const n = SHOWCASE_ITEMS.length;
-    // Evenly spaced settle points across [START, END] — every item gets an
-    // equal share of scroll distance.
-    const settlePoints = Array.from({ length: n }, (_, i) => START + (i / (n - 1)) * (END - START));
-    const thresholds = settlePoints.slice(1);
-    const positions = SHOWCASE_ITEMS.map((_, i) => `-${(i / n) * 100}%`);
-    return {
-      thresholds,
-      input: settlePoints,
-      output: positions,
-    };
-  }, []);
+  const n = SERVICES_ITEMS.length;
 
-  const stackY = useTransform(scrollYProgress, stackRange.input, stackRange.output);
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    let target = Math.floor(latest * n);
+    if (target >= n) target = n - 1;
+    if (target < 0) target = 0;
 
-  // 3. Derive active step from the same thresholds to trigger background slats & text crossfades
-  useMotionValueEvent(scrollYProgress, "change", (p) => {
-    let nextActive = 0;
-    for (let i = 0; i < stackRange.thresholds.length; i++) {
-      if (p >= stackRange.thresholds[i]) nextActive = i + 1;
-    }
-
-    if (nextActive !== activeIndex) {
+    if (target !== activeIndex) {
       setPrevIndex(activeIndex);
-      setDirection(nextActive > activeIndex ? 1 : -1);
-      setActiveIndex(nextActive);
+      setDirection(target > activeIndex ? 1 : -1);
+      setActiveIndex(target);
     }
   });
 
   return (
-    <section id="services" className="bg-white p-3 sm:p-4 lg:p-5">
-      {/* ── Section Title Header ── */}
-      <div className="py-10 sm:py-14 lg:py-16 text-center">
-        <h2 className="font-body text-h2 font-semibold tracking-wide uppercase text-neutral-900">
-          OUR SERVICES
-        </h2>
+    <section id="services" className="bg-white">
+      {/* Premium Header similar to WhyChooseUs */}
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-20 pb-10 sm:pt-28 sm:pb-14 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
+        >
+          <div className="h-[2px] w-8 bg-gold-gradient" />
+          <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+            OUR EXPERTISE
+          </span>
+          <div className="h-[2px] w-8 bg-gold-gradient" />
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 45 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          className="font-body text-h2 font-light tracking-tight text-neutral-900 leading-tight"
+        >
+          COMPREHENSIVE <span className="font-bold text-gold-gradient">SERVICES</span>
+        </motion.h2>
       </div>
 
-      {/* ── Scrolling Trigger Height (600vh for 6 items at a comfortable pace) ── */}
       <div ref={sectionRef} className="relative h-[600vh] w-full">
-        {/* ── Sticky Viewport Container ── */}
-        <div className="sticky top-3 sm:top-4 lg:top-5 h-[calc(100svh-1.5rem)] sm:h-[calc(100svh-2rem)] lg:h-[calc(100svh-2.5rem)] w-full overflow-hidden rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] bg-neutral-900 flex items-center justify-center shadow-2xl">
+        <div className="sticky top-0 h-screen w-full overflow-hidden bg-neutral-900 flex items-center justify-center shadow-2xl">
 
-          {/* ── Base Background (Previous Image Underneath) ── */}
+          {/* ── Base Background ── */}
           <div className="absolute inset-0 z-0 pointer-events-none">
-            <img
-              src={SHOWCASE_ITEMS[prevIndex].bgImage}
+            <Image
+              src={SERVICES_ITEMS[prevIndex].bgImage}
               alt=""
-              className="h-full w-full object-cover"
+              fill
+              sizes="100vw"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-black/30" />
           </div>
@@ -181,7 +180,7 @@ export default function StickyServices() {
                   className="flex-1 w-full overflow-hidden relative"
                 >
                   <img
-                    src={SHOWCASE_ITEMS[activeIndex].bgImage}
+                    src={SERVICES_ITEMS[activeIndex].bgImage}
                     alt=""
                     style={{
                       position: 'absolute',
@@ -198,10 +197,10 @@ export default function StickyServices() {
             </motion.div>
           </AnimatePresence>
 
-          {/* ── Side Badges (Visible on Medium+ screens) ── */}
+          {/* ── Side Badges ── */}
           <div className="absolute left-6 sm:left-10 lg:left-16 top-1/2 -translate-y-1/2 z-20 hidden md:block">
             <span className="font-body text-label font-medium text-white/90 uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
-              [ Our Services ]
+              [ Our Projects ]
             </span>
           </div>
           <div className="absolute right-6 sm:right-10 lg:right-16 top-1/2 -translate-y-1/2 z-20 hidden md:block">
@@ -210,12 +209,12 @@ export default function StickyServices() {
             </span>
           </div>
 
-          {/* ── Center Card (Beige/Cream Luxury Palette with Elevator Image Stack) ── */}
+          {/* ── Center Card ── */}
           <div className="relative z-20 w-[88%] sm:w-[420px] md:w-[460px] lg:w-[500px] rounded-2xl sm:rounded-3xl bg-[#e3d8c4] p-6 sm:p-8 md:p-10 shadow-[0_24px_70px_rgba(0,0,0,0.45)] border border-white/40 overflow-hidden text-neutral-900 flex flex-col items-center text-center">
 
             {/* Step Counter */}
             <span className="mb-3 font-body text-label font-semibold text-neutral-700 uppercase">
-              {SHOWCASE_ITEMS[activeIndex].step}
+              {SERVICES_ITEMS[activeIndex].step}
             </span>
 
             {/* Title (Crossfading on step change) */}
@@ -231,27 +230,31 @@ export default function StickyServices() {
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
                   className="font-body text-h3 font-semibold tracking-tight text-neutral-950"
                 >
-                  {SHOWCASE_ITEMS[activeIndex].title}
+                  {SERVICES_ITEMS[activeIndex].title}
                 </motion.h3>
               </AnimatePresence>
             </div>
 
-            {/* Image Inside Card (Continuous Elevator Stack via stackY) */}
+            {/* Image Inside Card (Animated Elevator Stack) */}
             <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] mb-6 rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_8px_25px_rgba(0,0,0,0.15)] bg-neutral-900">
               <motion.div
-                style={{ y: stackY, height: `${SHOWCASE_ITEMS.length * 100}%`, willChange: 'transform' }}
+                animate={{ y: `-${(activeIndex / SERVICES_ITEMS.length) * 100}%` }}
+                transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                style={{ height: `${SERVICES_ITEMS.length * 100}%`, willChange: 'transform' }}
                 className="absolute inset-x-0 top-0 w-full"
               >
-                {SHOWCASE_ITEMS.map((item) => (
+                {SERVICES_ITEMS.map((item, idx) => (
                   <div
-                    key={item.step}
+                    key={idx}
                     className="relative w-full overflow-hidden"
-                    style={{ height: `${100 / SHOWCASE_ITEMS.length}%` }}
+                    style={{ height: `${100 / SERVICES_ITEMS.length}%` }}
                   >
-                    <img
+                    <Image
                       src={item.bgImage}
                       alt={item.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="500px"
+                      className="object-cover"
                     />
                   </div>
                 ))}
@@ -269,20 +272,21 @@ export default function StickyServices() {
                   animate="center"
                   exit="exit"
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
-                  className="text-body text-neutral-700 max-w-sm"
+                  className="text-body text-neutral-700 max-w-sm line-clamp-3"
                 >
-                  {SHOWCASE_ITEMS[activeIndex].description}
+                  {SERVICES_ITEMS[activeIndex].description}
                 </motion.p>
               </AnimatePresence>
             </div>
 
             {/* CTA Button */}
-            <a
-              href={SHOWCASE_ITEMS[activeIndex].link}
+            <Link
+              href={SERVICES_ITEMS[activeIndex].link}
+              scroll={false}
               className="inline-flex items-center justify-center rounded-full border border-neutral-900/40 bg-transparent px-7 py-2.5 text-label font-semibold uppercase text-neutral-900 transition-all duration-300 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white hover:shadow-lg hover:-translate-y-0.5"
             >
               Discover More
-            </a>
+            </Link>
 
           </div>
 

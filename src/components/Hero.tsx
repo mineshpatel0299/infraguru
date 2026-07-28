@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef } from 'react';
-import { motion, useMotionValue, useSpring, useScroll, useTransform, type Variants } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import { motion, useScroll, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
 
 const HEADLINE_LINE_1 = "LIVE THE ART";
@@ -55,56 +55,72 @@ function SlideUpWordReveal({
 
 export default function Hero() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end end"]
   });
   
-  // Parallax effects
-  const bgParallax = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
-  const textParallax = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const springX = useSpring(px, { stiffness: 40, damping: 20 });
-  const springY = useSpring(py, { stiffness: 40, damping: 20 });
+    let duration = video.duration || 0;
+    let lastTime = -1;
+    let rafId: number;
 
-  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    px.set(((e.clientX - rect.left) / rect.width - 0.5) * 24);
-    py.set(((e.clientY - rect.top) / rect.height - 0.5) * 24);
-  }
+    const onLoadedMetadata = () => {
+      duration = video.duration || 0;
+    };
+    video.addEventListener('loadedmetadata', onLoadedMetadata);
+
+    const tick = () => {
+      if (duration && video.readyState >= 2) {
+        const target = scrollYProgress.get() * duration;
+        // Skip sub-frame seeks; setting currentTime is expensive and forces a decode.
+        if (Math.abs(target - lastTime) > 1 / 48) {
+          video.currentTime = target;
+          lastTime = target;
+        }
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      video.removeEventListener('loadedmetadata', onLoadedMetadata);
+    };
+  }, [scrollYProgress]);
 
   return (
-    <section id="hero" className="bg-white p-3 sm:p-4 lg:p-5">
+    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[300vh]">
       <Navbar />
 
       <div
-        ref={sectionRef}
-        onPointerMove={handlePointerMove}
-        className="relative flex h-[calc(100svh-1.5rem)] flex-col items-center justify-center overflow-hidden rounded-[20px] bg-primary-dark sm:h-[calc(100svh-2rem)] sm:rounded-[24px] lg:h-[calc(100svh-2.5rem)] lg:rounded-[32px]"
+        className="sticky top-0 left-0 w-full flex h-[100svh] flex-col items-center justify-end overflow-hidden"
       >
         {/* Cinematic background */}
-        <motion.div 
+        <motion.div
           className="absolute z-0 pointer-events-none"
-          style={{ top: '-20%', bottom: '-20%', left: 0, right: 0, y: bgParallax }}
+          style={{ top: '-20%', bottom: '-20%', left: 0, right: 0 }}
         >
-          <motion.div
-            className="absolute inset-0 z-0 scale-[1.06]"
-            style={{ x: springX, y: springY }}
-          >
-            <img
-              src="/heroi.jpg"
-              alt="Luxury Villa Background"
+          <div className="absolute inset-0 z-0 scale-[1.06]">
+            <video
+              ref={videoRef}
+              src="/ffhero.mp4"
+              poster="/fhero.jpeg"
+              muted
+              playsInline
+              preload="auto"
               className="h-full w-full object-cover"
             />
-          </motion.div>
+          </div>
         </motion.div>
 
-        {/* Shadow overlay for text readability (neutral, not blue) */}
-        <div className="absolute inset-0 z-1 bg-gradient-to-b from-black/45 via-black/60 to-black/40 pointer-events-none" />
+        {/* Color gradient overlay from bottom to top */}
+        <div className="absolute bottom-0 left-0 right-0 h-[50%] z-1 bg-gradient-to-t from-primary-dark via-primary-dark/60 to-transparent pointer-events-none" />
 
         {/* Film grain */}
         <div
@@ -124,8 +140,7 @@ export default function Hero() {
         />
 
         <motion.div 
-          className="container relative z-10 mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8 mt-16 sm:mt-24 lg:mt-32"
-          style={{ y: textParallax }}
+          className="container relative z-10 mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8 pb-4 sm:pb-6 lg:pb-8"
         >
           <h1 className="mb-4 max-w-none text-center text-h1 font-extrabold uppercase tracking-tight text-white sm:mb-6 sm:tracking-[-1px]">
             <SlideUpWordReveal text={HEADLINE_LINE_1} delay={1.2} className="block justify-center pb-1 flex-nowrap whitespace-nowrap" />
@@ -136,36 +151,16 @@ export default function Hero() {
             />
           </h1>
 
-          <motion.p
+          {/* <motion.p
             className="mb-6 max-w-lg text-body text-white/80 sm:mb-8"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
           >
             We bring you the best and take the necessary steps to relieve your property-buying anxiety.
-          </motion.p>
+          </motion.p> */}
 
-          <motion.div
-            className="flex flex-col items-center justify-center"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 2.0, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-3 rounded-full bg-white py-2 pr-2 pl-7 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_40px_rgba(0,0,0,0.3)] sm:pl-8"
-            >
-              <span className="text-label font-bold text-black uppercase">
-                Contact Us
-              </span>
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#c26d43] text-white transition-transform duration-300 group-hover:translate-x-1 sm:h-11 sm:w-11">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </span>
-            </a>
-          </motion.div>
+
         </motion.div>
 
       </div>

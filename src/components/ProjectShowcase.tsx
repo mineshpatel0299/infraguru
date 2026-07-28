@@ -3,25 +3,12 @@
 import React, { useRef, useState, useMemo, useEffect } from "react";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence, animate as animateScroll } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { PROJECTS } from "@/lib/projects";
 
 export default function ProjectShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeIndexRef = useRef(0);
-  // Where the raw scroll position currently says we should be. activeIndex
-  // advances toward this one step at a time (see the effect below) instead
-  // of jumping straight there — so a single fast scroll never skips past an
-  // intermediate project; every project gets its own reveal, however fast
-  // or slow you scroll.
-  const targetIndexRef = useRef(0);
-  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Set synchronously the instant a step chain starts (not inside the
-  // setActiveIndex updater, which React may not invoke until the next
-  // render) — otherwise a second "change" event arriving before the first
-  // updater runs sees no guard yet and starts its own overlapping chain,
-  // which is what caused indexes to skip.
-  const isAdvancingRef = useRef(false);
 
   // We allocate 100vh of vertical scroll per project (400vh total for 4 projects)
   const { scrollYProgress } = useScroll({
@@ -31,40 +18,48 @@ export default function ProjectShowcase() {
 
   const n = PROJECTS.length;
 
-  useEffect(() => {
-    return () => {
-      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
-    };
-  }, []);
-
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     // Map scroll progress (0 to 1) to an integer index (0 to PROJECTS.length - 1)
-    const target = Math.min(n - 1, Math.floor(Math.max(0, latest) * n));
-    targetIndexRef.current = target;
-
-    if (isAdvancingRef.current || target === activeIndexRef.current) return;
-    isAdvancingRef.current = true;
-
-    const step = () => {
-      const current = activeIndexRef.current;
-      const nextTarget = targetIndexRef.current;
-      if (current === nextTarget) {
-        isAdvancingRef.current = false;
-        advanceTimerRef.current = null;
-        return;
-      }
-      const next = current + (nextTarget > current ? 1 : -1);
-      activeIndexRef.current = next;
-      setActiveIndex(next);
-      advanceTimerRef.current = setTimeout(step, 380);
-    };
-    step();
+    let target = Math.floor(latest * n);
+    if (target >= n) target = n - 1;
+    if (target < 0) target = 0;
+    
+    if (target !== activeIndex) {
+      setActiveIndex(target);
+    }
   });
 
   const currentProject = PROJECTS[activeIndex] || PROJECTS[0];
 
   return (
     <section id="project-showcase" className="bg-white p-3 sm:p-4 lg:p-5">
+      {/* Premium Header similar to WhyChooseUs */}
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-20 pb-10 sm:pt-28 sm:pb-14 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
+        >
+          <div className="h-[2px] w-8 bg-gold-gradient" />
+          <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+            FEATURED PROJECTS
+          </span>
+          <div className="h-[2px] w-8 bg-gold-gradient" />
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 45 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          className="font-body text-h2 font-light tracking-tight text-neutral-900 leading-tight"
+        >
+          OUR <span className="font-bold text-gold-gradient">PORTFOLIO</span>
+        </motion.h2>
+      </div>
+
       {/* Tall scrolling track for smooth scroll-driven transitions */}
       <div ref={sectionRef} className="relative h-[400vh] w-full">
         {/* Sticky viewport container */}
@@ -97,10 +92,12 @@ export default function ProjectShowcase() {
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute inset-0 w-full h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.85)] border border-white/10 bg-neutral-900"
                 >
-                  <img
+                  <Image
                     src={currentProject.image}
                     alt={currentProject.title}
-                    className="h-full w-full object-cover"
+                    fill
+                    sizes="(min-width: 1024px) 620px, 90vw"
+                    className="object-cover"
                   />
                 </motion.div>
               </AnimatePresence>

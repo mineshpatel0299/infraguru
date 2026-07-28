@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp, scaleIn, fadeDown, viewportMirror } from "@/lib/motion";
 import type { Project } from "@/lib/projects";
@@ -349,7 +350,13 @@ export default function ProjectExperience({
                     i === 0 ? "lg:col-span-8" : i === 1 ? "lg:col-span-4" : i === 2 ? "lg:col-span-5" : "lg:col-span-7"
                   }`}
                 >
-                  <img src={src} alt="Gallery view" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <Image
+                    src={src}
+                    alt="Gallery view"
+                    fill
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
                   <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20" />
                   <ExpandBadge />
                 </motion.button>
@@ -448,7 +455,13 @@ export default function ProjectExperience({
                     {related.map((r) => (
                       <SealLink key={r.id} href={`/projects/${r.id}`} className="group flex items-center gap-6 p-4 rounded-2xl hover:bg-[#faf8f5] transition-colors border border-transparent hover:border-black/[0.03]">
                         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl shadow-sm">
-                          <img src={r.image} alt={r.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                          <Image
+                            src={r.image}
+                            alt={r.title}
+                            fill
+                            sizes="80px"
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
                         </div>
                         <div>
                           <div className="font-heading text-xl font-medium text-neutral-900 mb-1">{r.title}</div>
