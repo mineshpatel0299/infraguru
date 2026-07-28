@@ -31,6 +31,7 @@ const SealLink = React.forwardRef<HTMLAnchorElement, SealLinkProps>(function Sea
         else if (ref) ref.current = node;
       }}
       href={href}
+      scroll={false}
       onNavigate={(e) => {
         onNavigate?.(e);
         e.preventDefault();

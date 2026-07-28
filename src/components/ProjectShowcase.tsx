@@ -245,6 +245,7 @@ export default function ProjectShowcase() {
             <div className="pt-4 sm:pt-6 border-t border-white/[0.08]">
               <Link
                 href={`/projects/${currentProject.id}`}
+                scroll={false}
                 className="group flex items-center gap-4 sm:gap-6 w-full"
               >
                 <span className="text-label font-semibold text-white/90 group-hover:text-white transition-colors uppercase">

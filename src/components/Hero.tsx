@@ -124,8 +124,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
           >
-            Discover breathtaking villas, timeless interiors, and stunning exteriors —
-            all curated for those who desire more than just a home.
+            We bring you the best and take the necessary steps to relieve your property-buying anxiety.
           </motion.p>
 
           <motion.div

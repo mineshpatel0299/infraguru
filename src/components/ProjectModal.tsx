@@ -14,10 +14,21 @@ export default function ProjectModal({ project, related }: { project: Project; r
   }, [router]);
 
   useEffect(() => {
-    const prevOverflow = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = "hidden";
+    const root = document.documentElement;
+    // Locking scroll removes the scrollbar, which widens the viewport by its
+    // width and reflows everything underneath by a few px — read as the bg
+    // "jumping" the instant the modal opens. Pad that width back in so the
+    // layout never sees the change.
+    const scrollbarWidth = window.innerWidth - root.clientWidth;
+    const prevOverflow = root.style.overflow;
+    const prevPaddingRight = root.style.paddingRight;
+    root.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      root.style.paddingRight = `${scrollbarWidth}px`;
+    }
     return () => {
-      document.documentElement.style.overflow = prevOverflow;
+      root.style.overflow = prevOverflow;
+      root.style.paddingRight = prevPaddingRight;
     };
   }, []);
 
