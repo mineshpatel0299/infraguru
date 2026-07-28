@@ -6,6 +6,7 @@ import {
   useScroll,
   useTransform,
   useSpring,
+  useMotionValue,
   type Variants,
 } from 'framer-motion';
 import { viewportMirror } from '@/lib/motion';
@@ -61,10 +62,23 @@ export default function About() {
   const rawY = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
   const parallaxY = useSpring(rawY, { stiffness: 60, damping: 20 });
 
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const springX = useSpring(px, { stiffness: 40, damping: 20 });
+  const springY = useSpring(py, { stiffness: 40, damping: 20 });
+
+  function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    px.set(((e.clientX - rect.left) / rect.width - 0.5) * 24);
+    py.set(((e.clientY - rect.top) / rect.height - 0.5) * 24);
+  }
+
   return (
     <section id="about" className="bg-white p-3 sm:p-4 lg:p-5">
       <div
         ref={sectionRef}
+        onPointerMove={handlePointerMove}
         className="relative bg-[#faf8f5] py-12 sm:py-16 lg:py-20 overflow-hidden text-neutral-900 rounded-[20px] sm:rounded-[24px] lg:rounded-[32px]"
       >
         {/* ── Soft subtle ambient background glow ── */}
@@ -88,13 +102,15 @@ export default function About() {
                   x: { duration: 1.0, delay: 1.0, ease: [0.16, 1, 0.3, 1] as const },
                 }}
               >
-                <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
-                  <img
-                    src="/about-1.jpg"
-                    alt="Infra Guru Property Experience"
-                    className="w-full h-[120%] -mt-[10%] object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                <motion.div className="absolute inset-0 w-full h-full scale-[1.06]" style={{ x: springX, y: springY }}>
+                  <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
+                    <img
+                      src="/about-1.jpg"
+                      alt="Infra Guru Property Experience"
+                      className="w-full h-[120%] -mt-[10%] object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                  </motion.div>
                 </motion.div>
               </motion.div>
 
@@ -111,13 +127,15 @@ export default function About() {
                   x: { duration: 1.0, delay: 1.0, ease: [0.16, 1, 0.3, 1] as const },
                 }}
               >
-                <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
-                  <img
-                    src="/about-2.jpg"
-                    alt="Infra Guru Luxury Real Estate"
-                    className="w-full h-[120%] -mt-[10%] object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                <motion.div className="absolute inset-0 w-full h-full scale-[1.06]" style={{ x: springX, y: springY }}>
+                  <motion.div className="absolute inset-0 w-full h-full" style={{ y: parallaxY }}>
+                    <img
+                      src="/about-2.jpg"
+                      alt="Infra Guru Luxury Real Estate"
+                      className="w-full h-[120%] -mt-[10%] object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                  </motion.div>
                 </motion.div>
               </motion.div>
             </div>
