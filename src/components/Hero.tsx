@@ -110,13 +110,12 @@ export default function Hero() {
       >
         {/* Cinematic background */}
         <motion.div
-          className="absolute z-0 pointer-events-none"
-          style={{ top: '-20%', bottom: '-20%', left: 0, right: 0 }}
+          className="absolute inset-0 z-0 pointer-events-none"
         >
-          <div className="absolute inset-0 z-0 scale-[1.06]">
+          <div className="absolute inset-0 z-0">
             <video
               ref={videoRef}
-              src="/final.mp4"
+              src="/tt.mp4"
               poster=""
               muted
               playsInline
@@ -174,3 +173,6 @@ export default function Hero() {
     </section>
   );
 }
+
+
+

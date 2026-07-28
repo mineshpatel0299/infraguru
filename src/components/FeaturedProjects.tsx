@@ -109,7 +109,7 @@ export default function FeaturedProjects() {
   return (
     <section id="projects" className="bg-white">
       {/* Premium Header similar to WhyChooseUs */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-20 pb-10 sm:pt-28 sm:pb-14 text-center">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-4 pb-10 sm:pt-6 sm:pb-14 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
