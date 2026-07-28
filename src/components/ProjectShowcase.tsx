@@ -16,6 +16,12 @@ export default function ProjectShowcase() {
   // or slow you scroll.
   const targetIndexRef = useRef(0);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Set synchronously the instant a step chain starts (not inside the
+  // setActiveIndex updater, which React may not invoke until the next
+  // render) — otherwise a second "change" event arriving before the first
+  // updater runs sees no guard yet and starts its own overlapping chain,
+  // which is what caused indexes to skip.
+  const isAdvancingRef = useRef(false);
 
   // We allocate 100vh of vertical scroll per project (400vh total for 4 projects)
   const { scrollYProgress } = useScroll({
@@ -36,22 +42,23 @@ export default function ProjectShowcase() {
     const target = Math.min(n - 1, Math.floor(Math.max(0, latest) * n));
     targetIndexRef.current = target;
 
-    if (target !== activeIndexRef.current && !advanceTimerRef.current) {
-      const step = () => {
-        setActiveIndex((current) => {
-          const nextTarget = targetIndexRef.current;
-          if (current === nextTarget) {
-            advanceTimerRef.current = null;
-            return current;
-          }
-          const next = current + (nextTarget > current ? 1 : -1);
-          activeIndexRef.current = next;
-          advanceTimerRef.current = setTimeout(step, 280);
-          return next;
-        });
-      };
-      step();
-    }
+    if (isAdvancingRef.current || target === activeIndexRef.current) return;
+    isAdvancingRef.current = true;
+
+    const step = () => {
+      const current = activeIndexRef.current;
+      const nextTarget = targetIndexRef.current;
+      if (current === nextTarget) {
+        isAdvancingRef.current = false;
+        advanceTimerRef.current = null;
+        return;
+      }
+      const next = current + (nextTarget > current ? 1 : -1);
+      activeIndexRef.current = next;
+      setActiveIndex(next);
+      advanceTimerRef.current = setTimeout(step, 380);
+    };
+    step();
   });
 
   const currentProject = PROJECTS[activeIndex] || PROJECTS[0];
@@ -138,9 +145,8 @@ export default function ProjectShowcase() {
                   <motion.span
                     key={activeIndex}
                     initial={{ y: "40%", opacity: 0 }}
-                    animate={{ y: "0%", opacity: 1 }}
-                    exit={{ y: "-40%", opacity: 0 }}
-                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    animate={{ y: "0%", opacity: 1, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
+                    exit={{ y: "-40%", opacity: 0, transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] } }}
                     className="inline-block font-body text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tighter text-white"
                   >
                     0{activeIndex + 1}
@@ -162,12 +168,13 @@ export default function ProjectShowcase() {
                       <motion.span
                         key={`${activeIndex}-${idx}-${word}`}
                         initial={{ opacity: 0, y: 40, rotateX: -90, filter: "blur(6px)" }}
-                        animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-                        exit={{ opacity: 0, y: -30, rotateX: 90, filter: "blur(4px)" }}
-                        transition={{
-                          duration: 0.7,
-                          delay: idx * 0.08,
-                          ease: [0.16, 1, 0.3, 1],
+                        animate={{
+                          opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)",
+                          transition: { duration: 0.7, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] },
+                        }}
+                        exit={{
+                          opacity: 0, y: -20, rotateX: 60, filter: "blur(4px)",
+                          transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
                         }}
                         className="inline-block transform-gpu origin-bottom"
                       >
@@ -193,38 +200,38 @@ export default function ProjectShowcase() {
                     },
                     exit: {
                       opacity: 0,
-                      transition: { staggerChildren: 0.05, staggerDirection: -1 }
+                      transition: { staggerChildren: 0.04, staggerDirection: -1 }
                     }
                   }}
                   className="flex flex-col"
                 >
-                  <motion.p 
+                  <motion.p
                     variants={{
                       hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
                       visible: { y: 0, opacity: 1, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-                      exit: { y: -20, opacity: 0, filter: "blur(4px)", transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }
+                      exit: { y: -16, opacity: 0, filter: "blur(4px)", transition: { duration: 0.26, ease: [0.16, 1, 0.3, 1] } }
                     }}
                     className="text-caption text-white/90 font-medium mb-6 sm:mb-8 lg:mb-10"
                   >
                     {currentProject.location}
                   </motion.p>
 
-                  <motion.p 
+                  <motion.p
                     variants={{
                       hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
                       visible: { y: 0, opacity: 1, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-                      exit: { y: -20, opacity: 0, filter: "blur(4px)", transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }
+                      exit: { y: -16, opacity: 0, filter: "blur(4px)", transition: { duration: 0.26, ease: [0.16, 1, 0.3, 1] } }
                     }}
                     className="text-h4 text-white font-medium tracking-tight mb-3 sm:mb-4"
                   >
                     {currentProject.tagline}
                   </motion.p>
 
-                  <motion.p 
+                  <motion.p
                     variants={{
                       hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
                       visible: { y: 0, opacity: 1, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-                      exit: { y: -20, opacity: 0, filter: "blur(4px)", transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }
+                      exit: { y: -16, opacity: 0, filter: "blur(4px)", transition: { duration: 0.26, ease: [0.16, 1, 0.3, 1] } }
                     }}
                     className="text-body text-neutral-400 font-normal"
                   >
