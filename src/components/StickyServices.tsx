@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useState, useMemo, useEffect } from 'react';
-import { motion, useScroll, useMotionValueEvent, useTransform, AnimatePresence, animate as animateScroll, type Variants } from 'framer-motion';
+import React, { useRef, useState, useMemo } from 'react';
+import { motion, useScroll, useMotionValueEvent, useTransform, AnimatePresence, type Variants } from 'framer-motion';
 
 const SHOWCASE_ITEMS = [
   {
@@ -96,10 +96,6 @@ export default function StickyServices() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  // Mirrors activeIndex for use inside the scroll-snap effect below, whose
-  // listeners are set up once and shouldn't be torn down/rebuilt on every
-  // index change just to read the latest value.
-  const activeIndexRef = useRef(activeIndex);
 
   // 1. Track scroll progress (0 -> 1) of the section relative to the viewport
   const { scrollYProgress } = useScroll({
@@ -120,103 +116,14 @@ export default function StickyServices() {
     const settlePoints = Array.from({ length: n }, (_, i) => START + (i / (n - 1)) * (END - START));
     const thresholds = settlePoints.slice(1);
     const positions = SHOWCASE_ITEMS.map((_, i) => `-${(i / n) * 100}%`);
-    const avgGap = (END - START) / (n - 1);
     return {
       thresholds,
       input: settlePoints,
       output: positions,
-      // Snap targets are the pin's content start/end (START/END), not the
-      // outer 0/1 edges of the full scroll track — snapping all the way to 1
-      // after the last card is already fully visible is what produced the
-      // "extra scroll" once you finish the sequence.
-      snapPoints: settlePoints,
-      // How close (in scroll-progress) the user must already be to a settle
-      // point before a pause is allowed to trigger a snap. Keeps the snap
-      // from magnet-pulling someone mid-journey between items during an
-      // ordinary pause between scroll flicks.
-      snapGate: avgGap * 0.35,
     };
   }, []);
 
   const stackY = useTransform(scrollYProgress, stackRange.input, stackRange.output);
-
-  // 4. Once the user stops scrolling inside the pinned section, ease the rest
-  // of the way to the nearest snap point so each scroll gesture lands cleanly
-  // on a settled image instead of stopping mid-crossfade.
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    let settleTimer: ReturnType<typeof setTimeout> | null = null;
-    let activeAnimation: ReturnType<typeof animateScroll> | null = null;
-    let isAutoScrolling = false;
-
-    function cancelSnap() {
-      activeAnimation?.stop();
-      activeAnimation = null;
-      isAutoScrolling = false;
-    }
-
-    function handleUserInput() {
-      cancelSnap();
-    }
-
-    function handleScroll() {
-      if (isAutoScrolling) return;
-      if (settleTimer) clearTimeout(settleTimer);
-
-      settleTimer = setTimeout(() => {
-        const current = scrollYProgress.get();
-        if (current <= 0 || current >= 1) return;
-
-        const nearest = stackRange.snapPoints.reduce((best, sp) =>
-          Math.abs(sp - current) < Math.abs(best - current) ? sp : best
-        );
-        const nearestIndex = stackRange.snapPoints.indexOf(nearest);
-        const distance = Math.abs(nearest - current);
-        // Only snap when already close to a settle point. Without this gate,
-        // a natural pause between scroll flicks — anywhere, including mid-
-        // journey between items — would get magnet-pulled toward whichever
-        // point is nearest, which reads as the page fighting the user's
-        // scroll (it can even pull them backward mid-flick-sequence).
-        if (distance < 0.001 || distance > stackRange.snapGate || !section) return;
-
-        const travel = section.offsetHeight - window.innerHeight;
-        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-        const targetY = sectionTop + nearest * travel;
-
-        isAutoScrolling = true;
-        activeAnimation = animateScroll(window.scrollY, targetY, {
-          duration: 0.6,
-          ease: [0.16, 1, 0.3, 1],
-          onUpdate: (v) => window.scrollTo(0, v),
-          onComplete: () => {
-            isAutoScrolling = false;
-            // Force the active index to match where we just settled — sub-pixel
-            // scroll rounding can otherwise leave the scroll-driven index one
-            // step behind a snap destination that sits exactly on a threshold.
-            if (nearestIndex >= 0 && nearestIndex !== activeIndexRef.current) {
-              setPrevIndex(activeIndexRef.current);
-              setDirection(nearestIndex > activeIndexRef.current ? 1 : -1);
-              setActiveIndex(nearestIndex);
-              activeIndexRef.current = nearestIndex;
-            }
-          },
-        });
-      }, 320);
-    }
-
-    window.addEventListener('wheel', handleUserInput, { passive: true });
-    window.addEventListener('touchmove', handleUserInput, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('wheel', handleUserInput);
-      window.removeEventListener('touchmove', handleUserInput);
-      window.removeEventListener('scroll', handleScroll);
-      if (settleTimer) clearTimeout(settleTimer);
-      cancelSnap();
-    };
-  }, [scrollYProgress, stackRange]);
 
   // 3. Derive active step from the same thresholds to trigger background slats & text crossfades
   useMotionValueEvent(scrollYProgress, "change", (p) => {
@@ -229,7 +136,6 @@ export default function StickyServices() {
       setPrevIndex(activeIndex);
       setDirection(nextActive > activeIndex ? 1 : -1);
       setActiveIndex(nextActive);
-      activeIndexRef.current = nextActive;
     }
   });
 

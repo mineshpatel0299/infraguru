@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from 'react';
-import { motion, useMotionValue, useSpring, type Variants } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useScroll, useTransform, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
 
 const HEADLINE_LINE_1 = "LIVE THE ART";
@@ -55,6 +55,16 @@ function SlideUpWordReveal({
 
 export default function Hero() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
+  
+  // Parallax effects
+  const bgParallax = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
+  const textParallax = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
   const px = useMotionValue(0);
   const py = useMotionValue(0);
   const springX = useSpring(px, { stiffness: 40, damping: 20 });
@@ -77,15 +87,20 @@ export default function Hero() {
         className="relative flex h-[calc(100svh-1.5rem)] flex-col items-center justify-center overflow-hidden rounded-[20px] bg-primary-dark sm:h-[calc(100svh-2rem)] sm:rounded-[24px] lg:h-[calc(100svh-2.5rem)] lg:rounded-[32px]"
       >
         {/* Cinematic background */}
-        <motion.div
-          className="absolute inset-0 z-0 scale-106"
-          style={{ x: springX, y: springY }}
+        <motion.div 
+          className="absolute z-0 pointer-events-none"
+          style={{ top: '-20%', bottom: '-20%', left: 0, right: 0, y: bgParallax }}
         >
-          <img
-            src="/heroi.jpg"
-            alt="Luxury Villa Background"
-            className="h-full w-full object-cover"
-          />
+          <motion.div
+            className="absolute inset-0 z-0 scale-[1.06]"
+            style={{ x: springX, y: springY }}
+          >
+            <img
+              src="/heroi.jpg"
+              alt="Luxury Villa Background"
+              className="h-full w-full object-cover"
+            />
+          </motion.div>
         </motion.div>
 
         {/* Shadow overlay for text readability (neutral, not blue) */}
@@ -108,7 +123,10 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.15, ease: [0.85, 0, 0.15, 1] }}
         />
 
-        <div className="container relative z-10 mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8 mt-16 sm:mt-24 lg:mt-32">
+        <motion.div 
+          className="container relative z-10 mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8 mt-16 sm:mt-24 lg:mt-32"
+          style={{ y: textParallax }}
+        >
           <h1 className="mb-4 max-w-none text-center text-h1 font-extrabold uppercase tracking-tight text-white sm:mb-6 sm:tracking-[-1px]">
             <SlideUpWordReveal text={HEADLINE_LINE_1} delay={1.2} className="block justify-center pb-1 flex-nowrap whitespace-nowrap" />
             <SlideUpWordReveal
@@ -148,7 +166,7 @@ export default function Hero() {
               </span>
             </a>
           </motion.div>
-        </div>
+        </motion.div>
 
       </div>
     </section>
