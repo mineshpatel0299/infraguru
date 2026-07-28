@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from 'react';
-import { motion, useScroll, type Variants } from 'framer-motion';
+import { motion, useScroll, useSpring, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
 
 const HEADLINE_LINE_1 = "LIVE THE ART";
@@ -56,18 +56,26 @@ function SlideUpWordReveal({
 export default function Hero() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"]
   });
-  
+
+  // Smooths out jittery/jumpy raw scroll deltas (fast wheel flicks, trackpad
+  // micro-steps) before they drive the video, so the scrub target itself
+  // moves fluidly instead of in the raw, uneven steps the scroll event gives us.
+  const smoothScrollProgress = useSpring(scrollYProgress, {
+    stiffness: 300,
+    damping: 40,
+    mass: 0.5,
+  });
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     let duration = video.duration || 0;
-    let lastTime = -1;
     let rafId: number;
 
     const onLoadedMetadata = () => {
@@ -77,11 +85,10 @@ export default function Hero() {
 
     const tick = () => {
       if (duration && video.readyState >= 2) {
-        const target = scrollYProgress.get() * duration;
+        const target = smoothScrollProgress.get() * duration;
         // Skip sub-frame seeks; setting currentTime is expensive and forces a decode.
-        if (Math.abs(target - lastTime) > 1 / 48) {
+        if (Math.abs(target - video.currentTime) > 1 / 60) {
           video.currentTime = target;
-          lastTime = target;
         }
       }
       rafId = requestAnimationFrame(tick);
@@ -92,7 +99,7 @@ export default function Hero() {
       cancelAnimationFrame(rafId);
       video.removeEventListener('loadedmetadata', onLoadedMetadata);
     };
-  }, [scrollYProgress]);
+  }, [smoothScrollProgress]);
 
   return (
     <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[300vh]">
@@ -109,8 +116,8 @@ export default function Hero() {
           <div className="absolute inset-0 z-0 scale-[1.06]">
             <video
               ref={videoRef}
-              src="/ffhero.mp4"
-              poster="/fhero.jpeg"
+              src="/final.mp4"
+              poster=""
               muted
               playsInline
               preload="auto"
@@ -139,10 +146,10 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.15, ease: [0.85, 0, 0.15, 1] }}
         />
 
-        <motion.div 
+        <motion.div
           className="container relative z-10 mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8 pb-4 sm:pb-6 lg:pb-8"
         >
-          <h1 className="mb-4 max-w-none text-center text-h1 font-extrabold uppercase tracking-tight text-white sm:mb-6 sm:tracking-[-1px]">
+          <h1 className="mb-4 max-w-none text-center text-[clamp(1.5rem,3.2vw,3.4rem)] font-body font-light uppercase tracking-tight text-white sm:mb-6 sm:tracking-[-1px]">
             <SlideUpWordReveal text={HEADLINE_LINE_1} delay={1.2} className="block justify-center pb-1 flex-nowrap whitespace-nowrap" />
             <SlideUpWordReveal
               text={HEADLINE_LINE_2}

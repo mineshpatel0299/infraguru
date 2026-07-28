@@ -34,11 +34,11 @@ export default function About() {
               </span>
             </div>
             
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white leading-tight tracking-tight">
+            <h2 className="font-body text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight">
               Redefining Real Estate <span className="font-semibold text-gold-gradient">Excellence.</span>
             </h2>
             
-            <div className="flex flex-col gap-4 text-neutral-300 text-lg sm:text-xl font-light leading-relaxed mt-4">
+            <div className="flex flex-col gap-4 text-neutral-300 text-base sm:text-lg font-light leading-relaxed mt-4">
               <p>
                 At InfraGuru, we don't just facilitate transactions; we architect futures. 
                 With decades of collective experience, our team navigates the complexities 

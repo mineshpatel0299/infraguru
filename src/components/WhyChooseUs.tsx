@@ -108,7 +108,7 @@ export default function WhyChooseUs() {
               className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
             >
               <div className="h-[2px] w-8 bg-gold-gradient" />
-              <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+              <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
                 WHY CHOOSE US
               </span>
               <div className="h-[2px] w-8 bg-gold-gradient" />
@@ -117,7 +117,7 @@ export default function WhyChooseUs() {
             <motion.h2
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 45 }}
               transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="font-body text-h2 font-light tracking-tight text-neutral-900 leading-tight"
+              className="font-body text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
             >
               WHERE <span className="font-bold text-gold-gradient">EXCELLENCE</span><br />
               IS STANDARD.
@@ -147,7 +147,7 @@ export default function WhyChooseUs() {
 
                   {/* Top Left Card Number */}
                   <div className="flex items-start justify-between relative z-10">
-                    <span className="font-body text-5xl sm:text-6xl lg:text-7xl font-bold text-white/10 tracking-tighter transition-all duration-500 group-hover:text-gold-gradient">
+                    <span className="font-body text-4xl sm:text-5xl lg:text-6xl font-semibold text-white/10 tracking-tight transition-all duration-500 group-hover:text-gold-gradient">
                       {card.number}
                     </span>
                     <span className="h-2 w-2 rounded-full bg-white/20 transition-all duration-500 group-hover:bg-gold-gradient group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(212,175,55,0.5)]" />

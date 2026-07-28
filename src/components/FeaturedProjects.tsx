@@ -118,7 +118,7 @@ export default function FeaturedProjects() {
           className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
         >
           <div className="h-[2px] w-8 bg-gold-gradient" />
-          <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+          <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
             FEATURED PROJECTS
           </span>
           <div className="h-[2px] w-8 bg-gold-gradient" />
@@ -129,7 +129,7 @@ export default function FeaturedProjects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="font-body text-h2 font-light tracking-tight text-neutral-900 leading-tight"
+          className="font-body text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
         >
           OUR <span className="font-bold text-gold-gradient">PORTFOLIO</span>
         </motion.h2>
@@ -216,7 +216,7 @@ export default function FeaturedProjects() {
                   animate="center"
                   exit="exit"
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
-                  className="font-body text-h3 font-semibold tracking-tight text-gold-gradient"
+                  className="font-body text-[clamp(1.25rem,2.4vw,1.9rem)] font-medium tracking-normal text-gold-gradient"
                 >
                   {PROJECTS[activeIndex].title}
                 </motion.h3>

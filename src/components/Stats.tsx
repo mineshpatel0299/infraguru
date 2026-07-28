@@ -21,7 +21,7 @@ export default function Stats() {
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
 
   return (
-    <section id="stats" ref={containerRef} className="relative h-[300vh] bg-primary-dark w-full">
+    <section id="stats" ref={containerRef} className="relative h-[200vh] bg-primary-dark w-full">
       {/* Sticky container that stays pinned while we scroll */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center items-center perspective-[1000px]">
         
@@ -43,29 +43,29 @@ export default function Stats() {
           style={{ y: yTranslate, scale, opacity }}
           className="absolute z-10 w-full px-4 text-center flex flex-col gap-0 md:gap-1 items-center justify-center max-w-[95%] mx-auto"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.5rem] font-light text-white leading-tight tracking-wide drop-shadow-md md:whitespace-nowrap">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-[2.75rem] font-light text-white leading-tight tracking-normal drop-shadow-md md:whitespace-nowrap">
             We handle comprehensive real estate transactions,
           </h2>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.5rem] font-normal text-gold-gradient leading-tight tracking-wide drop-shadow-md mt-1 md:whitespace-nowrap">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-[2.75rem] font-light text-gold-gradient leading-tight tracking-normal drop-shadow-md mt-1 md:whitespace-nowrap">
             saving you valuable time.
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-16 mt-12 md:mt-16 w-full max-w-5xl pt-10 border-t border-white/20">
             <div className="flex flex-col items-center gap-1 sm:gap-2">
-              <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight drop-shadow-md">77<span className="text-gold-gradient font-medium">+</span></span>
-              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-widest text-center">Properties Listed</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white tracking-normal drop-shadow-md">77<span className="text-gold-gradient font-medium">+</span></span>
+              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-wide text-center">Properties Listed</span>
             </div>
             <div className="flex flex-col items-center gap-1 sm:gap-2">
-              <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight drop-shadow-md">350<span className="text-gold-gradient font-medium">+</span></span>
-              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-widest text-center">Properties Sold</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white tracking-normal drop-shadow-md">350<span className="text-gold-gradient font-medium">+</span></span>
+              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-wide text-center">Properties Sold</span>
             </div>
             <div className="flex flex-col items-center gap-1 sm:gap-2">
-              <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight drop-shadow-md">500<span className="text-gold-gradient font-medium">+</span></span>
-              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-widest text-center">Satisfied Clients</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white tracking-normal drop-shadow-md">500<span className="text-gold-gradient font-medium">+</span></span>
+              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-wide text-center">Satisfied Clients</span>
             </div>
             <div className="flex flex-col items-center gap-1 sm:gap-2">
-              <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight drop-shadow-md">25<span className="text-gold-gradient font-medium">+</span></span>
-              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-widest text-center">Realtor Awards</span>
+              <span className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white tracking-normal drop-shadow-md">25<span className="text-gold-gradient font-medium">+</span></span>
+              <span className="text-xs sm:text-sm md:text-base font-medium text-white/80 uppercase tracking-wide text-center">Realtor Awards</span>
             </div>
           </div>
         </motion.div>

@@ -86,7 +86,7 @@ export default function Testimonials() {
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 className="mb-3 sm:mb-4 flex items-center justify-start gap-3"
               >
-                <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+                <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
                   CLIENT STORIES
                 </span>
                 <div className="h-[2px] w-8 bg-gold-gradient" />
@@ -97,7 +97,7 @@ export default function Testimonials() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-                className="font-body text-h2 font-light tracking-tight text-white leading-tight mb-8 sm:mb-10 lg:mb-12"
+                className="font-body text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-white leading-tight mb-8 sm:mb-10 lg:mb-12"
               >
                 VOICES OF <br /> <span className="font-bold text-gold-gradient">TRUST</span>
               </motion.h2>
@@ -171,7 +171,7 @@ export default function Testimonials() {
 
                   {/* Middle Row: Quote Number & Text */}
                   <div className="flex-1 flex flex-col justify-center my-4 sm:my-6">
-                    <span className="font-heading text-3xl sm:text-4xl text-[#b87d6e] font-light mb-3 sm:mb-4 block">
+                    <span className="font-heading text-2xl sm:text-3xl text-[#b87d6e] font-light mb-3 sm:mb-4 block">
                       66
                     </span>
                     <p className="text-body text-neutral-800 font-normal">
@@ -181,7 +181,7 @@ export default function Testimonials() {
 
                   {/* Bottom Row: Author Details */}
                   <div className="pt-6 sm:pt-8 border-t border-black/[0.06] mt-auto">
-                    <h4 className="font-body font-bold text-body text-neutral-900">
+                    <h4 className="font-body font-semibold text-body text-neutral-900">
                       {card1.name}
                     </h4>
                     <p className="text-caption text-neutral-500 font-medium mt-0.5">
@@ -219,7 +219,7 @@ export default function Testimonials() {
 
                   {/* Middle Row: Quote Number & Text */}
                   <div className="flex-1 flex flex-col justify-center my-4 sm:my-6">
-                    <span className="font-heading text-3xl sm:text-4xl text-[#b87d6e] font-light mb-3 sm:mb-4 block">
+                    <span className="font-heading text-2xl sm:text-3xl text-[#b87d6e] font-light mb-3 sm:mb-4 block">
                       66
                     </span>
                     <p className="text-body text-neutral-800 font-normal">
@@ -229,7 +229,7 @@ export default function Testimonials() {
 
                   {/* Bottom Row: Author Details */}
                   <div className="pt-6 sm:pt-8 border-t border-black/[0.06] mt-auto">
-                    <h4 className="font-body font-bold text-body text-neutral-900">
+                    <h4 className="font-body font-semibold text-body text-neutral-900">
                       {card2.name}
                     </h4>
                     <p className="text-caption text-neutral-500 font-medium mt-0.5">

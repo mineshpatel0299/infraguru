@@ -75,7 +75,7 @@ export default function Services() {
             className="mb-4 flex items-center justify-center gap-3"
           >
             <div className="h-[2px] w-8 bg-gold-gradient" />
-            <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+            <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
               WHAT WE DO
             </span>
             <div className="h-[2px] w-8 bg-gold-gradient" />
@@ -86,7 +86,7 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="font-body text-h2 font-light tracking-tight text-neutral-900 leading-tight"
+            className="font-body text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
           >
             COMPREHENSIVE <span className="font-bold text-gold-gradient">SERVICES</span>
           </motion.h2>
@@ -125,10 +125,10 @@ export default function Services() {
                 </motion.div>
 
                 {/* Dark Blue Overlay */}
-                <div className={`absolute inset-0 z-10 transition-colors duration-700 ${isActive ? 'bg-gradient-to-t from-primary-dark via-primary-dark/60 to-transparent' : 'bg-primary-dark/80'}`} />
+                <div className={`absolute inset-0 z-10 transition-colors duration-700 ${isActive ? 'bg-black/20' : 'bg-primary-dark/80'}`} />
 
                 {/* Ghost Number */}
-                <div className="absolute top-4 right-4 lg:top-6 lg:right-6 z-20 font-body text-4xl lg:text-7xl font-bold text-white/10 leading-none">
+                <div className="absolute top-4 right-4 lg:top-6 lg:right-6 z-20 font-body text-3xl lg:text-6xl font-semibold text-white/10 leading-none">
                   {item.step}
                 </div>
 
@@ -139,7 +139,7 @@ export default function Services() {
                   {!isActive && !isMobile && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                       <span 
-                        className="font-body text-xl font-medium text-white/40 tracking-[0.2em] uppercase whitespace-nowrap"
+                        className="font-body text-lg font-medium text-white/40 tracking-[0.1em] uppercase whitespace-nowrap"
                         style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
                       >
                         {item.title}
@@ -150,7 +150,7 @@ export default function Services() {
                   {/* Inactive Horizontal Title (Mobile only) */}
                   {!isActive && isMobile && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <span className="font-body text-base font-medium text-white/50 tracking-widest uppercase">
+                      <span className="font-body text-base font-medium text-white/50 tracking-wide uppercase">
                         {item.title}
                       </span>
                     </div>
@@ -166,7 +166,7 @@ export default function Services() {
                         transition={{ duration: 0.5, delay: 0.15 }}
                         className="flex flex-col h-full justify-end"
                       >
-                        <h3 className="font-body text-3xl sm:text-4xl font-semibold text-gold-gradient mb-3 sm:mb-4">
+                        <h3 className="font-body text-2xl sm:text-3xl font-medium text-gold-gradient mb-3 sm:mb-4">
                           {item.title}
                         </h3>
                         <p className="text-white/80 text-sm sm:text-lg leading-relaxed max-w-lg mb-6 sm:mb-8 line-clamp-2 sm:line-clamp-3">
