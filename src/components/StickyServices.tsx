@@ -7,42 +7,42 @@ const SHOWCASE_ITEMS = [
   {
     step: "01 —— 06",
     title: "Property to Buy",
-    bgImage: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=90",
+    bgImage: "/Projects/M3M%20Antalya/544304004_m3m-antalya-hills-gallery-3.webp",
     description: "Property to buy means a land or building that is available for sale and can be legally purchased by a buyer.",
     link: "#contact",
   },
   {
     step: "02 —— 06",
     title: "Property to Sell",
-    bgImage: "https://images.unsplash.com/photo-1560184897-ae75f418493e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=90",
+    bgImage: "/Projects/SIgnature/WhatsApp-Image-2026-02-26-at-124237-PM-Picsart-AiImageEnhancer.webp",
     description: "Property to sell means a land or building that the owner is offering for sale and can be legally sold to a buyer.",
     link: "#contact",
   },
   {
     step: "03 —— 06",
     title: "Property to Rent",
-    bgImage: "https://images.unsplash.com/photo-1541976590-713941681591?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=90",
+    bgImage: "/Projects/SignatureDeluxe/image-Picsart-AiImageEnhancer-1-scaled.webp",
     description: "Property to rent means a land or building that is given to someone for temporary use in exchange for rent, without transferring ownership.",
     link: "#contact",
   },
   {
     step: "04 —— 06",
     title: "Property to Lease",
-    bgImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=90",
+    bgImage: "/Projects/M3M/Artboard_4_1_-_8jpuMAmC4FGE.webp",
     description: "Property to lease means a land or building given for long-term use to a tenant under a lease agreement, without transferring ownership.",
     link: "#contact",
   },
   {
     step: "05 —— 06",
     title: "Property to Invest",
-    bgImage: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=90",
+    bgImage: "/Projects/M3M%20Antalya/about_2_-_LKRZFgeqKGJ4_-_CfWwyPz3TLPk.webp",
     description: "Property to invest means properties specially selected for long-term returns, rental income and capital growth.",
     link: "#contact",
   },
   {
     step: "06 —— 06",
     title: "Property for Joint Development",
-    bgImage: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=90",
+    bgImage: "/Projects/SIgnature/WhatsApp-Image-2026-02-26-at-124128-PM-Picsart-AiImageEnhancer.webp",
     description: "Property for joint development is when a land owner and developer partner together to develop a project, sharing the resulting benefits without either party bearing the full cost alone.",
     link: "#contact",
   },
@@ -120,6 +120,7 @@ export default function StickyServices() {
     const settlePoints = Array.from({ length: n }, (_, i) => START + (i / (n - 1)) * (END - START));
     const thresholds = settlePoints.slice(1);
     const positions = SHOWCASE_ITEMS.map((_, i) => `-${(i / n) * 100}%`);
+    const avgGap = (END - START) / (n - 1);
     return {
       thresholds,
       input: settlePoints,
@@ -129,6 +130,11 @@ export default function StickyServices() {
       // after the last card is already fully visible is what produced the
       // "extra scroll" once you finish the sequence.
       snapPoints: settlePoints,
+      // How close (in scroll-progress) the user must already be to a settle
+      // point before a pause is allowed to trigger a snap. Keeps the snap
+      // from magnet-pulling someone mid-journey between items during an
+      // ordinary pause between scroll flicks.
+      snapGate: avgGap * 0.35,
     };
   }, []);
 
@@ -167,7 +173,13 @@ export default function StickyServices() {
           Math.abs(sp - current) < Math.abs(best - current) ? sp : best
         );
         const nearestIndex = stackRange.snapPoints.indexOf(nearest);
-        if (Math.abs(nearest - current) < 0.001 || !section) return;
+        const distance = Math.abs(nearest - current);
+        // Only snap when already close to a settle point. Without this gate,
+        // a natural pause between scroll flicks — anywhere, including mid-
+        // journey between items — would get magnet-pulled toward whichever
+        // point is nearest, which reads as the page fighting the user's
+        // scroll (it can even pull them backward mid-flick-sequence).
+        if (distance < 0.001 || distance > stackRange.snapGate || !section) return;
 
         const travel = section.offsetHeight - window.innerHeight;
         const sectionTop = section.getBoundingClientRect().top + window.scrollY;
@@ -191,7 +203,7 @@ export default function StickyServices() {
             }
           },
         });
-      }, 220);
+      }, 320);
     }
 
     window.addEventListener('wheel', handleUserInput, { passive: true });
@@ -301,7 +313,7 @@ export default function StickyServices() {
             </span>
 
             {/* Title (Crossfading on step change) */}
-            <div className="min-h-[40px] sm:min-h-[44px] flex items-center justify-center mb-5 w-full">
+            <div className="h-[62px] sm:h-[100px] flex items-center justify-center mb-5 w-full">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.h3
                   key={`title-${activeIndex}`}
@@ -341,7 +353,7 @@ export default function StickyServices() {
             </div>
 
             {/* Description (Crossfading on step change) */}
-            <div className="min-h-[64px] sm:min-h-[72px] flex items-center justify-center mb-6 w-full">
+            <div className="h-[115px] flex items-center justify-center mb-6 w-full">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.p
                   key={`desc-${activeIndex}`}

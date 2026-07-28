@@ -12,33 +12,33 @@ type CardItem = {
 const CARDS: CardItem[] = [
   {
     number: "01",
-    title: "CURATED COLLECTION OF LUXURY VILLAS",
+    title: "SMOOTH & STRESS-FREE PROCESS",
     description:
-      "Handpicked, architecturally striking villas in the most desirable locations. Each property offers privacy, sophistication, and world-class amenities.",
+      "Infra Guru is a professional real estate consulting company that helps clients find the right home and property investment with a seamless and stress-free process.",
   },
   {
     number: "02",
-    title: "BESPOKE INTERIOR & EXTERIOR DESIGN",
+    title: "TRUSTED GUIDANCE & SUPPORT",
     description:
-      "Our design services are fully personalized—crafted to match your vision, lifestyle, and taste. Whether you seek timeless elegance or bold modernity, we bring your dream space to life, inside and out.",
+      "We focus on delivering trusted guidance and complete transaction support throughout your entire real estate journey.",
   },
   {
     number: "03",
-    title: "END-TO-END PROJECT MANAGEMENT",
+    title: "10+ YEARS OF EXPERIENCE",
     description:
-      "From villa acquisition to full-scale design detail. Our seamless process ensures your peace of mind, with one dedicated team guiding you from concept to completion.",
+      "With more than a decade in the real estate industry, Infra Guru has been operating as a trusted brand in Gurgaon, Haryana since 2021.",
   },
   {
     number: "04",
-    title: "VERIFIED A-GRADE PARTNER NETWORK",
+    title: "WIDE RANGE OF PROPERTIES",
     description:
-      "We collaborate exclusively with top-tier architects, contractors, and legal experts. Every partner undergoes rigorous vetting to guarantee unmatched craftsmanship, compliance, and reliability.",
+      "We handle a comprehensive variety of property categories, specializing in residential properties, commercial properties, and farmland.",
   },
   {
     number: "05",
-    title: "TRANSPARENT & TAILORED INVESTMENTS",
+    title: "RENTALS & LAND DEVELOPMENT",
     description:
-      "We provide comprehensive market analysis and clear financial modeling for every acquisition. Our bespoke investment strategies maximize long-term property value and rental yields with zero hidden surprises.",
+      "Our expertise extends across the market, covering commercial rental properties, residential rentals, as well as land and development projects.",
   },
 ];
 

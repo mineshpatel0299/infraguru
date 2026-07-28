@@ -8,10 +8,14 @@ import { PROJECTS } from "@/lib/projects";
 export default function ProjectShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  // Mirrors activeIndex for use inside the scroll-snap effect below, whose
-  // listeners are set up once and shouldn't be torn down/rebuilt on every
-  // index change just to read the latest value.
   const activeIndexRef = useRef(0);
+  // Where the raw scroll position currently says we should be. activeIndex
+  // advances toward this one step at a time (see the effect below) instead
+  // of jumping straight there — so a single fast scroll never skips past an
+  // intermediate project; every project gets its own reveal, however fast
+  // or slow you scroll.
+  const targetIndexRef = useRef(0);
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // We allocate 100vh of vertical scroll per project (400vh total for 4 projects)
   const { scrollYProgress } = useScroll({
@@ -20,90 +24,35 @@ export default function ProjectShowcase() {
   });
 
   const n = PROJECTS.length;
-  // Even snap targets, one per project (0, 1/3, 2/3, 1 for 4 projects) — where
-  // scrolling should come to rest once the user stops, so each gesture lands
-  // on a fully-settled project instead of interrupting an in-flight crossfade.
-  const snapPoints = useMemo(() => Array.from({ length: n }, (_, i) => i / (n - 1)), [n]);
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    };
+  }, []);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     // Map scroll progress (0 to 1) to an integer index (0 to PROJECTS.length - 1)
-    const index = Math.min(n - 1, Math.floor(Math.max(0, latest) * n));
-    if (index !== activeIndex) {
-      setActiveIndex(index);
-      activeIndexRef.current = index;
+    const target = Math.min(n - 1, Math.floor(Math.max(0, latest) * n));
+    targetIndexRef.current = target;
+
+    if (target !== activeIndexRef.current && !advanceTimerRef.current) {
+      const step = () => {
+        setActiveIndex((current) => {
+          const nextTarget = targetIndexRef.current;
+          if (current === nextTarget) {
+            advanceTimerRef.current = null;
+            return current;
+          }
+          const next = current + (nextTarget > current ? 1 : -1);
+          activeIndexRef.current = next;
+          advanceTimerRef.current = setTimeout(step, 280);
+          return next;
+        });
+      };
+      step();
     }
   });
-
-  // Once the user stops scrolling inside the pinned section, ease the rest of
-  // the way to the nearest project so the right-side content (image, title,
-  // description) always finishes its transition instead of getting cut off
-  // mid-crossfade by the next threshold.
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    let settleTimer: ReturnType<typeof setTimeout> | null = null;
-    let activeAnimation: ReturnType<typeof animateScroll> | null = null;
-    let isAutoScrolling = false;
-
-    function cancelSnap() {
-      activeAnimation?.stop();
-      activeAnimation = null;
-      isAutoScrolling = false;
-    }
-
-    function handleUserInput() {
-      cancelSnap();
-    }
-
-    function handleScroll() {
-      if (isAutoScrolling) return;
-      if (settleTimer) clearTimeout(settleTimer);
-
-      settleTimer = setTimeout(() => {
-        const current = scrollYProgress.get();
-        if (current <= 0 || current >= 1) return;
-
-        const nearest = snapPoints.reduce((best, sp) =>
-          Math.abs(sp - current) < Math.abs(best - current) ? sp : best
-        );
-        const nearestIndex = snapPoints.indexOf(nearest);
-        if (Math.abs(nearest - current) < 0.001 || !section) return;
-
-        const travel = section.offsetHeight - window.innerHeight;
-        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
-        const targetY = sectionTop + nearest * travel;
-
-        isAutoScrolling = true;
-        activeAnimation = animateScroll(window.scrollY, targetY, {
-          duration: 0.6,
-          ease: [0.16, 1, 0.3, 1],
-          onUpdate: (v) => window.scrollTo(0, v),
-          onComplete: () => {
-            isAutoScrolling = false;
-            // Force the active index to match where we just settled — sub-pixel
-            // scroll rounding can otherwise leave the scroll-driven index one
-            // step behind a snap destination that sits exactly on a threshold.
-            if (nearestIndex >= 0 && nearestIndex !== activeIndexRef.current) {
-              setActiveIndex(nearestIndex);
-              activeIndexRef.current = nearestIndex;
-            }
-          },
-        });
-      }, 220);
-    }
-
-    window.addEventListener('wheel', handleUserInput, { passive: true });
-    window.addEventListener('touchmove', handleUserInput, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('wheel', handleUserInput);
-      window.removeEventListener('touchmove', handleUserInput);
-      window.removeEventListener('scroll', handleScroll);
-      if (settleTimer) clearTimeout(settleTimer);
-      cancelSnap();
-    };
-  }, [scrollYProgress, snapPoints]);
 
   const currentProject = PROJECTS[activeIndex] || PROJECTS[0];
 
@@ -185,7 +134,7 @@ export default function ProjectShowcase() {
 
               {/* Big active index number (01, 02, 03, 04) */}
               <div className="overflow-hidden">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                   <motion.span
                     key={activeIndex}
                     initial={{ y: "40%", opacity: 0 }}
@@ -230,25 +179,57 @@ export default function ProjectShowcase() {
               </div>
 
               {/* ── Location, Tagline, and Description ── */}
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={activeIndex}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: { staggerChildren: 0.1, delayChildren: 0.1 }
+                    },
+                    exit: {
+                      opacity: 0,
+                      transition: { staggerChildren: 0.05, staggerDirection: -1 }
+                    }
+                  }}
+                  className="flex flex-col"
                 >
-                  <p className="text-caption text-white/90 font-medium mb-6 sm:mb-8 lg:mb-10">
+                  <motion.p 
+                    variants={{
+                      hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
+                      visible: { y: 0, opacity: 1, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+                      exit: { y: -20, opacity: 0, filter: "blur(4px)", transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }
+                    }}
+                    className="text-caption text-white/90 font-medium mb-6 sm:mb-8 lg:mb-10"
+                  >
                     {currentProject.location}
-                  </p>
+                  </motion.p>
 
-                  <p className="text-h4 text-white font-medium tracking-tight mb-3 sm:mb-4">
+                  <motion.p 
+                    variants={{
+                      hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
+                      visible: { y: 0, opacity: 1, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+                      exit: { y: -20, opacity: 0, filter: "blur(4px)", transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }
+                    }}
+                    className="text-h4 text-white font-medium tracking-tight mb-3 sm:mb-4"
+                  >
                     {currentProject.tagline}
-                  </p>
+                  </motion.p>
 
-                  <p className="text-body text-neutral-400 font-normal">
+                  <motion.p 
+                    variants={{
+                      hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
+                      visible: { y: 0, opacity: 1, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+                      exit: { y: -20, opacity: 0, filter: "blur(4px)", transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }
+                    }}
+                    className="text-body text-neutral-400 font-normal"
+                  >
                     {currentProject.description[0]}
-                  </p>
+                  </motion.p>
                 </motion.div>
               </AnimatePresence>
             </div>

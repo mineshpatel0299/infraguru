@@ -77,21 +77,6 @@ export default function Testimonials() {
           {/* ── LEFT COLUMN: Header & Carousel Navigation Controls ── */}
           <div className="lg:col-span-4 flex flex-col justify-between py-2 sm:py-4">
             <div>
-              {/* Luxury Pool/Villa Icon Photo */}
-              <motion.div
-                variants={scaleIn}
-                initial="hidden"
-                whileInView="visible"
-                viewport={viewportMirror}
-                className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl overflow-hidden shadow-sm border border-white/60 mb-6 sm:mb-8"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&auto=format&fit=crop&q=80"
-                  alt="Villa view"
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-
               {/* Massive Editorial Heading */}
               <motion.h2
                 variants={fadeDown}
@@ -118,7 +103,7 @@ export default function Testimonials() {
               <button
                 onClick={handlePrev}
                 aria-label="Previous testimonial"
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-200/80 hover:bg-neutral-300 text-neutral-800 flex items-center justify-center transition-all duration-300 shadow-sm active:scale-95"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-200/80 hover:bg-neutral-300 text-neutral-800 flex items-center justify-center transition-all duration-300 shadow-sm active:scale-95 hover:scale-105"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -127,7 +112,7 @@ export default function Testimonials() {
               <button
                 onClick={handleNext}
                 aria-label="Next testimonial"
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white flex items-center justify-center transition-all duration-300 shadow-md active:scale-95"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white flex items-center justify-center transition-all duration-300 shadow-md active:scale-95 hover:scale-105"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
@@ -149,12 +134,13 @@ export default function Testimonials() {
               {/* Card 1 (Always visible) */}
               <AnimatePresence mode="popLayout" custom={direction}>
                 <motion.div
+                  layout
                   key={`card-1-${card1.id}`}
                   custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 50 : -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, x: direction > 0 ? 60 : -60, scale: 0.95, filter: "blur(5px)" }}
+                  animate={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, x: direction > 0 ? -60 : 60, scale: 0.95, filter: "blur(5px)" }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                   className={`${card1.bgColor} rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 flex flex-col justify-between h-full min-h-[400px] sm:min-h-[460px] shadow-sm border border-black/[0.03]`}
                 >
                   {/* Top Row: Pill Badge + Avatar */}
@@ -194,12 +180,13 @@ export default function Testimonials() {
               {/* Card 2 (Visible on sm/tablet and desktop, hidden on extra small mobile screens for clean single-card view) */}
               <AnimatePresence mode="popLayout" custom={direction}>
                 <motion.div
+                  layout
                   key={`card-2-${card2.id}`}
                   custom={direction}
-                  initial={{ opacity: 0, x: direction > 0 ? 50 : -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
-                  transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  initial={{ opacity: 0, x: direction > 0 ? 60 : -60, scale: 0.95, filter: "blur(5px)" }}
+                  animate={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, x: direction > 0 ? -60 : 60, scale: 0.95, filter: "blur(5px)" }}
+                  transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
                   className={`hidden sm:flex ${card2.bgColor} rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 flex-col justify-between h-full min-h-[400px] sm:min-h-[460px] shadow-sm border border-black/[0.03]`}
                 >
                   {/* Top Row: Pill Badge + Avatar */}
