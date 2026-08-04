@@ -189,49 +189,37 @@ export default function Hero() {
         </div>
 
         {/* Stats Bottom Bar */}
-        <motion.div 
-          className="w-full relative z-10 border-t border-white/10 bg-gradient-to-t from-black/50 to-transparent backdrop-blur-[2px]"
+        <motion.div
+          className="w-full relative z-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="container mx-auto px-5 sm:px-8 py-6 sm:py-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x divide-white/10">
-              
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 divide-x divide-white/10">
+
               {/* Stat 1 */}
-              <div className="flex items-center gap-4 lg:justify-center">
-                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
-                <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">25+</span>
-                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">YEARS OF<br/>EXCELLENCE</span>
-                </div>
+              <div className="flex flex-col items-center justify-center text-center px-2">
+                <span className="text-2xl sm:text-3xl font-light text-white leading-none">25+</span>
+                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">YEARS OF<br/>EXCELLENCE</span>
               </div>
 
               {/* Stat 2 */}
-              <div className="flex items-center gap-4 lg:justify-center">
-                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">50+</span>
-                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">PREMIUM<br/>PROJECTS</span>
-                </div>
+              <div className="flex flex-col items-center justify-center text-center px-2">
+                <span className="text-2xl sm:text-3xl font-light text-white leading-none">50+</span>
+                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">PREMIUM<br/>PROJECTS</span>
               </div>
 
               {/* Stat 3 */}
-              <div className="flex items-center gap-4 lg:justify-center">
-                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">15K+</span>
-                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">HAPPY<br/>FAMILIES</span>
-                </div>
+              <div className="flex flex-col items-center justify-center text-center px-2">
+                <span className="text-2xl sm:text-3xl font-light text-white leading-none">15K+</span>
+                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">HAPPY<br/>FAMILIES</span>
               </div>
 
               {/* Stat 4 */}
-              <div className="flex items-center gap-4 lg:justify-center">
-                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">10+</span>
-                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">CITIES<br/>PRESENT</span>
-                </div>
+              <div className="flex flex-col items-center justify-center text-center px-2">
+                <span className="text-2xl sm:text-3xl font-light text-white leading-none">10+</span>
+                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">CITIES<br/>PRESENT</span>
               </div>
 
             </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Inter } from "next/font/google";
 import SealTransitionProvider from "@/components/SealTransition";
+import Preloader from "@/components/Preloader";
 import "./globals.css";
 
 const inter = Inter({
@@ -32,10 +33,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${giordano.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <SealTransitionProvider>
-          {children}
-          {modal}
-        </SealTransitionProvider>
+        <Preloader>
+          <SealTransitionProvider>
+            {children}
+            {modal}
+          </SealTransitionProvider>
+        </Preloader>
       </body>
     </html>
   );
