@@ -2,16 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LINKS = [
-  { href: '#about', label: 'About' },
-  { href: '#services', label: 'Services' },
-  { href: '#project-showcase', label: 'Projects' },
-  { href: '#testimonials', label: 'Testimonials' },
+  { href: '/about', label: 'About' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/testimonials', label: 'Testimonials' },
 ];
 
-export default function Navbar() {
+export default function Navbar(){
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -54,7 +55,7 @@ export default function Navbar() {
       <div className="container mx-auto max-w-7xl px-5 sm:px-8 transition-all duration-500 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-3 lg:py-4">
         {/* Left: Logo */}
         <div className="flex justify-start">
-          <a href="#hero" className="inline-flex items-center shrink-0 z-10">
+          <Link href="/" className="inline-flex items-center shrink-0 z-10">
             <Image
               src="/logo.png"
               alt="Infraguru"
@@ -63,20 +64,30 @@ export default function Navbar() {
               className="object-contain transition-all duration-500 drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)] brightness-0 invert h-14 sm:h-[4.25rem] w-auto"
               priority
             />
-          </a>
+          </Link>
         </div>
 
         {/* Center: Desktop Links */}
         <div className="hidden min-[901px]:flex justify-center items-center gap-2">
-          {LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
-            >
-              {link.label}
-            </a>
-          ))}
+          {LINKS.map((link) =>
+            link.href.startsWith('/') ? (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+              >
+                {link.label}
+              </a>
+            )
+          )}
         </div>
 
         {/* Right: Desktop CTA & Mobile Hamburger */}
@@ -113,17 +124,29 @@ export default function Navbar() {
             <div className="mb-4 pb-4 border-b border-white/10">
               <Image src="/logo.png" alt="Infraguru" width={140} height={44} className="h-12 w-auto object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)] brightness-0 invert" />
             </div>
-            {LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-between px-2 py-3 text-h4 font-semibold uppercase text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
-              >
-                {link.label}
-                <span className="text-white/30 text-caption">→</span>
-              </a>
-            ))}
+            {LINKS.map((link) =>
+              link.href.startsWith('/') ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-between px-2 py-3 text-h4 font-semibold uppercase text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
+                >
+                  {link.label}
+                  <span className="text-white/30 text-caption">→</span>
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-between px-2 py-3 text-h4 font-semibold uppercase text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
+                >
+                  {link.label}
+                  <span className="text-white/30 text-caption">→</span>
+                </a>
+              )
+            )}
             <a
               href="#contact"
               className="mt-4 flex w-full items-center justify-center rounded-xl bg-white py-3 text-center text-label font-bold text-black uppercase shadow-md hover:bg-neutral-100"
