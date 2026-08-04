@@ -13,6 +13,7 @@ const LINK_COLUMNS = [
       { label: 'About Us', href: '/about' },
       { label: 'Careers', href: '#' },
       { label: 'Press', href: '#' },
+      { label: 'Contact', href: '/contact' },
     ],
   },
   {
@@ -148,7 +149,7 @@ export default function Footer() {
           </h4>
           <ul className="flex flex-col gap-2 sm:gap-3 text-body text-white/80">
             <li>
-              <span>Tower B-3, Spaze Itech Park<br />Sector-49, Gurugram, Haryana</span>
+              <span>Unit No. 1129, Spaze IT Tech Park<br />Sector - 49, Gurugram</span>
             </li>
             <li>
               <a href="mailto:info@infraguru.in" className="hover:text-white transition-colors">
@@ -161,9 +162,12 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="https://www.infraguru.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              <a href="https://infraguru.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                 www.infraguru.in
               </a>
+            </li>
+            <li>
+              <span className="text-white/60">Mon - Sat : 9:30am - 7:30pm</span>
             </li>
           </ul>
         </motion.div>

@@ -9,10 +9,10 @@ const LINKS = [
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
   { href: '/projects', label: 'Projects' },
-  { href: '/testimonials', label: 'Testimonials' },
+  { href: '/careers', label: 'Careers' },
 ];
 
-export default function Navbar(){
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -46,13 +46,12 @@ export default function Navbar(){
       initial={{ opacity: 0, y: -80 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed inset-x-0 top-0 z-[100] border-b transition-all duration-500 ${
-        scrolled
-          ? 'border-white/10 bg-[#0b1320]/80 shadow-[0_8px_30px_rgba(0,0,0,0.3)] backdrop-blur-xl'
-          : 'border-white/10 bg-black/40 shadow-[0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-md'
-      }`}
+      className={`fixed inset-x-0 top-0 z-[100] transition-all duration-500 ${scrolled
+        ? 'border-b border-white/10 bg-[#0b1320]/80 shadow-[0_8px_30px_rgba(0,0,0,0.3)] backdrop-blur-xl'
+        : 'bg-transparent border-b border-transparent'
+        }`}
     >
-      <div className="container mx-auto max-w-7xl px-5 sm:px-8 transition-all duration-500 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-3 lg:py-4">
+      <div className="container mx-auto px-5 sm:px-8 transition-all duration-500 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-3 lg:py-4">
         {/* Left: Logo */}
         <div className="flex justify-start">
           <Link href="/" className="inline-flex items-center shrink-0 z-10">
@@ -92,12 +91,13 @@ export default function Navbar(){
 
         {/* Right: Desktop CTA & Mobile Hamburger */}
         <div className="flex justify-end items-center">
-          <a
-            href="#contact"
-            className="hidden min-[901px]:inline-flex rounded-xl bg-white px-7 py-3 text-sm font-bold text-black uppercase tracking-[0.05em] shadow-[0_8px_24px_rgba(255,255,255,0.1)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-100 hover:shadow-[0_12px_30px_rgba(255,255,255,0.15)]"
+          <Link
+            href="/contact"
+            className="hidden min-[901px]:inline-flex items-center gap-3 rounded-[4px] border border-white/30 bg-transparent px-6 py-2.5 text-[10px] font-bold text-white uppercase tracking-widest transition-all duration-300 hover:bg-white hover:text-black"
           >
-            Book A Consultation
-          </a>
+            BOOK A CONSULTATION
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7m0 0H8m9 0v9" /></svg>
+          </Link>
 
           <button
             className="z-[110] flex h-9 w-9 flex-col items-center justify-center gap-[5px] min-[901px]:hidden"
@@ -147,13 +147,13 @@ export default function Navbar(){
                 </a>
               )
             )}
-            <a
-              href="#contact"
+            <Link
+              href="/contact"
               className="mt-4 flex w-full items-center justify-center rounded-xl bg-white py-3 text-center text-label font-bold text-black uppercase shadow-md hover:bg-neutral-100"
               onClick={() => setMenuOpen(false)}
             >
               Book A Consultation
-            </a>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

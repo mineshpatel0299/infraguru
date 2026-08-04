@@ -14,7 +14,7 @@
   --color-bg-soft-2: #e8eefc;
   --color-hairline: rgba(3, 46, 151, 0.1);
 
-  --font-heading: var(--font-inter), sans-serif;
+  --font-heading: var(--font-giordano), serif;
   --font-body: var(--font-inter), sans-serif;
 
   --shadow-soft: 0 10px 40px rgba(3, 46, 151, 0.08);
@@ -63,8 +63,8 @@
   --color-aurum-muted: #895900;
   --color-aurum-hairline: rgba(28, 17, 2, 0.16);
 
-  --font-aurum-heading: 'Urbanist', sans-serif;
-  --font-aurum-body: 'Urbanist', sans-serif;
+  --font-aurum-heading: var(--font-giordano), serif;
+  --font-aurum-body: var(--font-inter), sans-serif;
 }
 
 @layer base {

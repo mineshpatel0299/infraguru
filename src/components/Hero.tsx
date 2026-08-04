@@ -43,7 +43,7 @@ function SlideUpWordReveal({
       animate="visible"
     >
       {text.split(' ').map((word, i) => (
-        <span key={i} className="mr-[0.25em] inline-block overflow-hidden pb-[0.1em] -mb-[0.1em]">
+        <span key={i} className="mr-[0.25em] inline-block overflow-hidden pt-[0.2em] -mt-[0.2em] pb-[0.1em] -mb-[0.1em]">
           <motion.span className="inline-block" variants={wordVariant}>
             {word}
           </motion.span>
@@ -106,27 +106,27 @@ export default function Hero() {
       <Navbar />
 
       <div
-        className="sticky top-0 left-0 w-full flex h-[100svh] flex-col items-center justify-end overflow-hidden"
+        className="sticky top-0 left-0 w-full flex h-[100svh] flex-col overflow-hidden"
       >
         {/* Cinematic background */}
         <motion.div
           className="absolute inset-0 z-0 pointer-events-none"
         >
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 z-0 overflow-hidden">
             <video
               ref={videoRef}
-              src="/tt.mp4"
+              src="/ffinal.mp4"
               poster=""
               muted
               playsInline
               preload="auto"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover scale-[1.15] sm:scale-[1.2]"
             />
           </div>
         </motion.div>
 
         {/* Color gradient overlay from bottom to top */}
-        <div className="absolute bottom-0 left-0 right-0 h-[50%] z-1 bg-gradient-to-t from-primary-dark via-primary-dark/60 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-[50%] z-1 bg-gradient-to-t from-[#132731] via-[#132731]/60 to-transparent pointer-events-none" />
 
         {/* Film grain */}
         <div
@@ -145,28 +145,97 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.15, ease: [0.85, 0, 0.15, 1] }}
         />
 
-        <motion.div
-          className="container relative z-10 mx-auto flex max-w-6xl flex-col items-center px-5 text-center sm:px-8 pb-4 sm:pb-6 lg:pb-8"
+        {/* Main Content Area (Centers the text block vertically) */}
+        <div className="container relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center w-full mt-24 md:mt-0">
+          <motion.div className="flex flex-col items-start text-left w-full">
+            <h1 className="mb-2 font-heading font-light uppercase text-[#132731] flex flex-col items-start">
+              <SlideUpWordReveal 
+                text="LIVE THE ART OF" 
+                delay={1.2} 
+                className="font-body text-[clamp(1.2rem,2vw,2rem)] tracking-[0.2em] block justify-start pb-4 flex-nowrap whitespace-nowrap" 
+              />
+              <SlideUpWordReveal
+                text="LUXURY."
+                delay={1.45}
+                className="text-[clamp(3rem,6.5vw,6.5rem)] leading-[0.9] tracking-[-0.02em] block justify-start flex-nowrap whitespace-nowrap text-[#132731] drop-shadow-none"
+              />
+            </h1>
+            
+            <motion.div 
+               className="mt-3 sm:mt-4 flex flex-col gap-4"
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
+            >
+               <div className="w-24 h-[2px] bg-[#d4af37]"></div>
+               <p className="text-sm sm:text-base text-[#132731] leading-relaxed font-body font-medium">
+                 Premium residences crafted for those<br className="hidden sm:block"/>
+                 who value quality, comfort, and timeless living.
+               </p>
+            </motion.div>
+
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.8, delay: 1.9, ease: [0.16, 1, 0.3, 1] }}
+               className="mt-8 sm:mt-10"
+            >
+               <a href="/projects" className="inline-flex items-center gap-3 bg-[#0a1435] px-6 sm:px-8 py-3.5 text-[10px] font-bold text-white uppercase tracking-widest rounded hover:bg-white hover:text-[#0a1435] transition-colors border border-white/10 shadow-[0_12px_30px_rgba(0,0,0,0.5)]">
+                 EXPLORE PROJECTS
+                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7m0 0H8m9 0v9" /></svg>
+               </a>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Stats Bottom Bar */}
+        <motion.div 
+          className="w-full relative z-10 border-t border-white/10 bg-gradient-to-t from-black/50 to-transparent backdrop-blur-[2px]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="mb-4 max-w-none text-center text-[clamp(1.5rem,3.2vw,3.4rem)] font-body font-light uppercase tracking-tight text-white sm:mb-6 sm:tracking-[-1px]">
-            <SlideUpWordReveal text={HEADLINE_LINE_1} delay={1.2} className="block justify-center pb-1 flex-nowrap whitespace-nowrap" />
-            <SlideUpWordReveal
-              text={HEADLINE_LINE_2}
-              delay={1.45}
-              className="block justify-center flex-nowrap whitespace-nowrap text-white drop-shadow-none"
-            />
-          </h1>
+          <div className="container mx-auto px-5 sm:px-8 py-6 sm:py-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 lg:divide-x divide-white/10">
+              
+              {/* Stat 1 */}
+              <div className="flex items-center gap-4 lg:justify-center">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+                <div className="flex flex-col">
+                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">25+</span>
+                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">YEARS OF<br/>EXCELLENCE</span>
+                </div>
+              </div>
 
-          {/* <motion.p
-            className="mb-6 max-w-lg text-body text-white/80 sm:mb-8"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
-          >
-            We bring you the best and take the necessary steps to relieve your property-buying anxiety.
-          </motion.p> */}
+              {/* Stat 2 */}
+              <div className="flex items-center gap-4 lg:justify-center">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                <div className="flex flex-col">
+                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">50+</span>
+                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">PREMIUM<br/>PROJECTS</span>
+                </div>
+              </div>
 
+              {/* Stat 3 */}
+              <div className="flex items-center gap-4 lg:justify-center">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <div className="flex flex-col">
+                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">15K+</span>
+                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">HAPPY<br/>FAMILIES</span>
+                </div>
+              </div>
 
+              {/* Stat 4 */}
+              <div className="flex items-center gap-4 lg:justify-center">
+                <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <div className="flex flex-col">
+                  <span className="text-2xl sm:text-3xl font-light text-white leading-none">10+</span>
+                  <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">CITIES<br/>PRESENT</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </motion.div>
 
       </div>
