@@ -90,7 +90,7 @@ export default function AboutStory() {
               </span>
             </div>
 
-            <h2 className="font-body text-3xl font-light leading-tight tracking-tight text-primary-dark sm:text-4xl lg:text-5xl">
+            <h2 className="font-heading text-3xl font-light leading-tight tracking-tight text-primary-dark sm:text-4xl lg:text-5xl">
               A decade spent turning <span className="font-semibold text-gold-gradient">addresses</span> into
               legacies.
             </h2>

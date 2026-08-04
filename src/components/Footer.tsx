@@ -11,7 +11,7 @@ const LINK_COLUMNS = [
     title: 'Company',
     links: [
       { label: 'About Us', href: '/about' },
-      { label: 'Careers', href: '#' },
+      { label: 'Careers', href: '/careers' },
       { label: 'Press', href: '#' },
       { label: 'Contact', href: '/contact' },
     ],

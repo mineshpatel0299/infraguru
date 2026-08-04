@@ -34,7 +34,7 @@ export default function About() {
               </span>
             </div>
             
-            <h2 className="font-body text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight">
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight">
               Redefining Real Estate <span className="font-semibold text-gold-gradient">Excellence.</span>
             </h2>
             

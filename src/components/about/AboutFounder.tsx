@@ -35,7 +35,7 @@ export default function AboutFounder() {
             </span>
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </div>
-          <h2 className="font-body text-[clamp(1.5rem,3.2vw,2.75rem)] font-light leading-tight tracking-normal text-primary-dark">
+          <h2 className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light leading-tight tracking-normal text-primary-dark">
             The Vision <span className="font-bold text-gold-gradient">Behind InfraGuru</span>
           </h2>
         </motion.div>

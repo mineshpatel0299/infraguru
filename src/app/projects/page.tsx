@@ -211,7 +211,7 @@ export default function ProjectsPage() {
             transition={{ duration: 0.7 }}
             className="max-w-2xl"
           >
-            <h1 className="font-body text-4xl md:text-6xl lg:text-7xl font-light text-white uppercase leading-tight mb-4 drop-shadow-md">
+            <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-light text-white uppercase leading-tight mb-4 drop-shadow-md">
               FIND PLACE TO <br/><span className="font-bold text-gold-gradient">INVEST</span>
             </h1>
             <p className="text-white/90 text-lg max-w-md font-body drop-shadow">
@@ -347,7 +347,7 @@ export default function ProjectsPage() {
       <section className="pt-40 pb-24 max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-24">
         <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h2 className="font-body text-2xl md:text-3xl font-medium text-neutral-900">
+            <h2 className="font-heading text-2xl md:text-3xl font-medium text-neutral-900">
               Recommended <span className="font-bold text-gold-gradient">Places</span>
             </h2>
             <p className="text-sm text-neutral-500 mt-2 font-medium tracking-wide">

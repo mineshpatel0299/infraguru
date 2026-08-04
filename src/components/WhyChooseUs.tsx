@@ -117,7 +117,7 @@ export default function WhyChooseUs() {
             <motion.h2
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 45 }}
               transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="font-body text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
+              className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
             >
               WHERE <span className="font-bold text-gold-gradient">EXCELLENCE</span><br />
               IS STANDARD.
