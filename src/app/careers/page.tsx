@@ -24,7 +24,7 @@ export default function CareersPage() {
       <CareersHero />
       <CareersIntro />
       <CareersValues />
-      <CareersBenefits />
+      {/* <CareersBenefits /> */}
       <CareersOpenings />
       <CareersCTA />
       <Footer />

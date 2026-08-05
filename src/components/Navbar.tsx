@@ -104,7 +104,10 @@ export default function Navbar() {
           <div className="flex justify-end items-center">
             <Link
               href="/contact"
-              className="hidden min-[901px]:inline-flex items-center gap-3 rounded-[4px] border border-white/30 bg-transparent px-6 py-2.5 text-[10px] font-bold text-white uppercase tracking-widest transition-all duration-300 hover:bg-white hover:text-black"
+              className={`hidden min-[901px]:inline-flex items-center gap-3 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${scrolled
+                ? 'rounded-full border border-transparent bg-gold-gradient text-primary-dark hover:brightness-110'
+                : 'rounded-[4px] border border-white/30 bg-transparent text-white hover:bg-white hover:text-black'
+                }`}
             >
               BOOK A CONSULTATION
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7m0 0H8m9 0v9" /></svg>

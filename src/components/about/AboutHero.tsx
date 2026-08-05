@@ -31,7 +31,7 @@ function SlideUpWordReveal({ text, className = "" }: { text: string; className?:
       animate="visible"
     >
       {text.split(" ").map((word, i) => (
-        <span key={i} className="mr-[0.28em] inline-block overflow-hidden pb-[0.1em] -mb-[0.1em]">
+        <span key={i} className="mr-[0.28em] inline-block overflow-hidden pt-[0.2em] -mt-[0.2em] pb-[0.1em] -mb-[0.1em]">
           <motion.span className="inline-block" variants={wordVariant}>
             {word}
           </motion.span>
@@ -104,11 +104,11 @@ export default function AboutHero() {
           <div className="h-[2px] w-8 bg-gold-gradient" />
         </motion.div>
 
-        <h1 className="max-w-4xl text-center text-[clamp(2rem,6vw,5rem)] font-heading font-light uppercase leading-[1.05] tracking-tight text-white">
+        <h1 className="max-w-4xl text-center text-[clamp(2rem,6vw,5rem)] font-heading font-light uppercase leading-[1.2] tracking-tight text-white">
           <SlideUpWordReveal text="Engineering" />
-          <SlideUpWordReveal text="Legacies," className="text-gold-gradient font-semibold" />
-          <SlideUpWordReveal text="Not Just" />
-          <SlideUpWordReveal text="Listings." />
+          <SlideUpWordReveal text="Legacies," className="text-gold-gradient font-semibold mt-2 block" />
+          <SlideUpWordReveal text="Not Just" className="mt-2 block" />
+          <SlideUpWordReveal text="Listings." className="mt-2 block" />
         </h1>
 
         <motion.p

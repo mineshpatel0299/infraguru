@@ -140,7 +140,7 @@ export default function WhyChooseUs() {
                     delay: 0.25 + idx * 0.1,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className="group relative w-[85vw] sm:w-[380px] md:w-[420px] lg:w-[460px] shrink-0 rounded-[24px] sm:rounded-[28px] lg:rounded-[32px] bg-gradient-to-br from-[#253d67] to-[#12223a] p-6 sm:p-8 lg:p-10 border border-white/10 flex flex-col justify-between min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] transition-all duration-500 hover:-translate-y-2 hover:border-amber-200/30 cursor-pointer overflow-hidden"
+                  className="group relative w-[calc(100vw-3rem)] sm:w-[380px] md:w-[420px] lg:w-[460px] shrink-0 rounded-[24px] sm:rounded-[28px] lg:rounded-[32px] bg-gradient-to-br from-[#253d67] to-[#12223a] p-6 sm:p-8 lg:p-10 border border-white/10 flex flex-col justify-between min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] transition-all duration-500 hover:-translate-y-2 hover:border-amber-200/30 cursor-pointer overflow-hidden"
                 >
                   {/* Premium internal glow effect on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 transition-all duration-500 rounded-[inherit]" />

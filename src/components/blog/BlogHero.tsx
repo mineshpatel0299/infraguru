@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 
@@ -8,7 +9,7 @@ const containerVariant: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.045, delayChildren: 0.15 },
+    transition: { staggerChildren: 0.045, delayChildren: 0.45 },
   },
 };
 
@@ -17,20 +18,20 @@ const wordVariant: Variants = {
   visible: {
     y: "0%",
     opacity: 1,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
 function SlideUpWordReveal({ text, className = "" }: { text: string; className?: string }) {
   return (
     <motion.span
-      className={`inline-flex flex-wrap justify-center ${className}`}
+      className={`inline-flex flex-wrap ${className}`}
       variants={containerVariant}
       initial="hidden"
       animate="visible"
     >
       {text.split(" ").map((word, i) => (
-        <span key={i} className="mr-[0.28em] inline-block overflow-hidden pt-[0.2em] -mt-[0.2em] pb-[0.1em] -mb-[0.1em]">
+        <span key={i} className="mr-[0.22em] inline-block overflow-hidden pt-[0.2em] -mt-[0.2em] pb-[0.1em] -mb-[0.1em]">
           <motion.span className="inline-block" variants={wordVariant}>
             {word}
           </motion.span>
@@ -42,11 +43,20 @@ function SlideUpWordReveal({ text, className = "" }: { text: string; className?:
 
 export default function BlogHero() {
   return (
-    <section className="relative w-full overflow-hidden bg-primary-dark pb-20 pt-40 sm:pb-28 sm:pt-48">
-      {/* Ambient glow */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-[15%] left-1/2 h-[50vw] w-[50vw] -translate-x-1/2 rounded-full bg-secondary/5 blur-[150px]" />
-      </div>
+    <section className="relative w-full h-screen overflow-hidden">
+      {/* Full-bleed background image */}
+      <Image
+        src="/blog-hero.jpg"
+        alt="Luxury highrise architecture"
+        fill
+        priority
+        className="object-cover object-center"
+        sizes="100vw"
+      />
+
+      {/* Multi-layer overlay for deep, cinematic look */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#060d18]/95 via-[#060d18]/70 to-[#060d18]/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#060d18]/80 via-transparent to-[#060d18]/30" />
 
       {/* Curtain reveal on enter */}
       <motion.div
@@ -56,48 +66,59 @@ export default function BlogHero() {
         transition={{ duration: 0.6, delay: 0.05, ease: [0.85, 0, 0.15, 1] }}
       />
 
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-5 text-center sm:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-5 flex items-center justify-center gap-3 sm:mb-7"
-        >
-          <div className="h-[2px] w-8 bg-gold-gradient" />
-          <span className="font-body text-label font-semibold uppercase tracking-[0.3em] text-gold-gradient">
-            The Journal
-          </span>
-          <div className="h-[2px] w-8 bg-gold-gradient" />
-        </motion.div>
+      {/* Content — left-aligned, vertically centered */}
+      <div className="relative z-10 h-full flex items-center">
+        <div className="mx-auto w-full max-w-[1600px] px-6 sm:px-10 lg:px-20 xl:px-28">
 
-        <h1 className="max-w-3xl text-center text-[clamp(2rem,5.5vw,4.5rem)] font-heading font-light uppercase leading-[1.2] tracking-tight text-white">
-          <SlideUpWordReveal text="Insight, Curated Like Every" />
-          <SlideUpWordReveal text="Address We Sell." className="text-gold-gradient font-semibold mt-2 block" />
-        </h1>
+          {/* Eyebrow */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-6 flex items-center gap-3"
+          >
+            <div className="h-[2px] w-10 bg-gold-gradient" />
+            <span className="font-body text-label font-semibold uppercase tracking-[0.3em] text-gold-gradient">
+              The Journal
+            </span>
+          </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-6 max-w-xl text-body text-white/70 sm:mt-8"
-        >
-          Market analysis, buying guides, and design perspective from the InfraGuru advisory
-          desk — for readers who take real estate as seriously as we do.
-        </motion.p>
+          {/* Headline */}
+          <h1 className="text-[clamp(1.8rem,3.5vw,3.5rem)] font-heading font-light uppercase leading-[1.15] tracking-tight text-white">
+            <SlideUpWordReveal text="Perspectives On" />
+            <SlideUpWordReveal text="Property." className="text-gold-gradient font-semibold" />
+          </h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 flex items-center gap-2 text-caption uppercase tracking-[0.25em] text-white/50 sm:mt-10"
-        >
-          <Link href="/" className="transition-colors hover:text-white">
-            Home
-          </Link>
-          <span className="text-gold-gradient">/</span>
-          <span className="text-white/80">Journal</span>
-        </motion.div>
+          {/* Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-8 max-w-md text-base text-white/60 leading-relaxed font-body"
+          >
+            Market analysis, buying guides, and design perspective from the InfraGuru
+            advisory desk — for readers who take real estate as seriously as we do.
+          </motion.p>
+
+          {/* Gold divider + breadcrumb */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-10 flex items-center gap-4"
+          >
+            <div className="h-[1px] w-12 bg-gold-gradient opacity-60" />
+            <div className="flex items-center gap-2 text-caption uppercase tracking-[0.25em] text-white/40">
+              <Link href="/" className="transition-colors hover:text-white/80">Home</Link>
+              <span className="text-[#d4af37]">/</span>
+              <span className="text-white/70">Journal</span>
+            </div>
+          </motion.div>
+        </div>
       </div>
+
+      {/* Bottom fade to white */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/10 to-transparent pointer-events-none" />
     </section>
   );
 }

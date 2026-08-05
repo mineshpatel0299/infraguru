@@ -164,7 +164,7 @@ export default function FeaturedProjects() {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  style={{ willChange: 'transform, opacity' }}
+                  style={{ willChange: 'transform, opacity', scaleY: 1.06 }}
                   className="flex-1 w-full overflow-hidden relative"
                 >
                   <img
@@ -216,7 +216,7 @@ export default function FeaturedProjects() {
                   animate="center"
                   exit="exit"
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
-                  className="font-body text-[clamp(1.25rem,2.4vw,1.9rem)] font-medium tracking-normal text-gold-gradient"
+                  className="font-heading text-[clamp(1.25rem,2.4vw,1.9rem)] font-medium tracking-normal text-gold-gradient"
                 >
                   {PROJECTS[activeIndex].title}
                 </motion.h3>
