@@ -25,10 +25,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${giordano.variable}`} suppressHydrationWarning>
@@ -36,7 +34,6 @@ export default function RootLayout({
         <Preloader>
           <SealTransitionProvider>
             {children}
-            {modal}
           </SealTransitionProvider>
         </Preloader>
       </body>

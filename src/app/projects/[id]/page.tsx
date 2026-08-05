@@ -42,7 +42,7 @@ export default async function ProjectPage({
 
   return (
     <main>
-      <ProjectExperience project={project} related={related} mode="page" />
+      <ProjectExperience project={project} related={related} />
       <Footer />
     </main>
   );

@@ -87,7 +87,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           {/* Top Right Tag */}
           <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm border border-neutral-200/50 px-3 py-1.5 shadow-sm">
             <span className="text-[10px] font-body font-bold uppercase tracking-widest text-neutral-900">
-              {project.possession === 'Ready to Move' ? 'Ready to Move' : 'New Launch'}
+              {project.possession}
             </span>
           </div>
         </div>
@@ -153,21 +153,12 @@ export default function ProjectsPage() {
   });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   
-  // Map our sub-categories into two main ones for the toggle
-  const isResidential = (cat: string) => ['Residential', 'Villas', 'Luxury Apartments'].includes(cat);
-  const isCommercial = (cat: string) => ['Commercial'].includes(cat);
-  
-  const baseActiveProjects = PROJECTS.filter(p => 
+  const isResidential = (cat: string) => cat === 'Residential';
+  const isCommercial = (cat: string) => cat === 'Commercial';
+
+  const displayProjects = PROJECTS.filter(p =>
     category === 'Residential' ? isResidential(p.category) : isCommercial(p.category)
   );
-
-  // Generate exactly 21 projects for Residential as requested by duplicating mock data
-  const displayProjects = category === 'Residential' 
-    ? Array.from({ length: 21 }, (_, i) => ({ 
-        ...baseActiveProjects[i % Math.max(baseActiveProjects.length, 1)], 
-        id: (baseActiveProjects[i % Math.max(baseActiveProjects.length, 1)]?.id || 0) * 1000 + i 
-      }))
-    : baseActiveProjects;
 
   const resImg = PROJECTS.find(p => isResidential(p.category))?.image || '';
   const comImg = PROJECTS.find(p => isCommercial(p.category))?.image || '';
