@@ -13,7 +13,7 @@ export default function NotFound() {
       />
       <span className="eyebrow justify-center">Deed Not Found</span>
       <h1 className="mb-5 max-w-lg text-[clamp(2rem,4vw,3rem)] text-primary-dark">
-        This Parcel Isn&rsquo;t On Record
+        This Project Isn&rsquo;t On Record
       </h1>
       <p className="mb-10 max-w-md text-[1.02rem] leading-[1.7] text-muted">
         The listing you&rsquo;re looking for may have been sold, renamed, or never existed. Let&rsquo;s get you
