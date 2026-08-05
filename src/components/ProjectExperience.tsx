@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeUp, scaleIn, fadeDown, viewportMirror } from "@/lib/motion";
 import type { Project } from "@/lib/projects";
@@ -148,13 +149,13 @@ export default function ProjectExperience({
  <div className="w-full overflow-x-hidden bg-white selection:bg-[#132731] selection:text-white">
  {/* ── SLIM TOP BAR ── */}
  <div className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-white/10 bg-[#132731]/90 px-6 py-4 backdrop-blur-2xl">
- <SealLink
+ <Link
  href="/projects"
  className="group flex items-center gap-3 text-[0.7rem] font-medium text-white/80 uppercase transition-colors hover:text-white"
  >
  <span aria-hidden className="transition-transform duration-300 group-hover:-translate-x-1 opacity-70">&larr;</span> 
  <span>Portfolio</span>
- </SealLink>
+ </Link>
 
  <span className="hidden font-mono text-[0.65rem] text-white/50 uppercase md:inline">
  {project.category} &mdash; {project.code}
