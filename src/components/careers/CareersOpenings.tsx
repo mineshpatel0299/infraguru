@@ -1,135 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { fadeUp, viewportMirror } from "@/lib/motion";
+import { DEPARTMENTS, OPENINGS, type Department } from "@/lib/careers";
 import { CareerApplyModal } from "./CareerApplyModal";
-
-const DEPARTMENTS = ["All", "Sales", "Marketing", "Design", "Operations"] as const;
-
-type Department = (typeof DEPARTMENTS)[number];
-
-const OPENINGS: {
-  title: string;
-  department: Exclude<Department, "All">;
-  location: string;
-  workMode: string;
-  description: string;
-  requirements: string[];
-}[] = [
-  {
-    title: "Senior Sales Manager",
-    department: "Sales",
-    location: "Gurugram",
-    workMode: "Work from Office",
-    description:
-      "Lead a team of consultants across our premium residential portfolio, owning targets from lead to closing while upholding our advisory-first approach.",
-    requirements: [
-      "5+ years in real estate or premium sales leadership.",
-      "Proven record of leading and mentoring a sales team.",
-      "Strong negotiation and closing skills on high-value deals.",
-      "Comfortable owning revenue targets end to end.",
-    ],
-  },
-  {
-    title: "Real Estate Consultant",
-    department: "Sales",
-    location: "Gurugram",
-    workMode: "Work from Office",
-    description:
-      "Guide discerning clients through acquisitions end to end — site visits, negotiations, documentation — as their single point of trust.",
-    requirements: [
-      "Graduation in any discipline; MBA preferred.",
-      "Freshers to 3 years of sales or client-facing experience.",
-      "Strong communication and negotiation skills.",
-      "Willingness to travel for site visits.",
-    ],
-  },
-  {
-    title: "Business Development Manager",
-    department: "Sales",
-    location: "Mumbai",
-    workMode: "Hybrid",
-    description:
-      "Build and manage developer partnerships, structure joint-development opportunities, and expand our footprint into new micro-markets.",
-    requirements: [
-      "4+ years in business development or channel partnerships.",
-      "Existing network among developers or landowners is a plus.",
-      "Comfortable structuring long-cycle B2B deals.",
-      "Sharp commercial and analytical judgement.",
-    ],
-  },
-  {
-    title: "Digital Marketing Executive",
-    department: "Marketing",
-    location: "Gurugram",
-    workMode: "Work from Office",
-    description:
-      "Own performance campaigns and brand content across channels, translating our premium positioning into measurable pipeline.",
-    requirements: [
-      "2+ years running paid campaigns (Meta, Google).",
-      "Working knowledge of analytics and attribution tools.",
-      "Sharp eye for premium, on-brand creative.",
-      "Comfortable owning a monthly pipeline target.",
-    ],
-  },
-  {
-    title: "Content & Brand Strategist",
-    department: "Marketing",
-    location: "Remote",
-    workMode: "Remote",
-    description:
-      "Shape how InfraGuru sounds and looks everywhere — from listing narratives to campaign concepts — with an editorial, luxury-first lens.",
-    requirements: [
-      "3+ years in brand, content, or editorial roles.",
-      "Portfolio demonstrating a premium, considered voice.",
-      "Comfortable briefing designers and external agencies.",
-      "Excellent written English.",
-    ],
-  },
-  {
-    title: "Interior Design Lead",
-    department: "Design",
-    location: "Gurugram",
-    workMode: "Work from Office",
-    description:
-      "Direct show-flat and staging concepts for flagship projects, working closely with developers to elevate presentation standards.",
-    requirements: [
-      "Bachelor's degree in Interior or Spatial Design.",
-      "5+ years designing residential or hospitality interiors.",
-      "Proficiency in 3D visualization tools.",
-      "Experience presenting concepts directly to clients.",
-    ],
-  },
-  {
-    title: "Customer Relationship Manager",
-    department: "Operations",
-    location: "Bengaluru",
-    workMode: "Work from Office",
-    description:
-      "Own the post-sale client journey — documentation, handovers, and long-term relationship management for our repeat buyers.",
-    requirements: [
-      "3+ years in client servicing or relationship management.",
-      "High attention to detail with documentation and process.",
-      "Calm, empathetic communication under pressure.",
-      "Real estate or luxury services background preferred.",
-    ],
-  },
-  {
-    title: "Operations Associate",
-    department: "Operations",
-    location: "Gurugram",
-    workMode: "Work from Office",
-    description:
-      "Keep the engine running — coordinating between sales, legal, and developer teams to ensure every transaction closes without friction.",
-    requirements: [
-      "1-3 years in operations or coordination roles.",
-      "Highly organized with strong follow-through.",
-      "Comfortable coordinating across multiple stakeholders.",
-      "Working knowledge of MS Office / Google Workspace.",
-    ],
-  },
-];
 
 function LocationIcon() {
   return (
@@ -142,7 +18,7 @@ function LocationIcon() {
 
 export default function CareersOpenings() {
   const [activeDept, setActiveDept] = useState<Department>("All");
-  const [applyRole, setApplyRole] = useState<(typeof OPENINGS)[number] | { title: string } | null>(null);
+  const [genericModalOpen, setGenericModalOpen] = useState(false);
 
   const filtered = OPENINGS.filter((role) => activeDept === "All" || role.department === activeDept);
 
@@ -238,13 +114,12 @@ export default function CareersOpenings() {
                         <LocationIcon />
                         {role.workMode}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => setApplyRole(role)}
+                      <Link
+                        href={`/careers/apply/${role.slug}`}
                         className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gold-gradient px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-primary-dark shadow-[0_10px_24px_rgba(212,175,55,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(212,175,55,0.4)]"
                       >
                         Apply Now
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -267,7 +142,7 @@ export default function CareersOpenings() {
           Don&apos;t see the right fit?{" "}
           <button
             type="button"
-            onClick={() => setApplyRole({ title: "" })}
+            onClick={() => setGenericModalOpen(true)}
             className="font-semibold text-primary underline decoration-secondary decoration-2 underline-offset-4 transition-colors hover:text-primary-dark"
           >
             Send us your resume anyway.
@@ -275,12 +150,7 @@ export default function CareersOpenings() {
         </motion.p>
       </div>
 
-      <CareerApplyModal
-        open={applyRole !== null}
-        onClose={() => setApplyRole(null)}
-        role={applyRole?.title || undefined}
-        description={applyRole && "description" in applyRole ? applyRole.description : undefined}
-      />
+      <CareerApplyModal open={genericModalOpen} onClose={() => setGenericModalOpen(false)} />
     </section>
   );
 }
