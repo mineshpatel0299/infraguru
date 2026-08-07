@@ -22,7 +22,7 @@ export default function LoginForm({ next }: { next?: string }) {
           name="email"
           required
           autoComplete="username"
-          placeholder="admin@infraguru.in"
+          placeholder="name@company.com"
           className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 font-body text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-[#d4af37]/60 focus:bg-white/10"
         />
       </label>
