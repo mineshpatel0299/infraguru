@@ -75,34 +75,42 @@ export default function Hero() {
     const video = videoRef.current;
     if (!video) return;
 
-    let duration = video.duration || 0;
     let rafId: number;
+    let duration = video.duration || 0;
 
     const onLoadedMetadata = () => {
       duration = video.duration || 0;
     };
     video.addEventListener('loadedmetadata', onLoadedMetadata);
 
-    const tick = () => {
-      if (duration && video.readyState >= 2) {
-        const target = smoothScrollProgress.get() * duration;
-        // Skip sub-frame seeks; setting currentTime is expensive and forces a decode.
-        if (Math.abs(target - video.currentTime) > 1 / 60) {
-          video.currentTime = target;
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+    if (isMobile) {
+      // On mobile, MP4 scrubbing is often laggy/broken due to hardware decoding limits.
+      // So we just play the video normally.
+      video.play().catch(() => {});
+    } else {
+      // On desktop, we scrub the video based on scroll position.
+      const tick = () => {
+        if (duration && video.readyState >= 2) {
+          const target = smoothScrollProgress.get() * duration;
+          if (Math.abs(target - video.currentTime) > 1 / 60) {
+            video.currentTime = target;
+          }
         }
-      }
+        rafId = requestAnimationFrame(tick);
+      };
       rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
+    }
 
     return () => {
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
       video.removeEventListener('loadedmetadata', onLoadedMetadata);
     };
   }, [smoothScrollProgress]);
 
   return (
-    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[300vh]">
+    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[100svh] sm:h-[300vh]">
       <Navbar />
 
       <div
@@ -119,6 +127,7 @@ export default function Hero() {
               poster=""
               muted
               playsInline
+              loop
               preload="auto"
               className="h-full w-full object-cover scale-[1.15] sm:scale-[1.2]"
             />
