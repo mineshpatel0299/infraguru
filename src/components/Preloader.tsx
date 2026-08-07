@@ -14,16 +14,8 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isAdmin) return;
 
-    const lastLoad = sessionStorage.getItem('infraguru_preloader_time');
-    const now = Date.now();
-    
-    // If refreshed within 20 seconds, skip preloader
-    if (lastLoad && now - parseInt(lastLoad, 10) < 20000) {
-      setPhase('done');
-      return;
-    }
-    
-    sessionStorage.setItem('infraguru_preloader_time', now.toString());
+    // Trigger loader on every route change
+    setPhase('loading');
 
     const reducedMotion =
       typeof window !== 'undefined' &&
@@ -36,9 +28,10 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
 
     document.body.style.overflow = 'hidden';
 
-    const maxTimer = setTimeout(() => setPhase('revealing'), 6500);
+    // Show loader for 1.5 seconds during page transition
+    const maxTimer = setTimeout(() => setPhase('revealing'), 1500);
     return () => clearTimeout(maxTimer);
-  }, [isAdmin]);
+  }, [isAdmin, pathname]);
 
   useEffect(() => {
     if (phase !== 'revealing') return;
@@ -74,24 +67,36 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
 
       {phase !== 'done' && (
         <motion.div
-          className="fixed inset-0 z-1000 flex items-center justify-center bg-black"
+          className="fixed inset-0 z-1000 flex items-center justify-center bg-[#0B1320]"
           initial={{ opacity: 1, scale: 1 }}
           animate={
             revealing
-              ? { opacity: 0, scale: 1.35 }
+              ? { opacity: 0, scale: 1.15 }
               : { opacity: 1, scale: 1 }
           }
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
-          <video
-            className="h-full w-full object-cover"
-            src="/preloader.mp4"
-            autoPlay
-            muted
-            playsInline
-            onEnded={() => setPhase('revealing')}
-            onError={() => setPhase('revealing')}
-          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative w-24 h-24 sm:w-32 sm:h-32"
+          >
+            <motion.img
+              src="/g.png"
+              alt="Loading"
+              className="w-full h-full object-contain brightness-0 invert"
+              animate={{ 
+                opacity: [0.6, 1, 0.6],
+                scale: [0.95, 1.05, 0.95]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </motion.div>
         </motion.div>
       )}
     </>
