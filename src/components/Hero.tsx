@@ -137,29 +137,29 @@ export default function Hero() {
         />
 
         {/* Main Content Area (Centers the text block vertically) */}
-        <div className="container relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center w-full mt-24 md:mt-0">
-          <motion.div className="flex flex-col items-start text-left w-full">
-            <h1 className="mb-2 font-heading font-light uppercase text-[#132731] flex flex-col items-start">
+        <div className="container relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center w-full pb-36 sm:pb-0">
+          <motion.div className="flex flex-col items-start text-left w-full max-w-4xl">
+            <h1 className="mb-4 sm:mb-6 font-heading font-light uppercase text-[#132731] flex flex-col items-start">
               <SlideUpWordReveal 
                 text="LIVE THE ART OF" 
                 delay={1.2} 
-                className="font-body text-[clamp(1.2rem,2vw,2rem)] tracking-[0.2em] block justify-start pb-4 flex-nowrap whitespace-nowrap" 
+                className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 flex-nowrap whitespace-nowrap text-[#132731]/80" 
               />
               <SlideUpWordReveal
                 text="LUXURY."
                 delay={1.45}
-                className="text-[clamp(3rem,6.5vw,6.5rem)] leading-[0.9] tracking-[-0.02em] block justify-start flex-nowrap whitespace-nowrap text-[#132731] drop-shadow-none"
+                className="text-[clamp(3.5rem,10vw,7rem)] leading-[0.85] tracking-[-0.02em] block justify-start flex-nowrap whitespace-nowrap text-[#132731] drop-shadow-sm"
               />
             </h1>
             
             <motion.div 
-               className="mt-3 sm:mt-4 flex flex-col gap-4"
+               className="mt-2 sm:mt-4 hidden sm:flex flex-col gap-4 sm:gap-6"
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
             >
-               <div className="w-24 h-[2px] bg-[#d4af37]"></div>
-               <p className="text-sm sm:text-base text-[#132731] leading-relaxed font-body font-medium">
+               <div className="w-16 sm:w-24 h-[2px] bg-gold-gradient"></div>
+               <p className="text-sm sm:text-base lg:text-lg text-white sm:text-[#132731] leading-relaxed font-body font-medium max-w-md drop-shadow-md sm:drop-shadow-none">
                  Premium residences crafted for those<br className="hidden sm:block"/>
                  who value quality, comfort, and timeless living.
                </p>
@@ -169,11 +169,11 @@ export default function Hero() {
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.8, delay: 1.9, ease: [0.16, 1, 0.3, 1] }}
-               className="mt-8 sm:mt-10"
+               className="mt-6 sm:mt-12"
             >
-               <a href="/projects" className="inline-flex items-center gap-3 bg-[#0a1435] px-6 sm:px-8 py-3.5 text-[10px] font-bold text-white uppercase tracking-widest rounded hover:bg-white hover:text-[#0a1435] transition-colors border border-white/10 shadow-[0_12px_30px_rgba(0,0,0,0.5)]">
+               <a href="/projects" className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-[#132731] px-5 sm:px-9 py-3 sm:py-4 text-[10px] sm:text-xs font-bold text-white uppercase tracking-widest rounded-full hover:bg-gold-gradient hover:text-[#132731] transition-all duration-300 border border-transparent shadow-[0_8px_24px_rgba(0,0,0,0.15)] group">
                  EXPLORE PROJECTS
-                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7m0 0H8m9 0v9" /></svg>
+                 <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7m0 0H8m9 0v9" /></svg>
                </a>
             </motion.div>
           </motion.div>
@@ -181,36 +181,36 @@ export default function Hero() {
 
         {/* Stats Bottom Bar */}
         <motion.div
-          className="w-full relative z-10"
+          className="w-full relative z-10 bg-gradient-to-t from-[#132731] to-transparent pt-4 sm:pt-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="container mx-auto px-5 sm:px-8 py-6 sm:py-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-0 divide-x divide-white/10">
+          <div className="container mx-auto px-2 sm:px-8 pb-4 sm:pb-8">
+            <div className="grid grid-cols-4 gap-0 divide-x divide-white/15">
 
               {/* Stat 1 */}
-              <div className="flex flex-col items-center justify-center text-center px-2">
-                <span className="text-2xl sm:text-3xl font-light text-white leading-none">25+</span>
-                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">YEARS OF<br/>EXCELLENCE</span>
+              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
+                <span className="text-xl sm:text-4xl font-light text-white leading-none">25<span className="text-gold-gradient font-medium">+</span></span>
+                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">YEARS OF<br className="block sm:hidden" /> EXCELLENCE</span>
               </div>
 
               {/* Stat 2 */}
-              <div className="flex flex-col items-center justify-center text-center px-2">
-                <span className="text-2xl sm:text-3xl font-light text-white leading-none">50+</span>
-                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">PREMIUM<br/>PROJECTS</span>
+              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
+                <span className="text-xl sm:text-4xl font-light text-white leading-none">50<span className="text-gold-gradient font-medium">+</span></span>
+                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">PREMIUM<br className="block sm:hidden" /> PROJECTS</span>
               </div>
 
               {/* Stat 3 */}
-              <div className="flex flex-col items-center justify-center text-center px-2">
-                <span className="text-2xl sm:text-3xl font-light text-white leading-none">15K+</span>
-                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">HAPPY<br/>FAMILIES</span>
+              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
+                <span className="text-xl sm:text-4xl font-light text-white leading-none">15K<span className="text-gold-gradient font-medium">+</span></span>
+                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">HAPPY<br className="block sm:hidden" /> FAMILIES</span>
               </div>
 
               {/* Stat 4 */}
-              <div className="flex flex-col items-center justify-center text-center px-2">
-                <span className="text-2xl sm:text-3xl font-light text-white leading-none">10+</span>
-                <span className="text-[9px] font-bold tracking-widest text-white/50 uppercase mt-1.5">CITIES<br/>PRESENT</span>
+              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
+                <span className="text-xl sm:text-4xl font-light text-white leading-none">10<span className="text-gold-gradient font-medium">+</span></span>
+                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">CITIES<br className="block sm:hidden" /> PRESENT</span>
               </div>
 
             </div>

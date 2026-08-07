@@ -62,7 +62,7 @@ export default function Navbar() {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={`w-full border transition-[backdrop-filter] duration-700 ${scrolled ? 'backdrop-blur-xl' : 'backdrop-blur-0'}`}
       >
-        <div className="container mx-auto px-5 sm:px-8 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-3 lg:py-4">
+        <div className="container mx-auto px-5 sm:px-8 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-1 sm:py-3 lg:py-4">
           {/* Left: Logo */}
           <div className="flex justify-start">
             <Link href="/" className="inline-flex items-center shrink-0 z-10">
@@ -71,7 +71,7 @@ export default function Navbar() {
                 alt="Infraguru"
                 width={280}
                 height={90}
-                className="object-contain transition-all duration-500 drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)] brightness-0 invert h-14 sm:h-[4.25rem] w-auto"
+                className="object-contain transition-all duration-500 drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)] brightness-0 invert h-10 sm:h-[4.25rem] w-auto"
                 priority
               />
             </Link>
@@ -133,40 +133,37 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -16, scale: 0.97 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-x-4 top-full mt-2 flex flex-col gap-1 rounded-[20px] border border-white/10 bg-[#0b1320]/95 backdrop-blur-3xl p-6 shadow-[0_30px_80px_rgba(0,0,0,0.5)] min-[901px]:hidden"
+              className="absolute inset-x-4 top-full mt-2 flex flex-col gap-1.5 rounded-[24px] border border-white/10 bg-[#0B1320]/95 backdrop-blur-3xl p-6 shadow-[0_40px_80px_rgba(0,0,0,0.6)] min-[901px]:hidden"
             >
-              <div className="mb-4 pb-4 border-b border-white/10">
-                <Image src="/logo.png" alt="Infraguru" width={140} height={44} className="h-12 w-auto object-contain drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)] brightness-0 invert" />
-              </div>
               {LINKS.map((link) =>
                 link.href.startsWith('/') ? (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-between px-2 py-3 text-h4 font-semibold uppercase text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
+                    className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
                   >
                     {link.label}
-                    <span className="text-white/30 text-caption">→</span>
+                    <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
                   </Link>
                 ) : (
                   <a
                     key={link.href}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-between px-2 py-3 text-h4 font-semibold uppercase text-white/90 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
+                    className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
                   >
                     {link.label}
-                    <span className="text-white/30 text-caption">→</span>
+                    <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
                   </a>
                 )
               )}
               <Link
                 href="/contact"
-                className="mt-4 flex w-full items-center justify-center rounded-xl bg-white py-3 text-center text-label font-bold text-black uppercase shadow-md hover:bg-neutral-100"
+                className="mt-4 flex w-full items-center justify-center rounded-full bg-gold-gradient py-4 text-center text-[11px] font-bold text-[#132731] uppercase tracking-widest shadow-[0_10px_30px_rgba(212,175,55,0.2)] transition-all duration-300 hover:brightness-110 hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)]"
                 onClick={() => setMenuOpen(false)}
               >
-                Book A Consultation
+                BOOK A CONSULTATION
               </Link>
             </motion.div>
           )}
