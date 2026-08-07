@@ -7,10 +7,53 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fadeUp, staggerContainer, viewportMirror } from "@/lib/motion";
-import type { BlogPost } from "@/lib/blog";
+import type { BlogPost } from "@/lib/db/types";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+}
+
+function CoverImage({
+  src,
+  alt,
+  sizes,
+  className,
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  sizes: string;
+  className: string;
+  priority?: boolean;
+}) {
+  if (!src) {
+    return <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-bg-soft to-secondary/10" />;
+  }
+  return <Image src={src} alt={alt} fill priority={priority} sizes={sizes} className={className} />;
+}
+
+function AuthorAvatar({ name, avatar, size }: { name: string; avatar: string; size: number }) {
+  if (avatar) {
+    return (
+      <Image
+        src={avatar}
+        alt={name}
+        width={size}
+        height={size}
+        className="shrink-0 rounded-full object-cover"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  const initials = name.split(" ").map((p) => p[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
+  return (
+    <span
+      className="flex shrink-0 items-center justify-center rounded-full bg-primary/10 font-body font-bold text-primary"
+      style={{ width: size, height: size, fontSize: size * 0.4 }}
+    >
+      {initials || "?"}
+    </span>
+  );
 }
 
 export default function BlogPostContent({ post, related }: { post: BlogPost; related: BlogPost[] }) {
@@ -32,14 +75,7 @@ export default function BlogPostContent({ post, related }: { post: BlogPost; rel
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0"
         >
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
+          <CoverImage src={post.coverImage} alt={post.title} priority sizes="100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/60 to-primary-dark/20" />
         </motion.div>
 
@@ -87,13 +123,7 @@ export default function BlogPostContent({ post, related }: { post: BlogPost; rel
           viewport={viewportMirror}
           className="mb-12 flex items-center gap-4 border-b border-hairline pb-8"
         >
-          <Image
-            src={post.author.avatar}
-            alt={post.author.name}
-            width={52}
-            height={52}
-            className="h-[52px] w-[52px] rounded-full object-cover"
-          />
+          <AuthorAvatar name={post.author.name} avatar={post.author.avatar} size={52} />
           <div>
             <p className="font-body font-semibold text-primary-dark">{post.author.name}</p>
             <p className="text-caption text-muted">{post.author.role}</p>
@@ -163,10 +193,9 @@ export default function BlogPostContent({ post, related }: { post: BlogPost; rel
                 <motion.div key={p.id} variants={fadeUp}>
                   <Link href={`/blog/${p.slug}`} className="group flex h-full flex-col">
                     <div className="relative mb-5 aspect-[4/3] w-full overflow-hidden rounded-2xl">
-                      <Image
+                      <CoverImage
                         src={p.coverImage}
                         alt={p.title}
-                        fill
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />

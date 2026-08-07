@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { fadeUp, viewportMirror } from "@/lib/motion";
-import { DEPARTMENTS, OPENINGS, type Department } from "@/lib/careers";
+import { DEPARTMENTS, type Department, type JobOpening } from "@/lib/db/types";
 import { CareerApplyModal } from "./CareerApplyModal";
 
 function LocationIcon() {
@@ -16,11 +16,11 @@ function LocationIcon() {
   );
 }
 
-export default function CareersOpenings() {
+export default function CareersOpenings({ jobs }: { jobs: JobOpening[] }) {
   const [activeDept, setActiveDept] = useState<Department>("All");
   const [genericModalOpen, setGenericModalOpen] = useState(false);
 
-  const filtered = OPENINGS.filter((role) => activeDept === "All" || role.department === activeDept);
+  const filtered = jobs.filter((role) => activeDept === "All" || role.department === activeDept);
 
   return (
     <section id="careers-openings" className="relative w-full bg-bg-soft py-24 sm:py-32">
@@ -74,7 +74,7 @@ export default function CareersOpenings() {
             {filtered.map((role, i) => (
               <motion.div
                 layout
-                key={role.title}
+                key={role.id}
                 initial={{ opacity: 0, y: 24, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -16, scale: 0.98 }}

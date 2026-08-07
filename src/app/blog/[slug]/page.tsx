@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { BLOG_POSTS, getPostBySlug } from "@/lib/blog";
+import { getPostBySlug, listPublishedPosts } from "@/lib/db/blog";
 import BlogPostContent from "@/components/blog/BlogPostContent";
 
-export function generateStaticParams() {
-  return BLOG_POSTS.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -13,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return { title: "Article Not Found — InfraGuru" };
@@ -31,13 +29,13 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
-  if (!post) {
+  if (!post || post.status !== "published") {
     notFound();
   }
 
-  const related = BLOG_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
+  const related = (await listPublishedPosts()).filter((p) => p.id !== post.id).slice(0, 3);
 
   return <BlogPostContent post={post} related={related} />;
 }

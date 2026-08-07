@@ -1,0 +1,114 @@
+-- InfraGuru CMS schema (Neon Postgres)
+create extension if not exists pgcrypto;
+
+create table if not exists admin_users (
+  id uuid primary key default gen_random_uuid(),
+  email text unique not null,
+  password_hash text not null,
+  name text not null,
+  created_at timestamptz not null default now()
+);
+
+-- Binary storage for uploaded images/resumes until Cloudinary is wired up.
+-- Served back out through /api/media/[id]; swapping the storage backend
+-- later only touches lib/db/media.ts, not the CMS forms or public pages.
+create table if not exists media (
+  id uuid primary key default gen_random_uuid(),
+  filename text not null,
+  mime_type text not null,
+  size_bytes integer not null,
+  data bytea not null,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists projects (
+  id uuid primary key default gen_random_uuid(),
+  slug text unique not null,
+  code text,
+  title text not null,
+  tagline text,
+  location text,
+  category text not null default 'Residential',
+  price text,
+  specs text,
+  image text,
+  description jsonb not null default '[]',
+  highlights jsonb not null default '[]',
+  amenities jsonb not null default '[]',
+  gallery jsonb not null default '[]',
+  architect text,
+  developer text,
+  possession text,
+  rera text,
+  landmarks jsonb not null default '[]',
+  testimonial jsonb,
+  status text not null default 'published',
+  featured boolean not null default false,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists projects_status_idx on projects (status);
+create index if not exists projects_category_idx on projects (category);
+
+create table if not exists job_openings (
+  id uuid primary key default gen_random_uuid(),
+  slug text unique not null,
+  title text not null,
+  department text not null,
+  location text,
+  address text,
+  work_mode text,
+  requirements jsonb not null default '[]',
+  overview text,
+  responsibilities jsonb not null default '[]',
+  qualifications jsonb not null default '[]',
+  why_join jsonb not null default '[]',
+  status text not null default 'open',
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists job_openings_status_idx on job_openings (status);
+
+create table if not exists job_applications (
+  id uuid primary key default gen_random_uuid(),
+  job_id uuid references job_openings(id) on delete set null,
+  job_title_snapshot text,
+  full_name text not null,
+  email text not null,
+  phone text,
+  portfolio_url text,
+  cover_note text,
+  resume_filename text,
+  resume_mime_type text,
+  resume_data bytea,
+  status text not null default 'new',
+  created_at timestamptz not null default now()
+);
+
+create index if not exists job_applications_status_idx on job_applications (status);
+create index if not exists job_applications_job_idx on job_applications (job_id);
+
+create table if not exists blog_posts (
+  id uuid primary key default gen_random_uuid(),
+  slug text unique not null,
+  title text not null,
+  excerpt text,
+  category text not null default 'Market Insights',
+  post_date date not null default current_date,
+  read_time text,
+  cover_image text,
+  author_name text,
+  author_role text,
+  author_avatar text,
+  content jsonb not null default '[]',
+  status text not null default 'draft',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists blog_posts_status_idx on blog_posts (status);
+create index if not exists blog_posts_date_idx on blog_posts (post_date desc);

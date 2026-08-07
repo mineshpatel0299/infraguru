@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState, type DragEvent, type ReactNode } from "react";
+import { useRef, useState, useTransition, type DragEvent, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { fadeUp, fadeIn, viewportMirror } from "@/lib/motion";
-import type { JobOpening } from "@/lib/careers";
+import type { JobOpening } from "@/lib/db/types";
+import { submitApplicationAction } from "@/app/careers/apply-actions";
 
 function PinIcon() {
   return (
@@ -135,6 +136,8 @@ export default function CareerApplyPage({
   const [submitted, setSubmitted] = useState(false);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const pickFile = (file: File | undefined | null) => {
@@ -145,6 +148,29 @@ export default function CareerApplyPage({
     e.preventDefault();
     setDragActive(false);
     pickFile(e.dataTransfer.files?.[0]);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        await submitApplicationAction({
+          jobId: job.id,
+          jobTitleSnapshot: job.title,
+          fullName: String(formData.get("fullName") || ""),
+          email: String(formData.get("email") || ""),
+          phone: String(formData.get("phone") || ""),
+          portfolioUrl: String(formData.get("portfolioUrl") || ""),
+          coverNote: String(formData.get("coverNote") || ""),
+          resume: resumeFile,
+        });
+        setSubmitted(true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      }
+    });
   };
 
   return (
@@ -306,13 +332,7 @@ export default function CareerApplyPage({
                     </p>
                   </div>
                 ) : (
-                  <form
-                    className="flex flex-col gap-5"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setSubmitted(true);
-                    }}
-                  >
+                  <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <label className="block sm:col-span-2">
                         <FieldLabel>Full Name</FieldLabel>
@@ -322,6 +342,7 @@ export default function CareerApplyPage({
                           </span>
                           <input
                             type="text"
+                            name="fullName"
                             required
                             placeholder="Jane Doe"
                             className={`${inputClasses} pl-11`}
@@ -337,6 +358,7 @@ export default function CareerApplyPage({
                           </span>
                           <input
                             type="email"
+                            name="email"
                             required
                             placeholder="jane@email.com"
                             className={`${inputClasses} pl-11`}
@@ -352,6 +374,7 @@ export default function CareerApplyPage({
                           </span>
                           <input
                             type="tel"
+                            name="phone"
                             required
                             placeholder="+91 00000 00000"
                             className={`${inputClasses} pl-11`}
@@ -367,6 +390,7 @@ export default function CareerApplyPage({
                           </span>
                           <input
                             type="text"
+                            name="portfolioUrl"
                             placeholder="https://"
                             className={`${inputClasses} pl-11`}
                           />
@@ -441,17 +465,21 @@ export default function CareerApplyPage({
                     <label className="block">
                       <FieldLabel>Note To The Hiring Team (optional)</FieldLabel>
                       <textarea
+                        name="coverNote"
                         rows={4}
                         placeholder="Tell us why you're a great fit..."
                         className={`${inputClasses} resize-none`}
                       />
                     </label>
 
+                    {error && <p className="text-sm text-red-500">{error}</p>}
+
                     <button
                       type="submit"
-                      className="mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-gold-gradient px-8 py-4 font-body text-sm font-bold uppercase tracking-widest text-primary-dark shadow-[0_10px_24px_rgba(212,175,55,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(212,175,55,0.4)]"
+                      disabled={pending}
+                      className="mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-gold-gradient px-8 py-4 font-body text-sm font-bold uppercase tracking-widest text-primary-dark shadow-[0_10px_24px_rgba(212,175,55,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(212,175,55,0.4)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      Submit Application
+                      {pending ? "Submitting…" : "Submit Application"}
                     </button>
 
                     <p className="text-center text-[11px] text-muted">

@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PROJECTS } from "@/lib/projects";
+import type { Project } from "@/lib/db/types";
 
 const bgSlatVariants: Variants = {
   enter: ({ dir }: { dir: number; idx: number }) => ({
@@ -49,7 +49,7 @@ const textVariants: Variants = {
   }),
 };
 
-export default function FeaturedProjects() {
+export default function FeaturedProjects({ projects }: { projects: Project[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(0);
@@ -65,7 +65,7 @@ export default function FeaturedProjects() {
     offset: ['start start', 'end end'],
   });
 
-  const n = PROJECTS.length;
+  const n = projects.length;
 
   React.useEffect(() => {
     return () => {
@@ -141,7 +141,7 @@ export default function FeaturedProjects() {
           {/* ── Base Background ── */}
           <div className="absolute inset-0 z-0 pointer-events-none">
             <Image
-              src={PROJECTS[prevIndex].image}
+              src={projects[prevIndex].image}
               alt=""
               fill
               sizes="100vw"
@@ -168,7 +168,7 @@ export default function FeaturedProjects() {
                   className="flex-1 w-full overflow-hidden relative"
                 >
                   <img
-                    src={PROJECTS[activeIndex].image}
+                    src={projects[activeIndex].image}
                     alt=""
                     style={{
                       position: 'absolute',
@@ -202,7 +202,7 @@ export default function FeaturedProjects() {
 
             {/* Step Counter */}
             <span className="mb-3 font-body text-label font-semibold text-white/50 uppercase">
-              {`0${activeIndex + 1} —— 0${PROJECTS.length}`}
+              {`0${activeIndex + 1} —— 0${projects.length}`}
             </span>
 
             {/* Title (Crossfading on step change) */}
@@ -218,7 +218,13 @@ export default function FeaturedProjects() {
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
                   className="font-heading text-[clamp(1.25rem,2.4vw,1.9rem)] font-medium tracking-normal text-gold-gradient"
                 >
-                  {PROJECTS[activeIndex].title}
+                  {projects[activeIndex].title === "Signature Global De-luxe DXP" ? (
+                    <>
+                      Signature Global <br /> De-luxe DXP
+                    </>
+                  ) : (
+                    projects[activeIndex].title
+                  )}
                 </motion.h3>
               </AnimatePresence>
             </div>
@@ -226,16 +232,16 @@ export default function FeaturedProjects() {
             {/* Image Inside Card (Animated Elevator Stack) */}
             <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] mb-6 rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_8px_25px_rgba(0,0,0,0.15)] bg-neutral-900">
               <motion.div
-                animate={{ y: `-${(activeIndex / PROJECTS.length) * 100}%` }}
+                animate={{ y: `-${(activeIndex / projects.length) * 100}%` }}
                 transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                style={{ height: `${PROJECTS.length * 100}%`, willChange: 'transform' }}
+                style={{ height: `${projects.length * 100}%`, willChange: 'transform' }}
                 className="absolute inset-x-0 top-0 w-full"
               >
-                {PROJECTS.map((item, idx) => (
+                {projects.map((item, idx) => (
                   <div
                     key={idx}
                     className="relative w-full overflow-hidden"
-                    style={{ height: `${100 / PROJECTS.length}%` }}
+                    style={{ height: `${100 / projects.length}%` }}
                   >
                     <Image
                       src={item.image}
@@ -262,14 +268,14 @@ export default function FeaturedProjects() {
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
                   className="text-body text-white/70 max-w-sm line-clamp-3"
                 >
-                  {PROJECTS[activeIndex].description[0]}
+                  {projects[activeIndex].description[0]}
                 </motion.p>
               </AnimatePresence>
             </div>
 
             {/* CTA Button */}
             <Link
-              href={`/projects/${PROJECTS[activeIndex].id}`}
+              href={`/projects/${projects[activeIndex].id}`}
               scroll={false}
               className="inline-flex items-center justify-center rounded-full border border-white/20 bg-transparent px-7 py-2.5 text-label font-semibold uppercase text-white transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-[#12223a] hover:shadow-[0_8px_20px_rgba(212,175,55,0.3)] hover:-translate-y-0.5"
             >

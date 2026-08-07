@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PROJECTS, getProjectById } from "@/lib/projects";
+import { getProjectById, listPublishedProjects } from "@/lib/db/projects";
 import ProjectExperience from "@/components/ProjectExperience";
 import Footer from "@/components/Footer";
 
-export function generateStaticParams() {
-  return PROJECTS.map((p) => ({ id: String(p.id) }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -14,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const project = getProjectById(id);
+  const project = await getProjectById(id);
 
   if (!project) {
     return { title: "Deed Not Found — Infraguru" };
@@ -32,13 +30,13 @@ export default async function ProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const project = getProjectById(id);
+  const project = await getProjectById(id);
 
-  if (!project) {
+  if (!project || project.status !== "published") {
     notFound();
   }
 
-  const related = PROJECTS.filter((p) => p.id !== project.id).slice(0, 3);
+  const related = (await listPublishedProjects()).filter((p) => p.id !== project.id).slice(0, 3);
 
   return (
     <main>

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeUp, scaleIn, fadeDown, viewportMirror } from "@/lib/motion";
-import type { Project } from "@/lib/projects";
+import type { Project } from "@/lib/db/types";
 import SealLink from "./SealLink";
 
 /* ── Lightbox Component ─────────────────────────────────────────────────── */

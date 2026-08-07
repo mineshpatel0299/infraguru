@@ -11,18 +11,19 @@ const LINK_COLUMNS = [
     title: 'Company',
     links: [
       { label: 'About Us', href: '/about' },
+      { label: 'Projects', href: '/projects' },
       { label: 'Careers', href: '/careers' },
-      { label: 'Press', href: '#' },
+      { label: 'Blog', href: '/blog' },
       { label: 'Contact', href: '/contact' },
     ],
   },
   {
     title: 'Services',
     links: [
-      { label: 'Residential', href: '#' },
-      { label: 'Commercial', href: '#' },
-      { label: 'Infrastructure', href: '#' },
-      { label: 'Consulting', href: '#' },
+      { label: 'Property to Buy', href: '/contact' },
+      { label: 'Property to Sell', href: '/contact' },
+      { label: 'Property to Rent', href: '/contact' },
+      { label: 'Joint Development', href: '/contact' },
     ],
   },
 ];

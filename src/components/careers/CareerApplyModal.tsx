@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { submitApplicationAction } from "@/app/careers/apply-actions";
 
 export function CareerApplyModal({
   open,
@@ -12,13 +13,41 @@ export function CareerApplyModal({
   onClose: () => void;
 }) {
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const close = useCallback(() => {
     onClose();
     // Reset after the exit animation has time to finish, so the form
     // doesn't visibly flash back to its default state mid-close.
-    setTimeout(() => setSubmitted(false), 300);
+    setTimeout(() => {
+      setSubmitted(false);
+      setError(null);
+      formRef.current?.reset();
+    }, 300);
   }, [onClose]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        await submitApplicationAction({
+          jobId: null,
+          jobTitleSnapshot: String(formData.get("role") || "") || null,
+          fullName: String(formData.get("fullName") || ""),
+          email: String(formData.get("email") || ""),
+          phone: String(formData.get("phone") || ""),
+          resume: formData.get("resume") as File | null,
+        });
+        setSubmitted(true);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      }
+    });
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -104,47 +133,48 @@ export function CareerApplyModal({
                     Tell us a bit about yourself — every application is reviewed personally by our team.
                   </p>
 
-                  <form
-                    className="flex flex-col gap-4"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setSubmitted(true);
-                    }}
-                  >
+                  <form ref={formRef} className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     <input
                       type="text"
+                      name="fullName"
                       required
                       placeholder="Full name"
                       className="rounded-xl border border-primary-dark/15 bg-primary-dark/3 px-5 py-3.5 font-body text-sm text-ink placeholder-ink/40 outline-none transition-colors focus:border-primary-dark/50"
                     />
                     <input
                       type="email"
+                      name="email"
                       required
                       placeholder="Email address"
                       className="rounded-xl border border-primary-dark/15 bg-primary-dark/3 px-5 py-3.5 font-body text-sm text-ink placeholder-ink/40 outline-none transition-colors focus:border-primary-dark/50"
                     />
                     <input
                       type="tel"
+                      name="phone"
                       required
                       placeholder="Phone number"
                       className="rounded-xl border border-primary-dark/15 bg-primary-dark/3 px-5 py-3.5 font-body text-sm text-ink placeholder-ink/40 outline-none transition-colors focus:border-primary-dark/50"
                     />
                     <input
                       type="text"
+                      name="role"
                       placeholder="Role you're interested in"
                       className="rounded-xl border border-primary-dark/15 bg-primary-dark/3 px-5 py-3.5 font-body text-sm text-ink placeholder-ink/40 outline-none transition-colors focus:border-primary-dark/50"
                     />
-                    <input
-                      type="text"
-                      placeholder="Resume / portfolio link"
-                      className="rounded-xl border border-primary-dark/15 bg-primary-dark/3 px-5 py-3.5 font-body text-sm text-ink placeholder-ink/40 outline-none transition-colors focus:border-primary-dark/50"
-                    />
+                    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-dashed border-primary-dark/20 bg-primary-dark/3 px-5 py-3.5 font-body text-sm text-ink/60 transition-colors hover:border-primary-dark/40">
+                      <span>Attach resume (PDF or Word, optional)</span>
+                      <input type="file" name="resume" accept=".pdf,.doc,.docx" className="hidden" />
+                      <span className="shrink-0 text-xs font-semibold text-secondary-hover">Browse</span>
+                    </label>
+
+                    {error && <p className="text-sm text-red-500">{error}</p>}
 
                     <button
                       type="submit"
-                      className="mt-2 inline-flex items-center justify-center rounded-full bg-primary-dark px-8 py-4 font-body text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-dark/90"
+                      disabled={pending}
+                      className="mt-2 inline-flex items-center justify-center rounded-full bg-primary-dark px-8 py-4 font-body text-sm font-semibold text-white transition-all duration-200 hover:bg-primary-dark/90 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      Submit Application
+                      {pending ? "Submitting…" : "Submit Application"}
                     </button>
                   </form>
                 </>

@@ -7,15 +7,20 @@ import FeaturedProjects from "@/components/FeaturedProjects";
 import Testimonials from "@/components/Testimonials";
 import { DVSNetworkCTA } from "@/components/DVSNetworkCTA";
 import Footer from "@/components/Footer";
+import { listPublishedProjects } from "@/lib/db/projects";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const projects = await listPublishedProjects();
+
   return (
     <main>
       <Hero />
       <About />
       <Stats />
       <WhyChooseUs />
-      <FeaturedProjects />
+      <FeaturedProjects projects={projects.slice(0, 5)} />
       <Services />
       <Testimonials />
       <DVSNetworkCTA />

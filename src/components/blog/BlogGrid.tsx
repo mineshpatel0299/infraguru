@@ -5,29 +5,62 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeUp, viewportMirror } from "@/lib/motion";
-import { BLOG_POSTS, type BlogPost } from "@/lib/blog";
+import { BLOG_CATEGORIES, type BlogPost } from "@/lib/db/types";
 
-const CATEGORIES: Array<BlogPost["category"] | "All"> = [
-  "All",
-  "Market Insights",
-  "Buying Guide",
-  "Investment",
-  "Design & Living",
-];
+const CATEGORIES: Array<string> = ["All", ...BLOG_CATEGORIES];
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 }
 
-export default function BlogGrid() {
+function CoverImage({ src, alt, sizes, className }: { src: string; alt: string; sizes: string; className: string }) {
+  if (!src) {
+    return <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-bg-soft to-secondary/10" />;
+  }
+  return <Image src={src} alt={alt} fill sizes={sizes} className={className} />;
+}
+
+function AuthorAvatar({ name, avatar, size }: { name: string; avatar: string; size: number }) {
+  if (avatar) {
+    return (
+      <Image
+        src={avatar}
+        alt={name}
+        width={size}
+        height={size}
+        className="shrink-0 rounded-full object-cover"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  const initials = name.split(" ").map((p) => p[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
+  return (
+    <span
+      className="flex shrink-0 items-center justify-center rounded-full bg-primary/10 font-body font-bold text-primary"
+      style={{ width: size, height: size, fontSize: size * 0.4 }}
+    >
+      {initials || "?"}
+    </span>
+  );
+}
+
+export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
   const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]>("All");
 
-  const [featured, ...rest] = BLOG_POSTS;
+  const [featured, ...rest] = posts;
 
   const filtered = useMemo(
     () => (activeCategory === "All" ? rest : rest.filter((p) => p.category === activeCategory)),
     [activeCategory, rest]
   );
+
+  if (!featured) {
+    return (
+      <section className="w-full bg-white py-20 sm:py-28">
+        <p className="text-center text-body text-muted">No articles published yet.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="relative w-full bg-white py-20 sm:py-28">
@@ -45,10 +78,9 @@ export default function BlogGrid() {
             className="group grid grid-cols-1 gap-8 overflow-hidden rounded-[28px] border border-hairline bg-bg-soft lg:grid-cols-2 lg:gap-0"
           >
             <div className="relative aspect-[16/10] w-full overflow-hidden lg:aspect-auto">
-              <Image
+              <CoverImage
                 src={featured.coverImage}
                 alt={featured.title}
-                fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -71,13 +103,7 @@ export default function BlogGrid() {
               <p className="mt-4 text-body font-light leading-relaxed text-neutral-600">{featured.excerpt}</p>
 
               <div className="mt-8 flex items-center gap-3">
-                <Image
-                  src={featured.author.avatar}
-                  alt={featured.author.name}
-                  width={40}
-                  height={40}
-                  className="h-10 w-10 rounded-full object-cover"
-                />
+                <AuthorAvatar name={featured.author.name} avatar={featured.author.avatar} size={40} />
                 <div>
                   <p className="text-sm font-semibold text-primary-dark">{featured.author.name}</p>
                   <p className="text-caption text-muted">{formatDate(featured.date)}</p>
@@ -127,10 +153,9 @@ export default function BlogGrid() {
                   className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-hairline bg-white transition-all duration-500 hover:-translate-y-1.5 hover:border-transparent hover:shadow-[0_30px_60px_rgba(3,46,151,0.12)]"
                 >
                   <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <Image
+                    <CoverImage
                       src={post.coverImage}
                       alt={post.title}
-                      fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                     />
@@ -155,13 +180,7 @@ export default function BlogGrid() {
 
                     <div className="flex items-center justify-between border-t border-hairline pt-5">
                       <div className="flex items-center gap-2.5">
-                        <Image
-                          src={post.author.avatar}
-                          alt={post.author.name}
-                          width={28}
-                          height={28}
-                          className="h-7 w-7 rounded-full object-cover"
-                        />
+                        <AuthorAvatar name={post.author.name} avatar={post.author.avatar} size={28} />
                         <span className="text-xs font-medium text-neutral-700">{post.author.name}</span>
                       </div>
                       <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-primary transition-all duration-300 group-hover:gap-2.5 group-hover:text-secondary-hover">

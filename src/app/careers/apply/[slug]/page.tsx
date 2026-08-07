@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { OPENINGS, getJobBySlug } from "@/lib/careers";
+import { getJobBySlug, listOpenJobs } from "@/lib/db/jobs";
 import CareerApplyPage from "@/components/careers/CareerApplyPage";
 
-export function generateStaticParams() {
-  return OPENINGS.map((job) => ({ slug: job.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -13,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const job = getJobBySlug(slug);
+  const job = await getJobBySlug(slug);
 
   if (!job) {
     return { title: "Role Not Found — InfraGuru Careers" };
@@ -31,13 +29,13 @@ export default async function CareerApplyRoute({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const job = getJobBySlug(slug);
+  const job = await getJobBySlug(slug);
 
-  if (!job) {
+  if (!job || job.status !== "open") {
     notFound();
   }
 
-  const otherOpenings = OPENINGS.filter((o) => o.slug !== job.slug).slice(0, 3);
+  const otherOpenings = (await listOpenJobs()).filter((o) => o.slug !== job.slug).slice(0, 3);
 
   return <CareerApplyPage job={job} otherOpenings={otherOpenings} />;
 }

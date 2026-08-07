@@ -128,15 +128,6 @@ export default function Hero() {
         {/* Color gradient overlay from bottom to top */}
         <div className="absolute bottom-0 left-0 right-0 h-[50%] z-1 bg-gradient-to-t from-[#132731] via-[#132731]/60 to-transparent pointer-events-none" />
 
-        {/* Film grain */}
-        <div
-          className="pointer-events-none absolute inset-0 z-2 opacity-[0.05] mix-blend-overlay"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-          }}
-        />
-
         {/* Curtain reveal */}
         <motion.div
           className="pointer-events-none absolute inset-0 z-20 border-t-2 border-secondary bg-white"

@@ -1,14 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 type Phase = 'loading' | 'revealing' | 'done';
 
 export default function Preloader({ children }: { children: React.ReactNode }) {
-  const [phase, setPhase] = useState<Phase>('loading');
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin') ?? false;
+  const [phase, setPhase] = useState<Phase>(isAdmin ? 'done' : 'loading');
 
   useEffect(() => {
+    if (isAdmin) return;
+
+    const lastLoad = sessionStorage.getItem('infraguru_preloader_time');
+    const now = Date.now();
+    
+    // If refreshed within 20 seconds, skip preloader
+    if (lastLoad && now - parseInt(lastLoad, 10) < 20000) {
+      setPhase('done');
+      return;
+    }
+    
+    sessionStorage.setItem('infraguru_preloader_time', now.toString());
+
     const reducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -22,7 +38,7 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
 
     const maxTimer = setTimeout(() => setPhase('revealing'), 6500);
     return () => clearTimeout(maxTimer);
-  }, []);
+  }, [isAdmin]);
 
   useEffect(() => {
     if (phase !== 'revealing') return;
@@ -32,6 +48,12 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
     }, 900);
     return () => clearTimeout(timer);
   }, [phase]);
+
+  // The CMS is a daily-use internal tool — it should never sit behind the
+  // marketing splash video, so admin routes skip the preloader entirely.
+  if (isAdmin) {
+    return <>{children}</>;
+  }
 
   const revealing = phase === 'revealing';
 
