@@ -12,7 +12,7 @@ type NavLink = { href: string; label: string };
 const LINKS: NavLink[] = [
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
-  { href: '/projects', label: 'Projects' },
+  // { href: '/projects', label: 'Projects' },
 ];
 
 // Rendered until the real project-availability data loads — every location

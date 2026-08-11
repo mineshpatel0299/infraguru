@@ -1,16 +1,20 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { Project } from '@/lib/db/types';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProjectCard from '@/components/ProjectCard';
+import { PRICE_RANGE_OPTIONS, matchesPriceRange, type PriceRangeFilter } from '@/lib/priceFilter';
 
 export default function ProjectsPageClient({ projects }: { projects: Project[] }) {
   const [category, setCategory] = useState<'Residential' | 'Commercial'>('Residential');
+  const [locationQuery, setLocationQuery] = useState('');
+  const [priceRange, setPriceRange] = useState<PriceRangeFilter>('any');
   const heroRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
@@ -20,9 +24,19 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
   const isResidential = (cat: string) => cat === 'Residential';
   const isCommercial = (cat: string) => cat === 'Commercial';
 
-  const displayProjects = projects.filter(p =>
-    category === 'Residential' ? isResidential(p.category) : isCommercial(p.category)
-  );
+  const displayProjects = useMemo(() => {
+    const query = locationQuery.trim().toLowerCase();
+    return projects.filter((p) => {
+      if (category === 'Residential' ? !isResidential(p.category) : !isCommercial(p.category)) return false;
+      if (query && !p.location.toLowerCase().includes(query) && !p.title.toLowerCase().includes(query)) return false;
+      if (!matchesPriceRange(p.price, priceRange)) return false;
+      return true;
+    });
+  }, [projects, category, locationQuery, priceRange]);
+
+  const handleSearch = () => {
+    gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const resImg = projects.find(p => isResidential(p.category))?.image || '';
   const comImg = projects.find(p => isCommercial(p.category))?.image || '';
@@ -161,7 +175,14 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
               <svg className="w-5 h-5 text-neutral-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
               <div>
                 <label className="block text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Location</label>
-                <input type="text" placeholder="Choose destination" className="w-full text-sm font-medium text-neutral-900 bg-transparent border-none focus:ring-0 p-0 placeholder-neutral-400" />
+                <input
+                  type="text"
+                  value={locationQuery}
+                  onChange={(e) => setLocationQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  placeholder="Choose destination"
+                  className="w-full text-sm font-medium text-neutral-900 bg-transparent border-none focus:ring-0 p-0 placeholder-neutral-400"
+                />
               </div>
             </div>
 
@@ -181,16 +202,22 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
               <svg className="w-5 h-5 text-neutral-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
               <div>
                 <label className="block text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Price Range</label>
-                <select className="w-full text-sm font-medium text-neutral-900 bg-transparent border-none focus:ring-0 p-0 appearance-none">
-                  <option>Any Price</option>
-                  <option>Under ₹5 Cr</option>
-                  <option>₹5 Cr - ₹10 Cr</option>
-                  <option>Above ₹10 Cr</option>
+                <select
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(e.target.value as PriceRangeFilter)}
+                  className="w-full text-sm font-medium text-neutral-900 bg-transparent border-none focus:ring-0 p-0 appearance-none"
+                >
+                  {PRICE_RANGE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
                 </select>
               </div>
             </div>
 
-            <button className="w-full md:w-auto mt-4 md:mt-0 bg-neutral-900 hover:bg-[#12223a] text-white p-4 md:px-8 flex items-center justify-center transition-colors">
+            <button
+              onClick={handleSearch}
+              className="w-full md:w-auto mt-4 md:mt-0 bg-neutral-900 hover:bg-[#12223a] text-white p-4 md:px-8 flex items-center justify-center transition-colors"
+            >
               <span className="md:hidden font-body font-bold uppercase tracking-widest mr-2">Search</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </button>
@@ -199,7 +226,7 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
       </section>
 
       {/* Grid Section */}
-      <section className="pt-40 pb-24 max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-24">
+      <section ref={gridRef} className="pt-40 pb-24 max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-24">
         <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <h2 className="font-heading text-2xl md:text-3xl font-medium text-neutral-900">
@@ -207,20 +234,41 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
             </h2>
             <p className="text-sm text-neutral-500 mt-2 font-medium tracking-wide">
               Showing {displayProjects.length} projects in {category}
+              {locationQuery && ` matching "${locationQuery}"`}
             </p>
           </div>
-          <button className="text-xs font-body font-bold text-neutral-900 border border-neutral-300 px-4 py-2 uppercase tracking-widest hover:border-neutral-900 transition-colors">
-            See All {displayProjects.length}
+          <button
+            onClick={() => { setLocationQuery(''); setPriceRange('any'); }}
+            className="text-xs font-body font-bold text-neutral-900 border border-neutral-300 px-4 py-2 uppercase tracking-widest hover:border-neutral-900 transition-colors"
+          >
+            See All {projects.filter((p) => category === 'Residential' ? isResidential(p.category) : isCommercial(p.category)).length}
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AnimatePresence mode="popLayout">
-            {displayProjects.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
-            ))}
-          </AnimatePresence>
-        </div>
+        {displayProjects.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <AnimatePresence mode="popLayout">
+              {displayProjects.map((project, i) => (
+                <ProjectCard key={project.id} project={project} index={i} />
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center text-center py-24 border border-dashed border-neutral-200 rounded-2xl">
+            <h3 className="font-heading text-xl md:text-2xl font-light text-neutral-900 mb-3">
+              No {category.toLowerCase()} projects match your search.
+            </h3>
+            <p className="text-neutral-500 max-w-md mb-6 font-body text-sm">
+              Try a different destination or widen the price range.
+            </p>
+            <button
+              onClick={() => { setLocationQuery(''); setPriceRange('any'); }}
+              className="text-xs font-body font-bold text-neutral-900 border border-neutral-300 px-4 py-2 uppercase tracking-widest hover:border-neutral-900 transition-colors"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
       </section>
       <Footer />
     </motion.main>
