@@ -40,6 +40,11 @@ function toInput(p?: Project): ProjectInput {
     status: p?.status ?? "draft",
     featured: p?.featured ?? false,
     sortOrder: p?.sortOrder ?? 0,
+    seoTitle: p?.seoTitle ?? "",
+    seoDescription: p?.seoDescription ?? "",
+    seoKeywords: p?.seoKeywords ?? [],
+    ogImage: p?.ogImage ?? "",
+    seoNoindex: p?.seoNoindex ?? false,
   };
 }
 
@@ -287,6 +292,66 @@ export default function ProjectForm({ project }: { project?: Project }) {
             />
           </label>
         </div>
+      </FormSection>
+
+      <FormSection
+        title="Search Engine Optimization"
+        description="Controls how this listing appears in Google search results and when shared on social media. Leave blank to fall back to the title, tagline, and cover image above."
+      >
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="block sm:col-span-2">
+            <span className={labelClass}>SEO Title</span>
+            <input
+              type="text"
+              value={form.seoTitle ?? ""}
+              onChange={(e) => set("seoTitle", e.target.value)}
+              placeholder={form.title || "M3M Mansion — Infraguru"}
+              maxLength={70}
+              className={inputClass}
+            />
+            <span className="mt-1 block text-[11px] text-[#5c6480]">
+              {(form.seoTitle ?? "").length}/70 characters. Shown as the blue link in search results.
+            </span>
+          </label>
+          <label className="block sm:col-span-2">
+            <span className={labelClass}>SEO Description</span>
+            <textarea
+              rows={3}
+              value={form.seoDescription ?? ""}
+              onChange={(e) => set("seoDescription", e.target.value)}
+              placeholder={form.tagline || "A short, compelling summary for search results."}
+              maxLength={160}
+              className={`${inputClass} resize-none`}
+            />
+            <span className="mt-1 block text-[11px] text-[#5c6480]">
+              {(form.seoDescription ?? "").length}/160 characters.
+            </span>
+          </label>
+        </div>
+        <TextListEditor
+          label="SEO Keywords"
+          items={form.seoKeywords}
+          onChange={(v) => set("seoKeywords", v)}
+          placeholder="e.g. 4 BHK apartments Dwarka Expressway"
+        />
+        <div>
+          <span className={labelClass}>Social Share Image (OG Image)</span>
+          <div className="max-w-sm">
+            <MediaUploader value={form.ogImage ?? ""} onChange={(url) => set("ogImage", url)} label="social share image" />
+          </div>
+          <span className="mt-1 block text-[11px] text-[#5c6480]">
+            Recommended 1200×630px. Falls back to the cover image if left blank.
+          </span>
+        </div>
+        <label className="flex items-center gap-2.5">
+          <input
+            type="checkbox"
+            checked={form.seoNoindex}
+            onChange={(e) => set("seoNoindex", e.target.checked)}
+            className="h-4 w-4 rounded border-[#032E97]/20 text-[#d4af37] focus:ring-[#d4af37]"
+          />
+          <span className="text-sm font-medium text-[#0a1435]">Hide from search engines (noindex)</span>
+        </label>
       </FormSection>
 
       <FormSection title="Publishing">

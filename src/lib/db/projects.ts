@@ -25,6 +25,11 @@ type ProjectRow = {
   status: string;
   featured: boolean;
   sort_order: number;
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_keywords: string[] | null;
+  og_image: string | null;
+  seo_noindex: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -54,6 +59,11 @@ function mapRow(row: ProjectRow): Project {
     status: row.status as ProjectStatus,
     featured: row.featured,
     sortOrder: row.sort_order,
+    seoTitle: row.seo_title ?? "",
+    seoDescription: row.seo_description ?? "",
+    seoKeywords: row.seo_keywords ?? [],
+    ogImage: row.og_image ?? "",
+    seoNoindex: row.seo_noindex,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -82,6 +92,11 @@ export type ProjectInput = {
   status: ProjectStatus;
   featured: boolean;
   sortOrder: number;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  seoKeywords: string[];
+  ogImage?: string | null;
+  seoNoindex: boolean;
 };
 
 export async function listAllProjects(): Promise<Project[]> {
@@ -113,8 +128,10 @@ export async function createProject(input: ProjectInput): Promise<Project> {
     `insert into projects
       (slug, code, title, tagline, location, category, price, specs, image,
        description, highlights, amenities, gallery, architect, developer,
-       possession, rera, landmarks, testimonial, status, featured, sort_order)
-     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
+       possession, rera, landmarks, testimonial, status, featured, sort_order,
+       seo_title, seo_description, seo_keywords, og_image, seo_noindex)
+     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,
+             $23,$24,$25,$26,$27)
      returning *`,
     [
       input.slug,
@@ -139,6 +156,11 @@ export async function createProject(input: ProjectInput): Promise<Project> {
       input.status,
       input.featured,
       input.sortOrder,
+      input.seoTitle ?? null,
+      input.seoDescription ?? null,
+      JSON.stringify(input.seoKeywords),
+      input.ogImage ?? null,
+      input.seoNoindex,
     ]
   );
   return mapRow(res.rows[0]);
@@ -151,7 +173,9 @@ export async function updateProject(id: string, input: ProjectInput): Promise<Pr
       price = $8, specs = $9, image = $10, description = $11, highlights = $12,
       amenities = $13, gallery = $14, architect = $15, developer = $16,
       possession = $17, rera = $18, landmarks = $19, testimonial = $20,
-      status = $21, featured = $22, sort_order = $23, updated_at = now()
+      status = $21, featured = $22, sort_order = $23,
+      seo_title = $24, seo_description = $25, seo_keywords = $26, og_image = $27,
+      seo_noindex = $28, updated_at = now()
      where id = $1
      returning *`,
     [
@@ -178,6 +202,11 @@ export async function updateProject(id: string, input: ProjectInput): Promise<Pr
       input.status,
       input.featured,
       input.sortOrder,
+      input.seoTitle ?? null,
+      input.seoDescription ?? null,
+      JSON.stringify(input.seoKeywords),
+      input.ogImage ?? null,
+      input.seoNoindex,
     ]
   );
   if (!res.rows[0]) throw new Error("Project not found");

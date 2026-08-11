@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogHero from "@/components/blog/BlogHero";
@@ -7,6 +8,19 @@ import { listPublishedPosts } from "@/lib/db/blog";
 import BlogPageMotion from "./BlogPageMotion";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Journal",
+  description:
+    "Market insights, buying guides, and investment perspectives from the Infraguru advisory team.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "InfraGuru Journal",
+    description:
+      "Market insights, buying guides, and investment perspectives from the Infraguru advisory team.",
+    url: "/blog",
+  },
+};
 
 export default async function BlogPage() {
   const posts = await listPublishedPosts();

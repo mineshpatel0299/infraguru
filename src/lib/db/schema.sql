@@ -45,9 +45,22 @@ create table if not exists projects (
   status text not null default 'published',
   featured boolean not null default false,
   sort_order integer not null default 0,
+  seo_title text,
+  seo_description text,
+  seo_keywords jsonb not null default '[]',
+  og_image text,
+  seo_noindex boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Additive SEO columns for installs where the table already existed
+-- before these fields were introduced.
+alter table projects add column if not exists seo_title text;
+alter table projects add column if not exists seo_description text;
+alter table projects add column if not exists seo_keywords jsonb not null default '[]';
+alter table projects add column if not exists og_image text;
+alter table projects add column if not exists seo_noindex boolean not null default false;
 
 create index if not exists projects_status_idx on projects (status);
 create index if not exists projects_category_idx on projects (category);

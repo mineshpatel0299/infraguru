@@ -1,7 +1,4 @@
-"use client";
-
-import React from "react";
-import { motion } from "framer-motion";
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AboutHero from "@/components/about/AboutHero";
@@ -11,16 +8,24 @@ import AboutPillars from "@/components/about/AboutPillars";
 import AboutTimeline from "@/components/about/AboutTimeline";
 import AboutFounder from "@/components/about/AboutFounder";
 import AboutCTA from "@/components/about/AboutCTA";
+import AboutPageMotion from "./AboutPageMotion";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Infraguru is a private real estate advisory built on a tradition of trust, curating ultra-premium residences and commercial addresses.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About Infraguru",
+    description:
+      "Infraguru is a private real estate advisory built on a tradition of trust, curating ultra-premium residences and commercial addresses.",
+    url: "/about",
+  },
+};
 
 export default function AboutPage() {
   return (
-    <motion.main
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="bg-white"
-    >
+    <AboutPageMotion>
       <Navbar />
       <AboutHero />
       <AboutStory />
@@ -30,6 +35,6 @@ export default function AboutPage() {
       <AboutFounder />
       <AboutCTA />
       <Footer />
-    </motion.main>
+    </AboutPageMotion>
   );
 }

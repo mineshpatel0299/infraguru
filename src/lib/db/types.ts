@@ -31,6 +31,13 @@ export type Project = {
   status: ProjectStatus;
   featured: boolean;
   sortOrder: number;
+  // SEO — all optional overrides. Public pages fall back to title/tagline/image
+  // when these are blank, so components can also interpolate these directly.
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string[];
+  ogImage: string;
+  seoNoindex: boolean;
   createdAt: string;
   updatedAt: string;
 };

@@ -17,9 +17,18 @@ export async function generateMetadata({
     return { title: "Role Not Found — InfraGuru Careers" };
   }
 
+  const url = `/careers/apply/${job.slug}`;
+
   return {
     title: `Apply — ${job.title} — InfraGuru Careers`,
     description: job.overview,
+    alternates: { canonical: url },
+    robots: job.status === "open" ? { index: true, follow: true } : { index: false, follow: false },
+    openGraph: {
+      title: `Apply — ${job.title}`,
+      description: job.overview,
+      url,
+    },
   };
 }
 
