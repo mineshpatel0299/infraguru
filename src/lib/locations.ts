@@ -1,4 +1,4 @@
-export type LocationSlug = "delhi" | "gurgaon" | "goa" | "europe" | "australia" | "dubai";
+export type LocationSlug = "delhi" | "gurgaon" | "goa" | "dholera"| "europe" | "australia" | "dubai";
 export type LocationRegion = "India" | "International";
 
 export type LocationConfig = {
@@ -13,6 +13,7 @@ export const LOCATIONS: LocationConfig[] = [
   { slug: "delhi", label: "Delhi", region: "India", keywords: ["delhi"] },
   { slug: "gurgaon", label: "Gurgaon", region: "India", keywords: ["gurgaon", "gurugram"] },
   { slug: "goa", label: "Goa", region: "India", keywords: ["goa"] },
+  { slug: "dholera", label: "Dholera", region: "India", keywords: ["dholera"] },
   { slug: "europe", label: "Europe", region: "International", keywords: ["europe"] },
   { slug: "australia", label: "Australia", region: "International", keywords: ["australia"] },
   { slug: "dubai", label: "Dubai", region: "International", keywords: ["dubai"] },
