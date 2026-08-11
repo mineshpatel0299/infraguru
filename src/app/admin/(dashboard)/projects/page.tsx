@@ -96,7 +96,6 @@ export default async function AdminProjectsPage({
                 <th className="px-5 py-3">Category</th>
                 <th className="px-5 py-3">Price</th>
                 <th className="px-5 py-3">Status</th>
-                <th className="px-5 py-3">Featured</th>
                 <th className="px-5 py-3 text-right">Actions</th>
               </tr>
             </thead>
@@ -137,13 +136,6 @@ export default async function AdminProjectsPage({
                     <StatusBadge status={p.status} />
                   </td>
                   <td className="px-5 py-3.5">
-                    {p.featured ? (
-                      <span className="text-[#d4af37]">★</span>
-                    ) : (
-                      <span className="text-[#032E97]/15">☆</span>
-                    )}
-                  </td>
-                  <td className="px-5 py-3.5">
                     <div className="flex items-center justify-end gap-1">
                       <Link
                         href={`/admin/projects/${p.id}`}
@@ -161,7 +153,7 @@ export default async function AdminProjectsPage({
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-sm text-[#5c6480]">
+                  <td colSpan={6} className="px-5 py-12 text-center text-sm text-[#5c6480]">
                     No projects match your filters.
                   </td>
                 </tr>

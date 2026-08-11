@@ -44,7 +44,6 @@ create table if not exists projects (
   landmarks jsonb not null default '[]',
   testimonial jsonb,
   status text not null default 'published',
-  featured boolean not null default false,
   sort_order integer not null default 0,
   seo_title text,
   seo_description text,

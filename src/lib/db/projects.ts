@@ -24,7 +24,6 @@ type ProjectRow = {
   landmarks: Landmark[] | null;
   testimonial: Testimonial | null;
   status: string;
-  featured: boolean;
   sort_order: number;
   seo_title: string | null;
   seo_description: string | null;
@@ -59,7 +58,6 @@ function mapRow(row: ProjectRow): Project {
     landmarks: row.landmarks ?? [],
     testimonial: row.testimonial,
     status: row.status as ProjectStatus,
-    featured: row.featured,
     sortOrder: row.sort_order,
     seoTitle: row.seo_title ?? "",
     seoDescription: row.seo_description ?? "",
@@ -93,7 +91,6 @@ export type ProjectInput = {
   landmarks: Landmark[];
   testimonial: Testimonial | null;
   status: ProjectStatus;
-  featured: boolean;
   sortOrder: number;
   seoTitle?: string | null;
   seoDescription?: string | null;
@@ -131,10 +128,10 @@ export async function createProject(input: ProjectInput): Promise<Project> {
     `insert into projects
       (slug, code, title, tagline, location, location_slug, category, price, specs, image,
        description, highlights, amenities, gallery, architect, developer,
-       possession, rera, landmarks, testimonial, status, featured, sort_order,
+       possession, rera, landmarks, testimonial, status, sort_order,
        seo_title, seo_description, seo_keywords, og_image, seo_noindex)
-     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,
-             $24,$25,$26,$27,$28)
+     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,
+             $23,$24,$25,$26,$27)
      returning *`,
     [
       input.slug,
@@ -158,7 +155,6 @@ export async function createProject(input: ProjectInput): Promise<Project> {
       JSON.stringify(input.landmarks),
       input.testimonial ? JSON.stringify(input.testimonial) : null,
       input.status,
-      input.featured,
       input.sortOrder,
       input.seoTitle ?? null,
       input.seoDescription ?? null,
@@ -177,9 +173,9 @@ export async function updateProject(id: string, input: ProjectInput): Promise<Pr
       category = $8, price = $9, specs = $10, image = $11, description = $12, highlights = $13,
       amenities = $14, gallery = $15, architect = $16, developer = $17,
       possession = $18, rera = $19, landmarks = $20, testimonial = $21,
-      status = $22, featured = $23, sort_order = $24,
-      seo_title = $25, seo_description = $26, seo_keywords = $27, og_image = $28,
-      seo_noindex = $29, updated_at = now()
+      status = $22, sort_order = $23,
+      seo_title = $24, seo_description = $25, seo_keywords = $26, og_image = $27,
+      seo_noindex = $28, updated_at = now()
      where id = $1
      returning *`,
     [
@@ -205,7 +201,6 @@ export async function updateProject(id: string, input: ProjectInput): Promise<Pr
       JSON.stringify(input.landmarks),
       input.testimonial ? JSON.stringify(input.testimonial) : null,
       input.status,
-      input.featured,
       input.sortOrder,
       input.seoTitle ?? null,
       input.seoDescription ?? null,

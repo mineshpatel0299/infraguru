@@ -6,6 +6,7 @@ import FormSection from "@/components/admin/FormSection";
 import MediaUploader from "@/components/admin/MediaUploader";
 import GalleryEditor from "@/components/admin/GalleryEditor";
 import TextListEditor from "@/components/admin/TextListEditor";
+import AmenitiesEditor from "@/components/admin/AmenitiesEditor";
 import KeyValueListEditor from "@/components/admin/KeyValueListEditor";
 import SaveBar from "@/components/admin/SaveBar";
 import { inputClass, labelClass } from "@/components/admin/formStyles";
@@ -40,7 +41,6 @@ function toInput(p?: Project): ProjectInput {
     landmarks: p?.landmarks ?? [],
     testimonial: p?.testimonial ?? { quote: "", author: "Infraguru Advisory Team", role: "Real Estate Consultants, Gurugram" },
     status: p?.status ?? "draft",
-    featured: p?.featured ?? false,
     sortOrder: p?.sortOrder ?? 0,
     seoTitle: p?.seoTitle ?? "",
     seoDescription: p?.seoDescription ?? "",
@@ -268,13 +268,8 @@ export default function ProjectForm({ project }: { project?: Project }) {
         />
       </FormSection>
 
-      <FormSection title="Amenities">
-        <TextListEditor
-          label="Amenities"
-          items={form.amenities}
-          onChange={(v) => set("amenities", v)}
-          placeholder="🏊 Swimming Pool"
-        />
+      <FormSection title="Amenities" description="Pick an icon and label for each amenity.">
+        <AmenitiesEditor items={form.amenities} onChange={(v) => set("amenities", v)} />
       </FormSection>
 
       <FormSection title="Nearby Landmarks">
@@ -380,7 +375,7 @@ export default function ProjectForm({ project }: { project?: Project }) {
       </FormSection>
 
       <FormSection title="Publishing">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block">
             <span className={labelClass}>Status</span>
             <select
@@ -400,15 +395,6 @@ export default function ProjectForm({ project }: { project?: Project }) {
               onChange={(e) => set("sortOrder", Number(e.target.value) || 0)}
               className={inputClass}
             />
-          </label>
-          <label className="flex items-center gap-2.5 pt-6">
-            <input
-              type="checkbox"
-              checked={form.featured}
-              onChange={(e) => set("featured", e.target.checked)}
-              className="h-4 w-4 rounded border-[#032E97]/20 text-[#d4af37] focus:ring-[#d4af37]"
-            />
-            <span className="text-sm font-medium text-[#0a1435]">Featured on homepage</span>
           </label>
         </div>
       </FormSection>

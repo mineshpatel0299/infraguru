@@ -33,7 +33,6 @@ export type Project = {
   landmarks: Landmark[];
   testimonial: Testimonial | null;
   status: ProjectStatus;
-  featured: boolean;
   sortOrder: number;
   // SEO — all optional overrides. Public pages fall back to title/tagline/image
   // when these are blank, so components can also interpolate these directly.

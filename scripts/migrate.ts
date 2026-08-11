@@ -93,8 +93,8 @@ async function main() {
           `insert into projects
             (slug, code, title, tagline, location, category, price, specs, image,
              description, highlights, amenities, gallery, architect, developer,
-             possession, rera, landmarks, testimonial, status, featured, sort_order)
-           values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,'published',false,$20)
+             possession, rera, landmarks, testimonial, status, sort_order)
+           values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,'published',$20)
            on conflict (slug) do nothing`,
           [
             p.slug,

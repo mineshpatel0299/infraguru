@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Stats from "@/components/Stats";
 import WhyChooseUs from "@/components/WhyChooseUs";
+import ExploreProperties from "@/components/ExploreProperties";
 import Services from "@/components/Services";
 import FeaturedProjects from "@/components/FeaturedProjects";
 import Testimonials from "@/components/Testimonials";
@@ -26,6 +27,7 @@ export default async function Home() {
       <About />
       <Stats />
       <WhyChooseUs />
+      <ExploreProperties />
       <FeaturedProjects projects={projects.slice(0, 5)} />
       <Services />
       <Testimonials />
