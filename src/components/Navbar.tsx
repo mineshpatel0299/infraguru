@@ -5,16 +5,45 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const LINKS = [
+type NavLink = { href: string; label: string };
+type NavGroup = { label: string; dropdown: { heading: string; items: NavLink[] }[] };
+type NavItem = NavLink | NavGroup;
+
+const PROPERTIES_DROPDOWN: NavGroup = {
+  label: 'Properties',
+  dropdown: [
+    {
+      heading: 'India',
+      items: [
+        { href: '/projects?location=delhi', label: 'Delhi' },
+        { href: '/projects?location=gurgaon', label: 'Gurgaon' },
+        { href: '/projects?location=goa', label: 'Goa' },
+      ],
+    },
+    {
+      heading: 'International',
+      items: [
+        { href: '/projects?location=europe', label: 'Europe' },
+        { href: '/projects?location=australia', label: 'Australia' },
+        { href: '/projects?location=dubai', label: 'Dubai' },
+      ],
+    },
+  ],
+};
+
+const LINKS: NavItem[] = [
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
   { href: '/projects', label: 'Projects' },
+  PROPERTIES_DROPDOWN,
   { href: '/careers', label: 'Careers' },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [propertiesOpen, setPropertiesOpen] = useState(false);
+  const [mobilePropertiesOpen, setMobilePropertiesOpen] = useState(false);
 
 
   useEffect(() => {
@@ -80,7 +109,62 @@ export default function Navbar() {
           {/* Center: Desktop Links */}
           <div className="hidden min-[901px]:flex justify-center items-center gap-2">
             {LINKS.map((link) =>
-              link.href.startsWith('/') ? (
+              'dropdown' in link ? (
+                <div
+                  key={link.label}
+                  className="relative"
+                  onMouseEnter={() => setPropertiesOpen(true)}
+                  onMouseLeave={() => setPropertiesOpen(false)}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setPropertiesOpen((v) => !v)}
+                    aria-expanded={propertiesOpen}
+                    className="relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+                  >
+                    {link.label}
+                    <svg
+                      className={`w-3 h-3 transition-transform duration-300 ${propertiesOpen ? 'rotate-180' : ''}`}
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <AnimatePresence>
+                    {propertiesOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        className="absolute left-1/2 top-full mt-2 w-100 -translate-x-1/2 grid grid-cols-2 gap-6 rounded-2xl border border-white/10 bg-[#0B1320]/95 backdrop-blur-2xl p-5 shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
+                      >
+                        {link.dropdown.map((group) => (
+                          <div key={group.heading}>
+                            <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gold-gradient">
+                              {group.heading}
+                            </p>
+                            <ul className="flex flex-col gap-1">
+                              {group.items.map((item) => (
+                                <li key={item.href}>
+                                  <Link
+                                    href={item.href}
+                                    onClick={() => setPropertiesOpen(false)}
+                                    className="block rounded-lg px-2 py-1.5 text-sm text-white/75 hover:text-white hover:bg-white/10 transition-colors duration-200"
+                                  >
+                                    {item.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -88,14 +172,6 @@ export default function Navbar() {
                 >
                   {link.label}
                 </Link>
-              ) : (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
-                >
-                  {link.label}
-                </a>
               )
             )}
           </div>
@@ -136,7 +212,58 @@ export default function Navbar() {
               className="absolute inset-x-4 top-full mt-2 flex flex-col gap-1.5 rounded-[24px] border border-white/10 bg-[#0B1320]/95 backdrop-blur-3xl p-6 shadow-[0_40px_80px_rgba(0,0,0,0.6)] min-[901px]:hidden"
             >
               {LINKS.map((link) =>
-                link.href.startsWith('/') ? (
+                'dropdown' in link ? (
+                  <div key={link.label} className="rounded-2xl">
+                    <button
+                      type="button"
+                      onClick={() => setMobilePropertiesOpen((v) => !v)}
+                      aria-expanded={mobilePropertiesOpen}
+                      className="group flex w-full items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+                    >
+                      {link.label}
+                      <svg
+                        className={`w-3.5 h-3.5 text-white/40 transition-transform duration-300 ${mobilePropertiesOpen ? 'rotate-180' : ''}`}
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <AnimatePresence>
+                      {mobilePropertiesOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="grid grid-cols-2 gap-4 px-4 pb-3 pt-1">
+                            {link.dropdown.map((group) => (
+                              <div key={group.heading}>
+                                <p className="mb-2 text-[9px] font-bold uppercase tracking-widest text-gold-gradient">
+                                  {group.heading}
+                                </p>
+                                <ul className="flex flex-col gap-0.5">
+                                  {group.items.map((item) => (
+                                    <li key={item.href}>
+                                      <Link
+                                        href={item.href}
+                                        onClick={() => { setMenuOpen(false); setMobilePropertiesOpen(false); }}
+                                        className="block rounded-lg px-2 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors duration-200"
+                                      >
+                                        {item.label}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -146,16 +273,6 @@ export default function Navbar() {
                     {link.label}
                     <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
                   </Link>
-                ) : (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
-                  >
-                    {link.label}
-                    <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
-                  </a>
                 )
               )}
               <Link
