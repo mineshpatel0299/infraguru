@@ -4,39 +4,39 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getNavLocationGroups, type NavLocationGroup } from '@/lib/nav-locations';
+import { LOCATIONS } from '@/lib/locations';
 
 type NavLink = { href: string; label: string };
-type NavGroup = { label: string; dropdown: { heading: string; items: NavLink[] }[] };
-type NavItem = NavLink | NavGroup;
 
-const PROPERTIES_DROPDOWN: NavGroup = {
-  label: 'Properties',
-  dropdown: [
-    {
-      heading: 'India',
-      items: [
-        { href: '/projects?location=delhi', label: 'Delhi' },
-        { href: '/projects?location=gurgaon', label: 'Gurgaon' },
-        { href: '/projects?location=goa', label: 'Goa' },
-      ],
-    },
-    {
-      heading: 'International',
-      items: [
-        { href: '/projects?location=europe', label: 'Europe' },
-        { href: '/projects?location=australia', label: 'Australia' },
-        { href: '/projects?location=dubai', label: 'Dubai' },
-      ],
-    },
-  ],
-};
-
-const LINKS: NavItem[] = [
+const LINKS: NavLink[] = [
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
   { href: '/projects', label: 'Projects' },
-  PROPERTIES_DROPDOWN,
-  { href: '/careers', label: 'Careers' },
+];
+
+// Rendered until the real project-availability data loads — every location
+// starts as "Coming Soon" rather than guessing, so the dropdown never shows
+// a stale/incorrect link.
+const FALLBACK_LOCATION_GROUPS: NavLocationGroup[] = [
+  {
+    heading: 'India',
+    items: LOCATIONS.filter((l) => l.region === 'India').map((l) => ({
+      slug: l.slug,
+      label: l.label,
+      href: `/projects/location/${l.slug}`,
+      hasProjects: false,
+    })),
+  },
+  {
+    heading: 'International',
+    items: LOCATIONS.filter((l) => l.region === 'International').map((l) => ({
+      slug: l.slug,
+      label: l.label,
+      href: `/projects/location/${l.slug}`,
+      hasProjects: false,
+    })),
+  },
 ];
 
 export default function Navbar() {
@@ -44,7 +44,17 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [propertiesOpen, setPropertiesOpen] = useState(false);
   const [mobilePropertiesOpen, setMobilePropertiesOpen] = useState(false);
+  const [locationGroups, setLocationGroups] = useState<NavLocationGroup[]>(FALLBACK_LOCATION_GROUPS);
 
+  useEffect(() => {
+    let active = true;
+    getNavLocationGroups().then((groups) => {
+      if (active) setLocationGroups(groups);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -108,72 +118,86 @@ export default function Navbar() {
 
           {/* Center: Desktop Links */}
           <div className="hidden min-[901px]:flex justify-center items-center gap-2">
-            {LINKS.map((link) =>
-              'dropdown' in link ? (
-                <div
-                  key={link.label}
-                  className="relative"
-                  onMouseEnter={() => setPropertiesOpen(true)}
-                  onMouseLeave={() => setPropertiesOpen(false)}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setPropertiesOpen((v) => !v)}
-                    aria-expanded={propertiesOpen}
-                    className="relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
-                  >
-                    {link.label}
-                    <svg
-                      className={`w-3 h-3 transition-transform duration-300 ${propertiesOpen ? 'rotate-180' : ''}`}
-                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
+            {LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+              >
+                {link.label}
+              </Link>
+            ))}
 
-                  <AnimatePresence>
-                    {propertiesOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="absolute left-1/2 top-full mt-2 w-100 -translate-x-1/2 grid grid-cols-2 gap-6 rounded-2xl border border-white/10 bg-[#0B1320]/95 backdrop-blur-2xl p-5 shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
-                      >
-                        {link.dropdown.map((group) => (
-                          <div key={group.heading}>
-                            <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gold-gradient">
-                              {group.heading}
-                            </p>
-                            <ul className="flex flex-col gap-1">
-                              {group.items.map((item) => (
-                                <li key={item.href}>
-                                  <Link
-                                    href={item.href}
-                                    onClick={() => setPropertiesOpen(false)}
-                                    className="block rounded-lg px-2 py-1.5 text-sm text-white/75 hover:text-white hover:bg-white/10 transition-colors duration-200"
-                                  >
-                                    {item.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+            {/* Properties dropdown — driven by which locations actually have published projects */}
+            <div
+              className="relative"
+              onMouseEnter={() => setPropertiesOpen(true)}
+              onMouseLeave={() => setPropertiesOpen(false)}
+            >
+              <button
+                type="button"
+                onClick={() => setPropertiesOpen((v) => !v)}
+                aria-expanded={propertiesOpen}
+                className="relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+              >
+                Properties
+                <svg
+                  className={`w-3 h-3 transition-transform duration-300 ${propertiesOpen ? 'rotate-180' : ''}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 >
-                  {link.label}
-                </Link>
-              )
-            )}
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <AnimatePresence>
+                {propertiesOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute left-1/2 top-full mt-2 w-100 -translate-x-1/2 grid grid-cols-2 gap-6 rounded-2xl border border-white/10 bg-[#0B1320]/95 backdrop-blur-2xl p-5 shadow-[0_30px_60px_rgba(0,0,0,0.5)]"
+                  >
+                    {locationGroups.map((group) => (
+                      <div key={group.heading}>
+                        <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gold-gradient">
+                          {group.heading}
+                        </p>
+                        <ul className="flex flex-col gap-1">
+                          {group.items.map((item) =>
+                            item.hasProjects ? (
+                              <li key={item.slug}>
+                                <Link
+                                  href={item.href}
+                                  onClick={() => setPropertiesOpen(false)}
+                                  className="block rounded-lg px-2 py-1.5 text-sm text-white/75 hover:text-white hover:bg-white/10 transition-colors duration-200"
+                                >
+                                  {item.label}
+                                </Link>
+                              </li>
+                            ) : (
+                              <li key={item.slug}>
+                                <span className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm text-white/35 cursor-not-allowed">
+                                  {item.label}
+                                  <span className="text-[8px] font-bold uppercase tracking-wider text-white/25">Soon</span>
+                                </span>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <Link
+              href="/careers"
+              className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+            >
+              Careers
+            </Link>
           </div>
 
           {/* Right: Desktop CTA & Mobile Hamburger */}
@@ -211,70 +235,87 @@ export default function Navbar() {
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-x-4 top-full mt-2 flex flex-col gap-1.5 rounded-[24px] border border-white/10 bg-[#0B1320]/95 backdrop-blur-3xl p-6 shadow-[0_40px_80px_rgba(0,0,0,0.6)] min-[901px]:hidden"
             >
-              {LINKS.map((link) =>
-                'dropdown' in link ? (
-                  <div key={link.label} className="rounded-2xl">
-                    <button
-                      type="button"
-                      onClick={() => setMobilePropertiesOpen((v) => !v)}
-                      aria-expanded={mobilePropertiesOpen}
-                      className="group flex w-full items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
-                    >
-                      {link.label}
-                      <svg
-                        className={`w-3.5 h-3.5 text-white/40 transition-transform duration-300 ${mobilePropertiesOpen ? 'rotate-180' : ''}`}
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    <AnimatePresence>
-                      {mobilePropertiesOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                          className="overflow-hidden"
-                        >
-                          <div className="grid grid-cols-2 gap-4 px-4 pb-3 pt-1">
-                            {link.dropdown.map((group) => (
-                              <div key={group.heading}>
-                                <p className="mb-2 text-[9px] font-bold uppercase tracking-widest text-gold-gradient">
-                                  {group.heading}
-                                </p>
-                                <ul className="flex flex-col gap-0.5">
-                                  {group.items.map((item) => (
-                                    <li key={item.href}>
-                                      <Link
-                                        href={item.href}
-                                        onClick={() => { setMenuOpen(false); setMobilePropertiesOpen(false); }}
-                                        className="block rounded-lg px-2 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors duration-200"
-                                      >
-                                        {item.label}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ) : (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+              {LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+                >
+                  {link.label}
+                  <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
+                </Link>
+              ))}
+
+              {/* Properties dropdown — driven by which locations actually have published projects */}
+              <div className="rounded-2xl">
+                <button
+                  type="button"
+                  onClick={() => setMobilePropertiesOpen((v) => !v)}
+                  aria-expanded={mobilePropertiesOpen}
+                  className="group flex w-full items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+                >
+                  Properties
+                  <svg
+                    className={`w-3.5 h-3.5 text-white/40 transition-transform duration-300 ${mobilePropertiesOpen ? 'rotate-180' : ''}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
                   >
-                    {link.label}
-                    <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
-                  </Link>
-                )
-              )}
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <AnimatePresence>
+                  {mobilePropertiesOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="grid grid-cols-2 gap-4 px-4 pb-3 pt-1">
+                        {locationGroups.map((group) => (
+                          <div key={group.heading}>
+                            <p className="mb-2 text-[9px] font-bold uppercase tracking-widest text-gold-gradient">
+                              {group.heading}
+                            </p>
+                            <ul className="flex flex-col gap-0.5">
+                              {group.items.map((item) =>
+                                item.hasProjects ? (
+                                  <li key={item.slug}>
+                                    <Link
+                                      href={item.href}
+                                      onClick={() => { setMenuOpen(false); setMobilePropertiesOpen(false); }}
+                                      className="block rounded-lg px-2 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors duration-200"
+                                    >
+                                      {item.label}
+                                    </Link>
+                                  </li>
+                                ) : (
+                                  <li key={item.slug}>
+                                    <span className="flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-xs font-medium text-white/35 cursor-not-allowed">
+                                      {item.label}
+                                      <span className="text-[8px] font-bold uppercase tracking-wider text-white/25">Soon</span>
+                                    </span>
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <Link
+                href="/careers"
+                onClick={() => setMenuOpen(false)}
+                className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+              >
+                Careers
+                <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
+              </Link>
               <Link
                 href="/contact"
                 className="mt-4 flex w-full items-center justify-center rounded-full bg-gold-gradient py-4 text-center text-[11px] font-bold text-[#132731] uppercase tracking-widest shadow-[0_10px_30px_rgba(212,175,55,0.2)] transition-all duration-300 hover:brightness-110 hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)]"

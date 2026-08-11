@@ -1,10 +1,21 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeUp, staggerContainer, viewportMirror } from '@/lib/motion';
+import { getNavLocationGroups, type NavLocationItem } from '@/lib/nav-locations';
+import { LOCATIONS } from '@/lib/locations';
+
+// Every location starts "Coming Soon" until the real project-availability
+// data loads, so the footer never shows a stale/incorrect link.
+const FALLBACK_LOCATIONS: NavLocationItem[] = LOCATIONS.map((l) => ({
+  slug: l.slug,
+  label: l.label,
+  href: `/projects/location/${l.slug}`,
+  hasProjects: false,
+}));
 
 const LINK_COLUMNS = [
   {
@@ -59,6 +70,18 @@ const SOCIALS = [
 ];
 
 export default function Footer() {
+  const [locations, setLocations] = useState<NavLocationItem[]>(FALLBACK_LOCATIONS);
+
+  useEffect(() => {
+    let active = true;
+    getNavLocationGroups().then((groups) => {
+      if (active) setLocations(groups.flatMap((g) => g.items));
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <footer id="footer" className="relative overflow-hidden bg-primary-dark text-white">
 
@@ -75,7 +98,7 @@ export default function Footer() {
 
       {/* Main Footer Grid */}
       <motion.div
-        className="relative z-10 container mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 sm:py-24 grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-12 lg:grid-cols-[1.6fr_1fr_1fr_1fr]"
+        className="relative z-10 container mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 sm:py-24 grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-12 lg:grid-cols-[1.4fr_0.9fr_0.9fr_0.9fr_1fr]"
         variants={staggerContainer(0.1)}
         initial="hidden"
         whileInView="visible"
@@ -142,6 +165,33 @@ export default function Footer() {
             </ul>
           </motion.div>
         ))}
+
+        {/* Locations Column — reflects which cities/countries actually have published projects */}
+        <motion.div variants={fadeUp}>
+          <h4 className="mb-3 sm:mb-6 text-label font-semibold text-white/50 uppercase">
+            Locations
+          </h4>
+          <ul className="flex flex-col gap-2 sm:gap-3">
+            {locations.map((loc) =>
+              loc.hasProjects ? (
+                <li key={loc.slug}>
+                  <Link
+                    href={loc.href}
+                    className="text-body text-white/80 transition-all duration-200 hover:text-white hover:translate-x-1 inline-flex items-center gap-2 group"
+                  >
+                    <span className="w-0 h-px bg-white transition-all duration-200 group-hover:w-3" />
+                    {loc.label}
+                  </Link>
+                </li>
+              ) : (
+                <li key={loc.slug} className="flex items-center gap-2 text-body text-white/40">
+                  {loc.label}
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-white/30">Soon</span>
+                </li>
+              )
+            )}
+          </ul>
+        </motion.div>
 
         {/* Contact Column */}
         <motion.div variants={fadeUp} className="col-span-2 lg:col-span-1">

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { listPublishedProjects } from "@/lib/db/projects";
 import { listPublishedPosts } from "@/lib/db/blog";
 import { listOpenJobs } from "@/lib/db/jobs";
+import { LOCATIONS, projectMatchesLocation } from "@/lib/locations";
 import { SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -43,5 +44,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.4,
   }));
 
-  return [...staticRoutes, ...projectRoutes, ...postRoutes, ...jobRoutes];
+  const locationRoutes: MetadataRoute.Sitemap = LOCATIONS.filter((loc) =>
+    projects.some((p) => projectMatchesLocation(p.location, loc))
+  ).map((loc) => ({
+    url: `${SITE_URL}/projects/location/${loc.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...projectRoutes, ...postRoutes, ...jobRoutes, ...locationRoutes];
 }
