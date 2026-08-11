@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { listPublishedProjects } from "@/lib/db/projects";
-import { getLocationConfig, projectMatchesLocation } from "@/lib/locations";
+import { getLocationConfig, projectBelongsToLocation } from "@/lib/locations";
 import LocationProjectsClient from "./LocationProjectsClient";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ export async function generateMetadata({
   }
 
   const projects = await listPublishedProjects();
-  const matches = projects.filter((p) => projectMatchesLocation(p.location, config));
+  const matches = projects.filter((p) => projectBelongsToLocation(p, config));
   const title = `${config.label} Real Estate Projects`;
   const description = matches.length
     ? `Explore ${matches.length} ultra-premium ${matches.length === 1 ? "project" : "projects"} curated by Infraguru in ${config.label}.`
@@ -48,7 +48,7 @@ export default async function LocationProjectsPage({
   if (!config) notFound();
 
   const projects = await listPublishedProjects();
-  const matches = projects.filter((p) => projectMatchesLocation(p.location, config));
+  const matches = projects.filter((p) => projectBelongsToLocation(p, config));
 
   return <LocationProjectsClient location={config} projects={matches} />;
 }

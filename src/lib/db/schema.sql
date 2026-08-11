@@ -28,6 +28,7 @@ create table if not exists projects (
   title text not null,
   tagline text,
   location text,
+  location_slug text,
   category text not null default 'Residential',
   price text,
   specs text,
@@ -62,8 +63,14 @@ alter table projects add column if not exists seo_keywords jsonb not null defaul
 alter table projects add column if not exists og_image text;
 alter table projects add column if not exists seo_noindex boolean not null default false;
 
+-- Explicit city/region tag (one of src/lib/locations.ts LOCATIONS slugs) so the
+-- Properties nav dropdown and /projects/location/[slug] pages don't have to
+-- guess a project's city from the free-text `location` field.
+alter table projects add column if not exists location_slug text;
+
 create index if not exists projects_status_idx on projects (status);
 create index if not exists projects_category_idx on projects (category);
+create index if not exists projects_location_slug_idx on projects (location_slug);
 
 create table if not exists job_openings (
   id uuid primary key default gen_random_uuid(),

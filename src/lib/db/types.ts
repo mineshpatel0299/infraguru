@@ -14,6 +14,10 @@ export type Project = {
   title: string;
   tagline: string;
   location: string;
+  // One of src/lib/locations.ts LOCATIONS slugs, set explicitly in the CMS.
+  // "" means untagged — falls back to guessing from `location` (see
+  // projectBelongsToLocation).
+  locationSlug: string;
   category: string;
   price: string;
   specs: string;

@@ -1,7 +1,7 @@
 "use server";
 
 import { listPublishedProjects } from "@/lib/db/projects";
-import { LOCATIONS, projectMatchesLocation, type LocationRegion } from "@/lib/locations";
+import { LOCATIONS, projectBelongsToLocation, type LocationRegion } from "@/lib/locations";
 
 export type NavLocationItem = {
   slug: string;
@@ -26,7 +26,7 @@ export async function getNavLocationGroups(): Promise<NavLocationGroup[]> {
       slug: loc.slug,
       label: loc.label,
       href: `/projects/location/${loc.slug}`,
-      hasProjects: projects.some((p) => projectMatchesLocation(p.location, loc)),
+      hasProjects: projects.some((p) => projectBelongsToLocation(p, loc)),
     })),
   }));
 }

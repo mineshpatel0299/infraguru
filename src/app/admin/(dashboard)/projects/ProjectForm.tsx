@@ -12,6 +12,7 @@ import { inputClass, labelClass } from "@/components/admin/formStyles";
 import { slugify } from "@/lib/slugify";
 import type { Project } from "@/lib/db/types";
 import type { ProjectInput } from "@/lib/db/projects";
+import { LOCATIONS } from "@/lib/locations";
 import { saveProjectAction } from "./actions";
 
 const CATEGORY_OPTIONS = ["Residential", "Commercial"];
@@ -23,6 +24,7 @@ function toInput(p?: Project): ProjectInput {
     title: p?.title ?? "",
     tagline: p?.tagline ?? "",
     location: p?.location ?? "",
+    locationSlug: p?.locationSlug ?? "",
     category: p?.category ?? "Residential",
     price: p?.price ?? "",
     specs: p?.specs ?? "",
@@ -136,6 +138,29 @@ export default function ProjectForm({ project }: { project?: Project }) {
               placeholder="Sector 113, Gurugram"
               className={inputClass}
             />
+          </label>
+          <label className="block">
+            <span className={labelClass}>City / Region</span>
+            <select
+              value={form.locationSlug ?? ""}
+              onChange={(e) => set("locationSlug", e.target.value)}
+              className={inputClass}
+            >
+              <option value="">— Unassigned —</option>
+              <optgroup label="India">
+                {LOCATIONS.filter((l) => l.region === "India").map((l) => (
+                  <option key={l.slug} value={l.slug}>{l.label}</option>
+                ))}
+              </optgroup>
+              <optgroup label="International">
+                {LOCATIONS.filter((l) => l.region === "International").map((l) => (
+                  <option key={l.slug} value={l.slug}>{l.label}</option>
+                ))}
+              </optgroup>
+            </select>
+            <span className="mt-1 block text-[11px] text-[#5c6480]">
+              Controls which city page and nav dropdown entry this project appears under. Leave unassigned and it falls back to guessing from the Location text above.
+            </span>
           </label>
           <label className="block sm:col-span-2">
             <span className={labelClass}>Tagline</span>

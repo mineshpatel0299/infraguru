@@ -11,6 +11,7 @@ import bcrypt from "bcryptjs";
 import { PROJECTS } from "../src/lib/projects.ts";
 import { OPENINGS } from "../src/lib/careers.ts";
 import { BLOG_POSTS } from "../src/lib/blog.ts";
+import { LOCATIONS, projectMatchesLocation } from "../src/lib/locations.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -121,6 +122,25 @@ async function main() {
       }
     } else {
       console.log(`  projects table already has ${projectCount.rows[0].c} rows, skipping seed`);
+    }
+
+    console.log("→ backfilling location_slug for untagged projects...");
+    const untagged = await client.query<{ id: string; location: string | null }>(
+      `select id, location from projects where location_slug is null or location_slug = ''`
+    );
+    let backfilled = 0;
+    for (const row of untagged.rows) {
+      const text = row.location ?? "";
+      const match = LOCATIONS.find((l) => projectMatchesLocation(text, l));
+      if (match) {
+        await client.query(`update projects set location_slug = $1 where id = $2`, [match.slug, row.id]);
+        backfilled++;
+      }
+    }
+    const unmatched = untagged.rows.length - backfilled;
+    console.log(`  tagged ${backfilled}/${untagged.rows.length} untagged project(s) from their location text`);
+    if (unmatched > 0) {
+      console.log(`  ${unmatched} project(s) couldn't be matched automatically — assign a City/Region manually in the CMS`);
     }
 
     console.log("→ checking job_openings table...");

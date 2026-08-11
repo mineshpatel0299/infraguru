@@ -8,6 +8,7 @@ type ProjectRow = {
   title: string;
   tagline: string | null;
   location: string | null;
+  location_slug: string | null;
   category: string;
   price: string | null;
   specs: string | null;
@@ -42,6 +43,7 @@ function mapRow(row: ProjectRow): Project {
     title: row.title,
     tagline: row.tagline ?? "",
     location: row.location ?? "",
+    locationSlug: row.location_slug ?? "",
     category: row.category,
     price: row.price ?? "",
     specs: row.specs ?? "",
@@ -75,6 +77,7 @@ export type ProjectInput = {
   title: string;
   tagline?: string | null;
   location?: string | null;
+  locationSlug?: string | null;
   category: string;
   price?: string | null;
   specs?: string | null;
@@ -126,12 +129,12 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 export async function createProject(input: ProjectInput): Promise<Project> {
   const res = await db.query<ProjectRow>(
     `insert into projects
-      (slug, code, title, tagline, location, category, price, specs, image,
+      (slug, code, title, tagline, location, location_slug, category, price, specs, image,
        description, highlights, amenities, gallery, architect, developer,
        possession, rera, landmarks, testimonial, status, featured, sort_order,
        seo_title, seo_description, seo_keywords, og_image, seo_noindex)
-     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,
-             $23,$24,$25,$26,$27)
+     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,
+             $24,$25,$26,$27,$28)
      returning *`,
     [
       input.slug,
@@ -139,6 +142,7 @@ export async function createProject(input: ProjectInput): Promise<Project> {
       input.title,
       input.tagline ?? null,
       input.location ?? null,
+      input.locationSlug || null,
       input.category,
       input.price ?? null,
       input.specs ?? null,
@@ -169,13 +173,13 @@ export async function createProject(input: ProjectInput): Promise<Project> {
 export async function updateProject(id: string, input: ProjectInput): Promise<Project> {
   const res = await db.query<ProjectRow>(
     `update projects set
-      slug = $2, code = $3, title = $4, tagline = $5, location = $6, category = $7,
-      price = $8, specs = $9, image = $10, description = $11, highlights = $12,
-      amenities = $13, gallery = $14, architect = $15, developer = $16,
-      possession = $17, rera = $18, landmarks = $19, testimonial = $20,
-      status = $21, featured = $22, sort_order = $23,
-      seo_title = $24, seo_description = $25, seo_keywords = $26, og_image = $27,
-      seo_noindex = $28, updated_at = now()
+      slug = $2, code = $3, title = $4, tagline = $5, location = $6, location_slug = $7,
+      category = $8, price = $9, specs = $10, image = $11, description = $12, highlights = $13,
+      amenities = $14, gallery = $15, architect = $16, developer = $17,
+      possession = $18, rera = $19, landmarks = $20, testimonial = $21,
+      status = $22, featured = $23, sort_order = $24,
+      seo_title = $25, seo_description = $26, seo_keywords = $27, og_image = $28,
+      seo_noindex = $29, updated_at = now()
      where id = $1
      returning *`,
     [
@@ -185,6 +189,7 @@ export async function updateProject(id: string, input: ProjectInput): Promise<Pr
       input.title,
       input.tagline ?? null,
       input.location ?? null,
+      input.locationSlug || null,
       input.category,
       input.price ?? null,
       input.specs ?? null,

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { listPublishedProjects } from "@/lib/db/projects";
 import { listPublishedPosts } from "@/lib/db/blog";
 import { listOpenJobs } from "@/lib/db/jobs";
-import { LOCATIONS, projectMatchesLocation } from "@/lib/locations";
+import { LOCATIONS, projectBelongsToLocation } from "@/lib/locations";
 import { SITE_URL } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const locationRoutes: MetadataRoute.Sitemap = LOCATIONS.filter((loc) =>
-    projects.some((p) => projectMatchesLocation(p.location, loc))
+    projects.some((p) => projectBelongsToLocation(p, loc))
   ).map((loc) => ({
     url: `${SITE_URL}/projects/location/${loc.slug}`,
     changeFrequency: "weekly",

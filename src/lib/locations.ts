@@ -27,3 +27,16 @@ export function projectMatchesLocation(projectLocation: string, config: Location
   const haystack = projectLocation.toLowerCase();
   return config.keywords.some((keyword) => haystack.includes(keyword));
 }
+
+// The CMS lets an admin explicitly tag a project with one of the LOCATIONS
+// slugs (ProjectForm's "City / Region" field). That tag is authoritative
+// whenever it's set. Only legacy/untagged rows (locationSlug === "") fall
+// back to guessing from the free-text `location` field, so a bad guess can't
+// silently override what the admin actually picked.
+export function projectBelongsToLocation(
+  project: { locationSlug: string; location: string },
+  config: LocationConfig
+): boolean {
+  if (project.locationSlug) return project.locationSlug === config.slug;
+  return projectMatchesLocation(project.location, config);
+}

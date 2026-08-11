@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listAllProjects } from "@/lib/db/projects";
+import { getLocationConfig } from "@/lib/locations";
 import PageHeader from "@/components/admin/PageHeader";
 import StatusBadge from "@/components/admin/StatusBadge";
 import DeleteButton from "@/components/admin/DeleteButton";
@@ -87,10 +88,11 @@ export default async function AdminProjectsPage({
 
       <div className="overflow-hidden rounded-2xl border border-[#032E97]/8 bg-white shadow-[0_10px_40px_rgba(3,46,151,0.05)]">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[820px] text-left text-sm">
+          <table className="w-full min-w-[940px] text-left text-sm">
             <thead>
               <tr className="border-b border-[#032E97]/8 bg-[#032E97]/[0.02] text-[10px] font-bold uppercase tracking-wide text-[#5c6480]">
                 <th className="px-5 py-3">Project</th>
+                <th className="px-5 py-3">City</th>
                 <th className="px-5 py-3">Category</th>
                 <th className="px-5 py-3">Price</th>
                 <th className="px-5 py-3">Status</th>
@@ -114,6 +116,20 @@ export default async function AdminProjectsPage({
                         <p className="truncate text-xs text-[#5c6480]">{p.location}</p>
                       </div>
                     </div>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    {p.locationSlug ? (
+                      <span className="inline-flex items-center rounded-full bg-[#032E97]/8 px-2.5 py-1 text-[11px] font-semibold text-[#032E97]">
+                        {getLocationConfig(p.locationSlug)?.label ?? p.locationSlug}
+                      </span>
+                    ) : (
+                      <span
+                        title="No city assigned — won't reliably show up on any /projects/location page or in the Properties nav dropdown."
+                        className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-700"
+                      >
+                        Unassigned
+                      </span>
+                    )}
                   </td>
                   <td className="px-5 py-3.5 text-[#5c6480]">{p.category}</td>
                   <td className="px-5 py-3.5 text-[#5c6480]">{p.price}</td>
@@ -145,7 +161,7 @@ export default async function AdminProjectsPage({
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-sm text-[#5c6480]">
+                  <td colSpan={7} className="px-5 py-12 text-center text-sm text-[#5c6480]">
                     No projects match your filters.
                   </td>
                 </tr>
