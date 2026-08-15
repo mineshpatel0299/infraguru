@@ -3,35 +3,21 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportMirror } from "@/lib/motion";
+import { ABOUT_PILLARS_DEFAULT_CONTENT, type AboutPillarsContent } from "@/lib/pageSections";
+import { useSectionEdit } from "../pagebuilder/SectionEditBoundary";
+import EditableText from "../pagebuilder/EditableText";
+import RemoveItemButton from "../pagebuilder/RemoveItemButton";
+import AddItemButton from "../pagebuilder/AddItemButton";
 
-const PILLARS = [
-  {
-    number: "01",
-    title: "Integrity First",
-    description:
-      "Every recommendation is made with full transparency — no hidden margins, no conflicted interests, only what genuinely serves you.",
-  },
-  {
-    number: "02",
-    title: "Precision Curation",
-    description:
-      "We evaluate every asset against location, legal clarity, and long-term value before it ever reaches your shortlist.",
-  },
-  {
-    number: "03",
-    title: "Absolute Discretion",
-    description:
-      "High-value transactions demand privacy. Our process is built to move quietly, efficiently, and entirely on your terms.",
-  },
-  {
-    number: "04",
-    title: "Lifetime Partnership",
-    description:
-      "Our relationship doesn't end at the signature — from documentation to resale, we remain your standing advisory.",
-  },
-];
+export default function AboutPillars({ content = ABOUT_PILLARS_DEFAULT_CONTENT }: { content?: AboutPillarsContent }) {
+  const ctx = useSectionEdit();
+  const live = (ctx?.content as AboutPillarsContent | undefined) ?? content;
+  const PILLARS = live.pillars.map((pillar, i) => ({
+    number: String(i + 1).padStart(2, "0"),
+    title: pillar.title,
+    description: pillar.description,
+  }));
 
-export default function AboutPillars() {
   return (
     <section id="about-pillars" className="relative w-full overflow-hidden bg-primary-dark py-24 sm:py-32">
       {/* Ambient glow */}
@@ -50,13 +36,18 @@ export default function AboutPillars() {
         >
           <div className="mb-4 flex items-center justify-center gap-3">
             <div className="h-[2px] w-8 bg-gold-gradient" />
-            <span className="font-body text-label font-semibold uppercase tracking-wide text-gold-gradient">
-              What Guides Us
-            </span>
+            <EditableText
+              as="span"
+              path="eyebrow"
+              fallback={live.eyebrow}
+              className="font-body text-label font-semibold uppercase tracking-wide text-gold-gradient"
+            />
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </div>
           <h2 className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light leading-tight tracking-normal text-white">
-            The <span className="font-bold text-gold-gradient">Principles</span> Behind Every Deal
+            <EditableText as="span" path="headingPlain1" fallback={live.headingPlain1} />{" "}
+            <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />{" "}
+            <EditableText as="span" path="headingPlain2" fallback={live.headingPlain2} />
           </h2>
         </motion.div>
 
@@ -67,13 +58,14 @@ export default function AboutPillars() {
           viewport={viewportMirror}
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8"
         >
-          {PILLARS.map((pillar) => (
+          {PILLARS.map((pillar, idx) => (
             <motion.div
-              key={pillar.number}
+              key={idx}
               variants={fadeUp}
               className="group relative flex min-h-[280px] flex-col justify-between overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-[#253d67] to-[#12223a] p-7 transition-all duration-500 hover:-translate-y-2 hover:border-amber-200/30 sm:min-h-[320px] sm:p-8"
             >
               <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/0 to-white/0 transition-all duration-500 group-hover:from-white/5" />
+              <RemoveItemButton arrayPath="pillars" index={idx} />
 
               <div className="relative z-10 flex items-start justify-between">
                 <span className="font-body text-4xl font-semibold text-white/10 transition-all duration-500 group-hover:text-gold-gradient sm:text-5xl">
@@ -83,13 +75,29 @@ export default function AboutPillars() {
               </div>
 
               <div className="relative z-10 mt-10">
-                <h3 className="mb-3 font-body text-h4 font-medium uppercase tracking-tight text-white transition-all duration-500 group-hover:text-gold-gradient">
-                  {pillar.title}
-                </h3>
-                <p className="text-body font-light leading-relaxed text-white/70">{pillar.description}</p>
+                <EditableText
+                  as="h3"
+                  path={`pillars[${idx}].title`}
+                  fallback={pillar.title}
+                  className="mb-3 font-body text-h4 font-medium uppercase tracking-tight text-white transition-all duration-500 group-hover:text-gold-gradient block"
+                />
+                <EditableText
+                  as="p"
+                  path={`pillars[${idx}].description`}
+                  fallback={pillar.description}
+                  multiline
+                  className="text-body font-light leading-relaxed text-white/70"
+                />
               </div>
             </motion.div>
           ))}
+          {ctx && (
+            <AddItemButton
+              arrayPath="pillars"
+              newItem={{ title: "New Pillar", description: "Describe this pillar…" }}
+              className="flex min-h-[280px] items-center justify-center rounded-[28px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-white/30 hover:text-white/70 sm:min-h-[320px]"
+            />
+          )}
         </motion.div>
       </div>
     </section>

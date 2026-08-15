@@ -289,6 +289,195 @@ export const FOOTER_DEFAULT_CONTENT: FooterContent = {
   ],
 };
 
+// ── About page ────────────────────────────────────────────────────────────
+
+export type AboutHeroContent = {
+  eyebrow: string;
+  line1: string;
+  line2: string;
+  line3: string;
+  line4: string;
+  description: string;
+  image: string;
+};
+
+export const ABOUT_HERO_DEFAULT_CONTENT: AboutHeroContent = {
+  eyebrow: "Our Story",
+  line1: "Engineering",
+  line2: "Legacies,",
+  line3: "Not Just",
+  line4: "Listings.",
+  description:
+    "Since 2011, InfraGuru has stood at the intersection of trust and craftsmanship — curating real estate that is bought once and cherished for generations.",
+  image: "/about.jpg",
+};
+
+export type AboutStoryContent = {
+  eyebrow: string;
+  headingPlain1: string;
+  headingHighlight: string;
+  headingPlain2: string;
+  paragraphs: string[];
+  image1: string;
+  image2: string;
+  badgeYear: string;
+  badgeLabel: string;
+  stats: StatPill[];
+};
+
+export const ABOUT_STORY_DEFAULT_CONTENT: AboutStoryContent = {
+  eyebrow: "Who We Are",
+  headingPlain1: "A decade spent turning",
+  headingHighlight: "addresses",
+  headingPlain2: "into legacies.",
+  paragraphs: [
+    "InfraGuru began with a simple conviction — that real estate advisory should feel like a partnership, not a transaction. Since 2011, we've worked from Gurugram outward, guiding individuals, families, and enterprises through the residential, commercial, and infrastructure markets with quiet precision.",
+    "We don't chase volume. Every mandate — whether it's a flagship commercial tower, a private residence, or a joint-development structure — is handled with the same architect's eye for detail and a fiduciary's sense of responsibility.",
+  ],
+  image1: "/about-1.jpg",
+  image2: "/about-2.jpg",
+  badgeYear: "2011",
+  badgeLabel: "Est.",
+  stats: [
+    { value: "15+", label: "Years of Trust" },
+    { value: "500+", label: "Families & Investors Served" },
+  ],
+};
+
+export type AboutPillarsContent = {
+  eyebrow: string;
+  headingPlain1: string;
+  headingHighlight: string;
+  headingPlain2: string;
+  pillars: { title: string; description: string }[];
+};
+
+export const ABOUT_PILLARS_DEFAULT_CONTENT: AboutPillarsContent = {
+  eyebrow: "What Guides Us",
+  headingPlain1: "The",
+  headingHighlight: "Principles",
+  headingPlain2: "Behind Every Deal",
+  pillars: [
+    {
+      title: "Integrity First",
+      description:
+        "Every recommendation is made with full transparency — no hidden margins, no conflicted interests, only what genuinely serves you.",
+    },
+    {
+      title: "Precision Curation",
+      description:
+        "We evaluate every asset against location, legal clarity, and long-term value before it ever reaches your shortlist.",
+    },
+    {
+      title: "Absolute Discretion",
+      description:
+        "High-value transactions demand privacy. Our process is built to move quietly, efficiently, and entirely on your terms.",
+    },
+    {
+      title: "Lifetime Partnership",
+      description:
+        "Our relationship doesn't end at the signature — from documentation to resale, we remain your standing advisory.",
+    },
+  ],
+};
+
+export type AboutStatsContent = {
+  stats: StatPill[];
+};
+
+export const ABOUT_STATS_DEFAULT_CONTENT: AboutStatsContent = {
+  stats: [
+    { value: "77+", label: "Properties Listed" },
+    { value: "350+", label: "Properties Sold" },
+    { value: "500+", label: "Satisfied Clients" },
+    { value: "25+", label: "Realtor Awards" },
+  ],
+};
+
+export type AboutMilestone = { year: string; title: string; description: string };
+
+export type AboutTimelineContent = {
+  eyebrow: string;
+  headingPlain: string;
+  headingHighlight: string;
+  milestones: AboutMilestone[];
+};
+
+export const ABOUT_TIMELINE_DEFAULT_CONTENT: AboutTimelineContent = {
+  eyebrow: "The Journey",
+  headingPlain: "Fifteen Years,",
+  headingHighlight: "One Standard.",
+  milestones: [
+    {
+      year: "2011",
+      title: "InfraGuru Founded",
+      description: "Opened our doors in Gurugram with a single mandate: real estate advisory built on trust.",
+    },
+    {
+      year: "2015",
+      title: "Commercial Expansion",
+      description: "Extended into commercial and infrastructure advisory, serving developers and institutions.",
+    },
+    {
+      year: "2019",
+      title: "300+ Transactions",
+      description: "Crossed three hundred successful transactions across residential and commercial portfolios.",
+    },
+    {
+      year: "2023",
+      title: "Joint-Development Practice",
+      description: "Launched a dedicated structuring practice for landowner-developer partnerships.",
+    },
+    {
+      year: "2026",
+      title: "500+ Clients, 25+ Awards",
+      description: "A decade and a half later — a trusted name behind Gurugram's most discerning acquisitions.",
+    },
+  ],
+};
+
+export type AboutFounderContent = {
+  eyebrow: string;
+  headingPlain: string;
+  headingHighlight: string;
+  portraitImage: string;
+  name: string;
+  role: string;
+  quote: string;
+  bio: string;
+};
+
+export const ABOUT_FOUNDER_DEFAULT_CONTENT: AboutFounderContent = {
+  eyebrow: "Meet The Founder",
+  headingPlain: "The Vision",
+  headingHighlight: "Behind InfraGuru",
+  portraitImage: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&auto=format&fit=crop&q=80",
+  name: "Baljeet Singh",
+  role: "Founder & CEO",
+  quote:
+    "I started InfraGuru on a belief that's stayed with me since day one — real estate isn't about square footage, it's about the life that happens inside it. Every client walks away with more than a property; they walk away with a decision they'll never second-guess.",
+  bio: "With over fifteen years navigating Gurugram's real estate landscape, Baljeet founded InfraGuru to close the gap between what buyers are promised and what they actually receive. That principle still shapes every mandate the firm takes on today.",
+};
+
+export type AboutCTAContent = {
+  eyebrow: string;
+  headingPlain: string;
+  headingHighlight: string;
+  subcopy: string;
+  ctaLabel: string;
+  ctaHref: string;
+};
+
+export const ABOUT_CTA_DEFAULT_CONTENT: AboutCTAContent = {
+  eyebrow: "Let's Talk",
+  headingPlain: "Ready to write the next chapter of your",
+  headingHighlight: "portfolio?",
+  subcopy:
+    "Book a private consultation with our advisory team and discover what a truly considered real estate partnership feels like.",
+  ctaLabel: "Book A Consultation",
+  ctaHref: "#contact",
+};
+
 // ── Page / section registry ──────────────────────────────────────────────
 
 export type SectionDef = {
@@ -320,6 +509,21 @@ export const PAGE_REGISTRY: PageDef[] = [
       { key: "exploreProperties", label: "Explore Properties", pageSlug: "home" },
       { key: "services", label: "Services", pageSlug: "home" },
       { key: "testimonials", label: "Testimonials", pageSlug: "home" },
+      { key: "footer", label: "Footer (shown on all pages)", pageSlug: "global" },
+    ],
+  },
+  {
+    slug: "about",
+    label: "About",
+    previewPath: "/about",
+    sections: [
+      { key: "hero", label: "Hero", pageSlug: "about" },
+      { key: "story", label: "Our Story", pageSlug: "about" },
+      { key: "pillars", label: "Pillars", pageSlug: "about" },
+      { key: "stats", label: "Stats", pageSlug: "about" },
+      { key: "timeline", label: "Timeline", pageSlug: "about" },
+      { key: "founder", label: "Founder", pageSlug: "about" },
+      { key: "cta", label: "Call To Action", pageSlug: "about" },
       { key: "footer", label: "Footer (shown on all pages)", pageSlug: "global" },
     ],
   },

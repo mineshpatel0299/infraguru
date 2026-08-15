@@ -4,6 +4,10 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
+import { ABOUT_HERO_DEFAULT_CONTENT, type AboutHeroContent } from "@/lib/pageSections";
+import { useSectionEdit } from "../pagebuilder/SectionEditBoundary";
+import EditableText from "../pagebuilder/EditableText";
+import EditableImage from "../pagebuilder/EditableImage";
 
 const containerVariant: Variants = {
   hidden: { opacity: 0 },
@@ -41,7 +45,9 @@ function SlideUpWordReveal({ text, className = "" }: { text: string; className?:
   );
 }
 
-export default function AboutHero() {
+export default function AboutHero({ content = ABOUT_HERO_DEFAULT_CONTENT }: { content?: AboutHeroContent }) {
+  const ctx = useSectionEdit();
+  const live = (ctx?.content as AboutHeroContent | undefined) ?? content;
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -58,14 +64,18 @@ export default function AboutHero() {
   return (
     <section ref={sectionRef} className="relative h-[100svh] w-full overflow-hidden bg-primary-dark">
       <motion.div style={{ scale: imgScale, y: imgY }} className="absolute inset-0 z-0">
-        <Image
-          src="/about.jpg"
-          alt="InfraGuru — the story behind the address"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
+        <EditableImage path="image" fallback={live.image} wrapperClassName="relative h-full w-full">
+          {(src) => (
+            <Image
+              src={src}
+              alt="InfraGuru — the story behind the address"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          )}
+        </EditableImage>
         <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/55 to-primary-dark/30" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
       </motion.div>
@@ -98,28 +108,41 @@ export default function AboutHero() {
           className="mb-5 flex items-center justify-center gap-3 sm:mb-7"
         >
           <div className="h-[2px] w-8 bg-gold-gradient" />
-          <span className="font-body text-label font-semibold uppercase tracking-[0.3em] text-gold-gradient">
-            Our Story
-          </span>
+          <EditableText
+            as="span"
+            path="eyebrow"
+            fallback={live.eyebrow}
+            className="font-body text-label font-semibold uppercase tracking-[0.3em] text-gold-gradient"
+          />
           <div className="h-[2px] w-8 bg-gold-gradient" />
         </motion.div>
 
         <h1 className="max-w-4xl text-center text-[clamp(2rem,6vw,5rem)] font-heading font-light uppercase leading-[1.2] tracking-tight text-white">
-          <SlideUpWordReveal text="Engineering" />
-          <SlideUpWordReveal text="Legacies," className="text-gold-gradient font-semibold mt-2 block" />
-          <SlideUpWordReveal text="Not Just" className="mt-2 block" />
-          <SlideUpWordReveal text="Listings." className="mt-2 block" />
+          {ctx ? (
+            <>
+              <EditableText as="span" path="line1" fallback={live.line1} className="block" />
+              <EditableText as="span" path="line2" fallback={live.line2} className="text-gold-gradient font-semibold mt-2 block" />
+              <EditableText as="span" path="line3" fallback={live.line3} className="mt-2 block" />
+              <EditableText as="span" path="line4" fallback={live.line4} className="mt-2 block" />
+            </>
+          ) : (
+            <>
+              <SlideUpWordReveal text={content.line1} />
+              <SlideUpWordReveal text={content.line2} className="text-gold-gradient font-semibold mt-2 block" />
+              <SlideUpWordReveal text={content.line3} className="mt-2 block" />
+              <SlideUpWordReveal text={content.line4} className="mt-2 block" />
+            </>
+          )}
         </h1>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-6 max-w-xl text-body text-white/75 sm:mt-8"
+          className="mt-6 max-w-xl sm:mt-8"
         >
-          Since 2011, InfraGuru has stood at the intersection of trust and craftsmanship —
-          curating real estate that is bought once and cherished for generations.
-        </motion.p>
+          <EditableText as="p" path="description" fallback={live.description} multiline className="text-body text-white/75" />
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 24 }}
