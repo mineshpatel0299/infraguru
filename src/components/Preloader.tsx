@@ -29,7 +29,11 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
       // If no last load or it was >20s ago, play the full video preloader
       if (!lastLoad || now - parseInt(lastLoad, 10) >= 20000) {
         currentLoaderType = 'video';
-        duration = 6500;
+        // prefinal.mp4 runs ~7.4s — this is only a safety-net fallback in
+        // case onEnded never fires (e.g. autoplay blocked); it must exceed
+        // the video's own length + its post-end pause, or it cuts the video
+        // off mid-playback before onEnded gets a chance to run.
+        duration = 8200;
       }
       
       sessionStorage.setItem('infraguru_preloader_time', now.toString());
@@ -98,12 +102,12 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
         >
           {loaderType === 'video' ? (
             <video
-              className="h-full w-full object-cover"
-              src="/preloader.mp4"
+              className="h-[85%] w-[85%] object-contain"
+              src="/prefinal.mp4"
               autoPlay
               muted
               playsInline
-              onEnded={() => setPhase('revealing')}
+              onEnded={() => setTimeout(() => setPhase('revealing'), 500)}
               onError={() => setPhase('revealing')}
             />
           ) : (

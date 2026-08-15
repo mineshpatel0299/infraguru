@@ -4,53 +4,23 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { SERVICES_DEFAULT_CONTENT, type ServicesContent } from '@/lib/pageSections';
+import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
+import EditableText from './pagebuilder/EditableText';
+import EditableImage from './pagebuilder/EditableImage';
+import RemoveItemButton from './pagebuilder/RemoveItemButton';
+import AddItemButton from './pagebuilder/AddItemButton';
 
-export const SERVICES_ITEMS = [
-  {
-    step: "01",
-    title: "Property to Buy",
-    bgImage: "/Projects/M3M%20Antalya/544304004_m3m-antalya-hills-gallery-3.webp",
-    description: "Property to buy means a land or building that is available for sale and can be legally purchased by a buyer.",
-    link: "/contact",
-  },
-  {
-    step: "02",
-    title: "Property to Sell",
-    bgImage: "/Projects/SIgnature/WhatsApp-Image-2026-02-26-at-124237-PM-Picsart-AiImageEnhancer.webp",
-    description: "Property to sell means a land or building that the owner is offering for sale and can be legally sold to a buyer.",
-    link: "/contact",
-  },
-  {
-    step: "03",
-    title: "Property to Rent",
-    bgImage: "/Projects/SignatureDeluxe/image-Picsart-AiImageEnhancer-1-scaled.webp",
-    description: "Property to rent means a land or building that is given to someone for temporary use in exchange for rent, without transferring ownership.",
-    link: "/contact",
-  },
-  {
-    step: "04",
-    title: "Property to Lease",
-    bgImage: "/Projects/M3M/Artboard_4_1_-_8jpuMAmC4FGE.webp",
-    description: "Property to lease means a land or building given for long-term use to a tenant under a lease agreement, without transferring ownership.",
-    link: "/contact",
-  },
-  {
-    step: "05",
-    title: "Property to Invest",
-    bgImage: "/Projects/M3M%20Antalya/about_2_-_LKRZFgeqKGJ4_-_CfWwyPz3TLPk.webp",
-    description: "Property to invest means properties specially selected for long-term returns, rental income and capital growth.",
-    link: "/contact",
-  },
-  {
-    step: "06",
-    title: "Property for Joint Development",
-    bgImage: "/Projects/SIgnature/WhatsApp-Image-2026-02-26-at-124128-PM-Picsart-AiImageEnhancer.webp",
-    description: "Property for joint development is when a land owner and developer partner together to develop a project, sharing the resulting benefits without either party bearing the full cost alone.",
-    link: "/contact",
-  },
-];
-
-export default function Services() {
+export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { content?: ServicesContent }) {
+  const ctx = useSectionEdit();
+  const live = (ctx?.content as ServicesContent | undefined) ?? content;
+  const SERVICES_ITEMS = live.items.map((item, i) => ({
+    step: String(i + 1).padStart(2, "0"),
+    title: item.title,
+    bgImage: item.bgImage,
+    description: item.description,
+    link: item.link,
+  }));
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -75,9 +45,12 @@ export default function Services() {
             className="mb-4 flex items-center justify-center gap-3"
           >
             <div className="h-[2px] w-8 bg-gold-gradient" />
-            <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
-              WHAT WE DO
-            </span>
+            <EditableText
+              as="span"
+              path="eyebrow"
+              fallback={live.eyebrow}
+              className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide"
+            />
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </motion.div>
 
@@ -88,7 +61,8 @@ export default function Services() {
             transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
             className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
           >
-            COMPREHENSIVE <span className="font-bold text-gold-gradient">SERVICES</span>
+            <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
+            <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />
           </motion.h2>
         </div>
 
@@ -99,29 +73,35 @@ export default function Services() {
             
             return (
               <motion.div
-                key={item.step}
+                key={idx}
                 onMouseEnter={() => !isMobile && setHoveredIndex(idx)}
                 onClick={() => isMobile && setHoveredIndex(idx)}
                 initial={false}
-                animate={{ 
-                  flex: isActive ? (isMobile ? 5 : 6) : 1 
+                animate={{
+                  flex: isActive ? (isMobile ? 5 : 6) : 1
                 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 className="relative overflow-hidden rounded-3xl cursor-pointer group bg-primary-dark"
               >
+                <RemoveItemButton arrayPath="items" index={idx} className="absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white opacity-0 shadow transition-opacity group-hover:opacity-100" />
+
                 {/* Background Image */}
-                <motion.div 
+                <motion.div
                   className="absolute inset-0 z-0"
                   animate={{ scale: isActive ? 1.05 : 1 }}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <Image
-                    src={item.bgImage}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className={`object-cover transition-opacity duration-700 ${isActive ? 'opacity-70' : 'opacity-20'}`}
-                  />
+                  <EditableImage path={`items[${idx}].bgImage`} fallback={item.bgImage} wrapperClassName="relative h-full w-full">
+                    {(src) => (
+                      <Image
+                        src={src}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className={`object-cover transition-opacity duration-700 ${isActive ? 'opacity-70' : 'opacity-20'}`}
+                      />
+                    )}
+                  </EditableImage>
                 </motion.div>
 
                 {/* Dark Blue Overlay */}
@@ -166,12 +146,19 @@ export default function Services() {
                         transition={{ duration: 0.5, delay: 0.15 }}
                         className="flex flex-col h-full justify-end"
                       >
-                        <h3 className="font-body text-2xl sm:text-3xl font-medium text-gold-gradient mb-3 sm:mb-4">
-                          {item.title}
-                        </h3>
-                        <p className="text-white/80 text-sm sm:text-lg leading-relaxed max-w-lg mb-6 sm:mb-8 line-clamp-2 sm:line-clamp-3">
-                          {item.description}
-                        </p>
+                        <EditableText
+                          as="h3"
+                          path={`items[${idx}].title`}
+                          fallback={item.title}
+                          className="font-body text-2xl sm:text-3xl font-medium text-gold-gradient mb-3 sm:mb-4 block"
+                        />
+                        <EditableText
+                          as="p"
+                          path={`items[${idx}].description`}
+                          fallback={item.description}
+                          multiline
+                          className="text-white/80 text-sm sm:text-lg leading-relaxed max-w-lg mb-6 sm:mb-8"
+                        />
                         
                         <div>
                           <Link 
@@ -190,8 +177,15 @@ export default function Services() {
               </motion.div>
             );
           })}
+          {ctx && (
+            <AddItemButton
+              arrayPath="items"
+              newItem={{ title: "New Service", description: "Describe this service…", bgImage: "/about-1.jpg", link: "/contact" }}
+              className="flex flex-1 items-center justify-center rounded-3xl border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-white/30 hover:text-white/70"
+            />
+          )}
         </div>
-        
+
       </div>
     </section>
   );

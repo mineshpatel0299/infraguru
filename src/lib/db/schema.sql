@@ -131,3 +131,15 @@ create table if not exists blog_posts (
 
 create index if not exists blog_posts_status_idx on blog_posts (status);
 create index if not exists blog_posts_date_idx on blog_posts (post_date desc);
+
+-- Generic per-section content storage for the visual page builder. Shared
+-- content (e.g. the Footer, rendered on many pages) lives once under
+-- page_slug = 'global' instead of being duplicated per page.
+create table if not exists page_sections (
+  id uuid primary key default gen_random_uuid(),
+  page_slug text not null,
+  section_key text not null,
+  content jsonb not null default '{}',
+  updated_at timestamptz not null default now(),
+  unique (page_slug, section_key)
+);

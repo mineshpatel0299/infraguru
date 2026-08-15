@@ -7,6 +7,7 @@ import { logoutAction } from "@/app/admin/(auth)/actions";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: "grid" as const, exact: true },
+  { href: "/admin/pages", label: "Pages", icon: "layout" as const },
   { href: "/admin/projects", label: "Projects", icon: "building" as const },
   { href: "/admin/blog", label: "Blog", icon: "document" as const },
   { href: "/admin/careers", label: "Careers", icon: "briefcase" as const },
@@ -17,6 +18,7 @@ const NAV_ITEMS = [
 function NavIcon({ icon }: { icon: (typeof NAV_ITEMS)[number]["icon"] }) {
   const paths: Record<typeof icon, string> = {
     grid: "M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z",
+    layout: "M3 4h18v4H3V4zm0 6h7v10H3V10zm9 0h9v4h-9v-4zm0 6h9v4h-9v-4z",
     building: "M4 21V7l8-4 8 4v14M9 21v-6h6v6M9 11h.01M15 11h.01M9 15h.01M15 15h.01",
     briefcase: "M20 7H4a1 1 0 00-1 1v10a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM8 7V5a2 2 0 012-2h4a2 2 0 012 2v2",
     inbox: "M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z",

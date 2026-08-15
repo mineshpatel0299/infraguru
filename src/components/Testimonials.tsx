@@ -4,55 +4,29 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeDown, scaleIn, slideRight, viewportMirror } from "@/lib/motion";
+import { TESTIMONIALS_DEFAULT_CONTENT, type TestimonialsContent } from "@/lib/pageSections";
+import { useSectionEdit } from "./pagebuilder/SectionEditBoundary";
+import EditableText from "./pagebuilder/EditableText";
+import EditableImage from "./pagebuilder/EditableImage";
+import RemoveItemButton from "./pagebuilder/RemoveItemButton";
+import AddItemButton from "./pagebuilder/AddItemButton";
 
-const TESTIMONIALS = [
-  {
-    id: 1,
-    badge: "01 Testimonials",
-    name: "Michael Carter",
-    role: "Real Estate Developer",
-    quote:
-      "An exceptional experience from start to finish! Their attention to detail and ability to bring ideas to life is truly unmatched. Highly recommended for anyone looking for top-tier renderings and visuals.",
-    bgColor: "bg-[#f4efe8]",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 2,
-    badge: "02 Testimonials",
-    name: "Sophia Roberts",
-    role: "Interior Designer",
-    quote:
-      "Working with them was a game-changer for my projects. The virtual tours they created were so immersive and engaging that my clients couldn't stop raving about them!",
-    bgColor: "bg-[#edf2ee]",
-    avatar:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 3,
-    badge: "03 Testimonials",
-    name: "David Vance",
-    role: "Luxury Homebuyer",
-    quote:
-      "The most transparent and seamless real estate acquisition we have ever experienced. Infraguru found us our dream waterfront villa before it even hit the open market.",
-    bgColor: "bg-[#f4efe8]",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
-  },
-  {
-    id: 4,
-    badge: "04 Testimonials",
-    name: "Elena Rostova",
-    role: "Commercial Investor",
-    quote:
-      "Their strategic market insights and asset curation delivered returns that exceeded our portfolio projections by over 30%. A world-class real estate advisory team.",
-    bgColor: "bg-[#edf2ee]",
-    avatar:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
-  },
-];
-
-export default function Testimonials() {
+export default function Testimonials({
+  content = TESTIMONIALS_DEFAULT_CONTENT,
+}: {
+  content?: TestimonialsContent;
+}) {
+  const ctx = useSectionEdit();
+  const live = (ctx?.content as TestimonialsContent | undefined) ?? content;
+  const TESTIMONIALS = live.items.map((item, i) => ({
+    id: i + 1,
+    badge: `${String(i + 1).padStart(2, "0")} Testimonials`,
+    name: item.name,
+    role: item.role,
+    quote: item.quote,
+    bgColor: i % 2 === 0 ? "bg-[#f4efe8]" : "bg-[#edf2ee]",
+    avatar: item.avatar,
+  }));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
@@ -66,9 +40,13 @@ export default function Testimonials() {
     setCurrentIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
   };
 
+  if (TESTIMONIALS.length === 0) return null;
+
   // On desktop/tablet we show 2 cards at once, on mobile we show 1 card
-  const card1 = TESTIMONIALS[currentIndex];
-  const card2 = TESTIMONIALS[(currentIndex + 1) % TESTIMONIALS.length];
+  const card1Index = currentIndex % TESTIMONIALS.length;
+  const card2Index = (currentIndex + 1) % TESTIMONIALS.length;
+  const card1 = TESTIMONIALS[card1Index];
+  const card2 = TESTIMONIALS[card2Index];
 
   return (
     <section id="testimonials" className="bg-white">
@@ -86,9 +64,12 @@ export default function Testimonials() {
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 className="mb-3 sm:mb-4 flex items-center justify-start gap-3"
               >
-                <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
-                  CLIENT STORIES
-                </span>
+                <EditableText
+                  as="span"
+                  path="eyebrow"
+                  fallback={live.eyebrow}
+                  className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide"
+                />
                 <div className="h-[2px] w-8 bg-gold-gradient" />
               </motion.div>
 
@@ -99,7 +80,7 @@ export default function Testimonials() {
                 transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
                 className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-white leading-tight mb-8 sm:mb-10 lg:mb-12"
               >
-                VOICES OF <br /> <span className="font-bold text-gold-gradient">TRUST</span>
+                <EditableText as="span" path="headingPlain" fallback={live.headingPlain} /> <br /> <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />
               </motion.h2>
             </div>
 
@@ -153,20 +134,24 @@ export default function Testimonials() {
                   animate={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, x: direction > 0 ? -60 : 60, scale: 0.95, filter: "blur(5px)" }}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className={`${card1.bgColor} rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 flex flex-col justify-between h-full min-h-[400px] sm:min-h-[460px] shadow-sm border border-black/[0.03]`}
+                  className={`group relative ${card1.bgColor} rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 flex flex-col justify-between h-full min-h-[400px] sm:min-h-[460px] shadow-sm border border-black/[0.03]`}
                 >
+                  <RemoveItemButton arrayPath="items" index={card1Index} />
                   {/* Top Row: Pill Badge + Avatar */}
                   <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8">
                     <span className="border border-neutral-400/50 rounded-full px-3.5 py-1 text-label font-medium text-neutral-700 font-body bg-white/40">
                       {card1.badge}
                     </span>
-                    <Image
-                      src={card1.avatar}
-                      alt={card1.name}
-                      width={48}
-                      height={48}
-                      className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border-2 border-white"
-                    />
+                    <EditableImage path={`items[${card1Index}].avatar`} fallback={card1.avatar} wrapperClassName="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 rounded-full overflow-hidden">
+                      {(src) => (
+                        <Image
+                          src={src}
+                          alt={card1.name}
+                          fill
+                          className="object-cover shadow-sm border-2 border-white"
+                        />
+                      )}
+                    </EditableImage>
                   </div>
 
                   {/* Middle Row: Quote Number & Text */}
@@ -174,19 +159,13 @@ export default function Testimonials() {
                     <span className="font-heading text-2xl sm:text-3xl text-[#b87d6e] font-light mb-3 sm:mb-4 block">
                       66
                     </span>
-                    <p className="text-body text-neutral-800 font-normal">
-                      {card1.quote}
-                    </p>
+                    <EditableText as="p" path={`items[${card1Index}].quote`} fallback={card1.quote} multiline className="text-body text-neutral-800 font-normal" />
                   </div>
 
                   {/* Bottom Row: Author Details */}
                   <div className="pt-6 sm:pt-8 border-t border-black/[0.06] mt-auto">
-                    <h4 className="font-body font-semibold text-body text-neutral-900">
-                      {card1.name}
-                    </h4>
-                    <p className="text-caption text-neutral-500 font-medium mt-0.5">
-                      {card1.role}
-                    </p>
+                    <EditableText as="h4" path={`items[${card1Index}].name`} fallback={card1.name} className="font-body font-semibold text-body text-neutral-900 block" />
+                    <EditableText as="p" path={`items[${card1Index}].role`} fallback={card1.role} className="text-caption text-neutral-500 font-medium mt-0.5" />
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -201,20 +180,24 @@ export default function Testimonials() {
                   animate={{ opacity: 1, x: 0, scale: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, x: direction > 0 ? -60 : 60, scale: 0.95, filter: "blur(5px)" }}
                   transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  className={`hidden sm:flex ${card2.bgColor} rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 flex-col justify-between h-full min-h-[400px] sm:min-h-[460px] shadow-sm border border-black/[0.03]`}
+                  className={`hidden sm:flex group relative ${card2.bgColor} rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 lg:p-10 flex-col justify-between h-full min-h-[400px] sm:min-h-[460px] shadow-sm border border-black/[0.03]`}
                 >
+                  <RemoveItemButton arrayPath="items" index={card2Index} />
                   {/* Top Row: Pill Badge + Avatar */}
                   <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8">
                     <span className="border border-neutral-400/50 rounded-full px-3.5 py-1 text-label font-medium text-neutral-700 font-body bg-white/40">
                       {card2.badge}
                     </span>
-                    <Image
-                      src={card2.avatar}
-                      alt={card2.name}
-                      width={48}
-                      height={48}
-                      className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover shadow-sm border-2 border-white"
-                    />
+                    <EditableImage path={`items[${card2Index}].avatar`} fallback={card2.avatar} wrapperClassName="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 rounded-full overflow-hidden">
+                      {(src) => (
+                        <Image
+                          src={src}
+                          alt={card2.name}
+                          fill
+                          className="object-cover shadow-sm border-2 border-white"
+                        />
+                      )}
+                    </EditableImage>
                   </div>
 
                   {/* Middle Row: Quote Number & Text */}
@@ -222,23 +205,24 @@ export default function Testimonials() {
                     <span className="font-heading text-2xl sm:text-3xl text-[#b87d6e] font-light mb-3 sm:mb-4 block">
                       66
                     </span>
-                    <p className="text-body text-neutral-800 font-normal">
-                      {card2.quote}
-                    </p>
+                    <EditableText as="p" path={`items[${card2Index}].quote`} fallback={card2.quote} multiline className="text-body text-neutral-800 font-normal" />
                   </div>
 
                   {/* Bottom Row: Author Details */}
                   <div className="pt-6 sm:pt-8 border-t border-black/[0.06] mt-auto">
-                    <h4 className="font-body font-semibold text-body text-neutral-900">
-                      {card2.name}
-                    </h4>
-                    <p className="text-caption text-neutral-500 font-medium mt-0.5">
-                      {card2.role}
-                    </p>
+                    <EditableText as="h4" path={`items[${card2Index}].name`} fallback={card2.name} className="font-body font-semibold text-body text-neutral-900 block" />
+                    <EditableText as="p" path={`items[${card2Index}].role`} fallback={card2.role} className="text-caption text-neutral-500 font-medium mt-0.5" />
                   </div>
                 </motion.div>
               </AnimatePresence>
 
+              {ctx && (
+                <AddItemButton
+                  arrayPath="items"
+                  newItem={{ name: "New Person", role: "Role / Title", quote: "Add a testimonial quote…", avatar: "/about-1.jpg" }}
+                  className="hidden sm:flex min-h-[400px] sm:min-h-[460px] items-center justify-center rounded-[24px] sm:rounded-[32px] border-2 border-dashed border-[#032E97]/20 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-white/40 hover:text-white/70"
+                />
+              )}
             </div>
           </motion.div>
 

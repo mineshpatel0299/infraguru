@@ -2,47 +2,25 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+import { WHY_CHOOSE_US_DEFAULT_CONTENT, type WhyChooseUsContent } from '@/lib/pageSections';
+import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
+import EditableText from './pagebuilder/EditableText';
+import RemoveItemButton from './pagebuilder/RemoveItemButton';
+import AddItemButton from './pagebuilder/AddItemButton';
 
-type CardItem = {
-  number: string;
-  title: string;
-  description: string;
-};
+export default function WhyChooseUs({
+  content = WHY_CHOOSE_US_DEFAULT_CONTENT,
+}: {
+  content?: WhyChooseUsContent;
+}) {
+  const ctx = useSectionEdit();
+  const live = (ctx?.content as WhyChooseUsContent | undefined) ?? content;
+  const CARDS = live.cards.map((card, i) => ({
+    number: String(i + 1).padStart(2, "0"),
+    title: card.title,
+    description: card.description,
+  }));
 
-const CARDS: CardItem[] = [
-  {
-    number: "01",
-    title: "SMOOTH & STRESS-FREE PROCESS",
-    description:
-      "Infra Guru is a professional real estate consulting company that helps clients find the right home and property investment with a seamless and stress-free process.",
-  },
-  {
-    number: "02",
-    title: "TRUSTED GUIDANCE & SUPPORT",
-    description:
-      "We focus on delivering trusted guidance and complete transaction support throughout your entire real estate journey.",
-  },
-  {
-    number: "03",
-    title: "10+ YEARS OF EXPERIENCE",
-    description:
-      "With more than a decade in the real estate industry, Infra Guru has been operating as a trusted brand in Gurgaon, Haryana since 2021.",
-  },
-  {
-    number: "04",
-    title: "WIDE RANGE OF PROPERTIES",
-    description:
-      "We handle a comprehensive variety of property categories, specializing in residential properties, commercial properties, and farmland.",
-  },
-  {
-    number: "05",
-    title: "RENTALS & LAND DEVELOPMENT",
-    description:
-      "Our expertise extends across the market, covering commercial rental properties, residential rentals, as well as land and development projects.",
-  },
-];
-
-export default function WhyChooseUs() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -108,9 +86,12 @@ export default function WhyChooseUs() {
               className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
             >
               <div className="h-[2px] w-8 bg-gold-gradient" />
-              <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
-                WHY CHOOSE US
-              </span>
+              <EditableText
+                as="span"
+                path="eyebrow"
+                fallback={live.eyebrow}
+                className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide"
+              />
               <div className="h-[2px] w-8 bg-gold-gradient" />
             </motion.div>
 
@@ -119,8 +100,9 @@ export default function WhyChooseUs() {
               transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
               className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
             >
-              WHERE <span className="font-bold text-gold-gradient">EXCELLENCE</span><br />
-              IS STANDARD.
+              <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
+              <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" /><br />
+              <EditableText as="span" path="headingSuffix" fallback={live.headingSuffix} />
             </motion.h2>
           </div>
 
@@ -133,7 +115,7 @@ export default function WhyChooseUs() {
             >
               {CARDS.map((card, idx) => (
                 <motion.div
-                  key={card.number}
+                  key={idx}
                   animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
                   transition={{
                     duration: 0.8,
@@ -144,6 +126,7 @@ export default function WhyChooseUs() {
                 >
                   {/* Premium internal glow effect on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 transition-all duration-500 rounded-[inherit]" />
+                  <RemoveItemButton arrayPath="cards" index={idx} />
 
                   {/* Top Left Card Number */}
                   <div className="flex items-start justify-between relative z-10">
@@ -155,15 +138,27 @@ export default function WhyChooseUs() {
 
                   {/* Middle / Bottom Content Block */}
                   <div className="mt-10 sm:mt-12 lg:mt-16 relative z-10">
-                    <h3 className="font-body text-h4 font-medium tracking-tight text-white uppercase mb-3 sm:mb-4 leading-snug transition-all duration-500 group-hover:text-gold-gradient">
-                      {card.title}
-                    </h3>
-                    <p className="text-body text-white/70 font-light leading-relaxed">
-                      {card.description}
-                    </p>
+                    <EditableText
+                      as="h3"
+                      path={`cards[${idx}].title`}
+                      fallback={card.title}
+                      className="font-body text-h4 font-medium tracking-tight text-white uppercase mb-3 sm:mb-4 leading-snug transition-all duration-500 group-hover:text-gold-gradient block"
+                    />
+                    <EditableText
+                      as="p"
+                      path={`cards[${idx}].description`}
+                      fallback={card.description}
+                      multiline
+                      className="text-body text-white/70 font-light leading-relaxed"
+                    />
                   </div>
                 </motion.div>
               ))}
+              {ctx && (
+                <div className="flex w-[240px] shrink-0 items-center justify-center">
+                  <AddItemButton arrayPath="cards" newItem={{ title: "NEW CARD", description: "Describe this card…" }} />
+                </div>
+              )}
             </motion.div>
           </div>
         </div>

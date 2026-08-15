@@ -129,7 +129,7 @@ export default function CareersHero() {
         >
           <a
             href="#careers-openings"
-            className="inline-flex items-center gap-3 rounded-xl bg-white px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest text-black shadow-[0_12px_30px_rgba(255,255,255,0.15)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-100"
+            className="inline-flex items-center gap-3 rounded-xl bg-white px-8 py-3.5 text-[12px] font-bold uppercase tracking-widest text-black shadow-[0_12px_30px_rgba(255,255,255,0.15)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-100"
           >
             View Open Roles
             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
@@ -137,7 +137,7 @@ export default function CareersHero() {
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-3 rounded-xl border border-white/30 bg-transparent px-8 py-3.5 text-[10px] font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-white hover:text-black"
+            className="inline-flex items-center gap-3 rounded-xl border border-white/30 bg-transparent px-8 py-3.5 text-[12px] font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-white hover:text-black"
           >
             Send Your Resume
           </button>

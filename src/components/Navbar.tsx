@@ -39,8 +39,16 @@ const FALLBACK_LOCATION_GROUPS: NavLocationGroup[] = [
   },
 ];
 
-export default function Navbar() {
+type NavbarProps = {
+  /** Forces the solid/blurred bar look from the start — for pages without a
+   * full-bleed dark hero behind the fixed header, where the default
+   * transparent-until-scrolled state would leave white nav text unreadable. */
+  solid?: boolean;
+};
+
+export default function Navbar({ solid = false }: NavbarProps = {}) {
   const [scrolled, setScrolled] = useState(false);
+  const isSolid = solid || scrolled;
   const [menuOpen, setMenuOpen] = useState(false);
   const [propertiesOpen, setPropertiesOpen] = useState(false);
   const [mobilePropertiesOpen, setMobilePropertiesOpen] = useState(false);
@@ -94,12 +102,12 @@ export default function Navbar() {
           width: scrolled ? '94%' : '100%',
           maxWidth: scrolled ? 1180 : 2400,
           borderRadius: scrolled ? 999 : 0,
-          backgroundColor: scrolled ? 'rgba(11,19,32,0.82)' : 'rgba(11,19,32,0)',
-          borderColor: scrolled ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0)',
-          boxShadow: scrolled ? '0 12px 34px rgba(0,0,0,0.32)' : '0 0px 0px rgba(0,0,0,0)',
+          backgroundColor: isSolid ? 'rgba(11,19,32,0.82)' : 'rgba(11,19,32,0)',
+          borderColor: isSolid ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0)',
+          boxShadow: isSolid ? '0 12px 34px rgba(0,0,0,0.32)' : '0 0px 0px rgba(0,0,0,0)',
         }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className={`w-full border transition-[backdrop-filter] duration-700 ${scrolled ? 'backdrop-blur-xl' : 'backdrop-blur-0'}`}
+        className={`w-full border transition-[backdrop-filter] duration-700 ${isSolid ? 'backdrop-blur-xl' : 'backdrop-blur-0'}`}
       >
         <div className="container mx-auto px-5 sm:px-8 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-1 sm:py-3 lg:py-4">
           {/* Left: Logo */}
@@ -204,7 +212,7 @@ export default function Navbar() {
           <div className="flex justify-end items-center">
             <Link
               href="/contact"
-              className={`hidden min-[901px]:inline-flex items-center gap-3 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${scrolled
+              className={`hidden min-[901px]:inline-flex items-center gap-3 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${isSolid
                 ? 'rounded-full border border-transparent bg-gold-gradient text-primary-dark hover:brightness-110'
                 : 'rounded-[4px] border border-white/30 bg-transparent text-white hover:bg-white hover:text-black'
                 }`}

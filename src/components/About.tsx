@@ -3,8 +3,16 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { ABOUT_DEFAULT_CONTENT, type AboutContent } from "@/lib/pageSections";
+import { useSectionEdit } from "./pagebuilder/SectionEditBoundary";
+import EditableText from "./pagebuilder/EditableText";
+import EditableImage from "./pagebuilder/EditableImage";
+import RemoveItemButton from "./pagebuilder/RemoveItemButton";
+import AddItemButton from "./pagebuilder/AddItemButton";
 
-export default function About() {
+export default function About({ content = ABOUT_DEFAULT_CONTENT }: { content?: AboutContent }) {
+  const ctx = useSectionEdit();
+  const live = (ctx?.content as AboutContent | undefined) ?? content;
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -33,39 +41,35 @@ export default function About() {
           >
             <div className="flex items-center gap-4">
               <div className="h-[2px] w-12 bg-gold-gradient" />
-              <span className="font-body text-label uppercase tracking-widest text-gold-gradient font-semibold">
-                About InfraGuru
-              </span>
+              <EditableText
+                as="span"
+                path="eyebrow"
+                fallback={live.eyebrow}
+                className="font-body text-label uppercase tracking-widest text-gold-gradient font-semibold"
+              />
             </div>
 
             <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight">
-              Redefining Real Estate{" "}
-              <span className="font-semibold text-gold-gradient">
-                Excellence.
-              </span>
+              <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
+              <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-semibold text-gold-gradient" />
             </h2>
 
             <div className="flex flex-col gap-4 text-neutral-300 text-base sm:text-lg font-light leading-relaxed mt-4">
-              <p>
-                At InfraGuru, we don't just facilitate transactions; we
-                architect futures. With decades of collective experience, our
-                team navigates the complexities of the real estate market with
-                unmatched precision and deep local insight.
-              </p>
-              <p>
-                Whether you are acquiring a flagship commercial asset, seeking
-                the perfect residential sanctuary, or structuring a joint
-                development, we provide the strategic clarity you need to move
-                forward with absolute confidence.
-              </p>
+              {live.paragraphs.map((paragraph, i) => (
+                <div key={i} className="group relative">
+                  <RemoveItemButton arrayPath="paragraphs" index={i} />
+                  <EditableText as="p" path={`paragraphs[${i}]`} fallback={paragraph} multiline />
+                </div>
+              ))}
+              {ctx && <AddItemButton arrayPath="paragraphs" newItem="New paragraph…" label="Add paragraph" />}
             </div>
 
             <div className="mt-8">
               <a
-                href="#contact"
+                href={content.ctaHref}
                 className="inline-flex items-center gap-3 border-b border-[#d4af37] pb-1 text-white hover:text-[#d4af37] transition-colors uppercase tracking-wide font-medium text-sm group"
               >
-                <span>Discover Our Legacy</span>
+                <EditableText as="span" path="ctaLabel" fallback={live.ctaLabel} />
                 <span className="transform group-hover:translate-x-1 transition-transform">
                   →
                 </span>
@@ -85,13 +89,17 @@ export default function About() {
               transition={{ duration: 1, ease: "easeOut" }}
               className="absolute top-0 right-10 sm:right-0 w-[75%] h-[75%] rounded-2xl overflow-hidden shadow-2xl"
             >
-              <Image
-                src="/about-1.jpg"
-                alt="InfraGuru Real Estate"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 80vw, 40vw"
-              />
+              <EditableImage path="image1" fallback={live.image1} wrapperClassName="relative h-full w-full">
+                {(src) => (
+                  <Image
+                    src={src}
+                    alt="InfraGuru Real Estate"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 80vw, 40vw"
+                  />
+                )}
+              </EditableImage>
               <div className="absolute inset-0 bg-primary-dark/20 mix-blend-multiply" />
             </motion.div>
 
@@ -105,13 +113,17 @@ export default function About() {
               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
               className="absolute bottom-0 left-0 w-[60%] h-[55%] rounded-2xl overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10"
             >
-              <Image
-                src="/about-2.jpg"
-                alt="InfraGuru Architecture"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 60vw, 30vw"
-              />
+              <EditableImage path="image2" fallback={live.image2} wrapperClassName="relative h-full w-full">
+                {(src) => (
+                  <Image
+                    src={src}
+                    alt="InfraGuru Architecture"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 60vw, 30vw"
+                  />
+                )}
+              </EditableImage>
             </motion.div>
           </div>
         </div>

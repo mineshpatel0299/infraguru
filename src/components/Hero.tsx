@@ -3,10 +3,11 @@
 import { useEffect, useRef } from 'react';
 import { motion, useScroll, useSpring, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
-
-const HEADLINE_LINE_1 = "LIVE THE ART";
-const HEADLINE_LINE_2 = "OF LUXURY.";
-
+import { HERO_DEFAULT_CONTENT, type HeroContent } from '@/lib/pageSections';
+import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
+import EditableText from './pagebuilder/EditableText';
+import RemoveItemButton from './pagebuilder/RemoveItemButton';
+import AddItemButton from './pagebuilder/AddItemButton';
 
 const containerVariant: Variants = {
   hidden: { opacity: 0 },
@@ -53,7 +54,9 @@ function SlideUpWordReveal({
   );
 }
 
-export default function Hero() {
+export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: HeroContent }) {
+  const ctx = useSectionEdit();
+  const live = (ctx?.content as HeroContent | undefined) ?? content;
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -149,16 +152,34 @@ export default function Hero() {
         <div className="container relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center w-full pb-36 sm:pb-0">
           <motion.div className="flex flex-col items-start text-left w-full max-w-4xl">
             <h1 className="mb-4 sm:mb-6 font-heading font-light uppercase text-[#132731] flex flex-col items-start">
-              <SlideUpWordReveal 
-                text="LIVE THE ART OF" 
-                delay={1.2} 
-                className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 flex-nowrap whitespace-nowrap text-[#132731]/80" 
-              />
-              <SlideUpWordReveal
-                text="LUXURY."
-                delay={1.45}
-                className="text-[clamp(3.5rem,10vw,7rem)] leading-[0.85] tracking-[-0.02em] block justify-start flex-nowrap whitespace-nowrap text-[#132731] drop-shadow-sm"
-              />
+              {ctx ? (
+                <EditableText
+                  as="span"
+                  path="eyebrow"
+                  fallback={live.eyebrow}
+                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 text-[#132731]/80"
+                />
+              ) : (
+                <SlideUpWordReveal
+                  text={content.eyebrow}
+                  delay={1.2}
+                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 flex-nowrap whitespace-nowrap text-[#132731]/80"
+                />
+              )}
+              {ctx ? (
+                <EditableText
+                  as="span"
+                  path="headline"
+                  fallback={live.headline}
+                  className="text-[clamp(3.5rem,10vw,7rem)] leading-[0.85] tracking-[-0.02em] block justify-start text-[#132731] drop-shadow-sm"
+                />
+              ) : (
+                <SlideUpWordReveal
+                  text={content.headline}
+                  delay={1.45}
+                  className="text-[clamp(3.5rem,10vw,7rem)] leading-[0.85] tracking-[-0.02em] block justify-start flex-nowrap whitespace-nowrap text-[#132731] drop-shadow-sm"
+                />
+              )}
             </h1>
             
             <motion.div 
@@ -168,10 +189,13 @@ export default function Hero() {
                transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
             >
                <div className="w-16 sm:w-24 h-[2px] bg-gold-gradient"></div>
-               <p className="text-sm sm:text-base lg:text-lg text-white sm:text-[#132731] leading-relaxed font-body font-medium max-w-md drop-shadow-md sm:drop-shadow-none">
-                 Premium residences crafted for those<br className="hidden sm:block"/>
-                 who value quality, comfort, and timeless living.
-               </p>
+               <EditableText
+                 as="p"
+                 path="description"
+                 fallback={live.description}
+                 multiline
+                 className="text-sm sm:text-base lg:text-lg text-white sm:text-[#132731] leading-relaxed font-body font-medium max-w-md drop-shadow-md sm:drop-shadow-none"
+               />
             </motion.div>
 
             <motion.div
@@ -180,8 +204,8 @@ export default function Hero() {
                transition={{ duration: 0.8, delay: 1.9, ease: [0.16, 1, 0.3, 1] }}
                className="mt-6 sm:mt-12"
             >
-               <a href="/projects" className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-[#132731] px-5 sm:px-9 py-3 sm:py-4 text-[10px] sm:text-xs font-bold text-white uppercase tracking-widest rounded-full hover:bg-gold-gradient hover:text-[#132731] transition-all duration-300 border border-transparent shadow-[0_8px_24px_rgba(0,0,0,0.15)] group">
-                 EXPLORE PROJECTS
+               <a href={content.ctaHref} className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-[#132731] px-5 sm:px-9 py-3 sm:py-4 text-[10px] sm:text-xs font-bold text-white uppercase tracking-widest rounded-full hover:bg-gold-gradient hover:text-[#132731] transition-all duration-300 border border-transparent shadow-[0_8px_24px_rgba(0,0,0,0.15)] group">
+                 <EditableText as="span" path="ctaLabel" fallback={live.ctaLabel} />
                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7m0 0H8m9 0v9" /></svg>
                </a>
             </motion.div>
@@ -197,32 +221,26 @@ export default function Hero() {
         >
           <div className="container mx-auto px-2 sm:px-8 pb-4 sm:pb-8">
             <div className="grid grid-cols-4 gap-0 divide-x divide-white/15">
-
-              {/* Stat 1 */}
-              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
-                <span className="text-xl sm:text-4xl font-light text-white leading-none">25<span className="text-gold-gradient font-medium">+</span></span>
-                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">YEARS OF<br className="block sm:hidden" /> EXCELLENCE</span>
-              </div>
-
-              {/* Stat 2 */}
-              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
-                <span className="text-xl sm:text-4xl font-light text-white leading-none">50<span className="text-gold-gradient font-medium">+</span></span>
-                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">PREMIUM<br className="block sm:hidden" /> PROJECTS</span>
-              </div>
-
-              {/* Stat 3 */}
-              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
-                <span className="text-xl sm:text-4xl font-light text-white leading-none">15K<span className="text-gold-gradient font-medium">+</span></span>
-                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">HAPPY<br className="block sm:hidden" /> FAMILIES</span>
-              </div>
-
-              {/* Stat 4 */}
-              <div className="flex flex-col items-center justify-center text-center px-1 sm:px-2">
-                <span className="text-xl sm:text-4xl font-light text-white leading-none">10<span className="text-gold-gradient font-medium">+</span></span>
-                <span className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2">CITIES<br className="block sm:hidden" /> PRESENT</span>
-              </div>
-
+              {live.stats.map((stat, i) => (
+                <div key={i} className="group relative flex flex-col items-center justify-center text-center px-1 sm:px-2">
+                  <RemoveItemButton arrayPath="stats" index={i} />
+                  <EditableText as="span" path={`stats[${i}].value`} fallback={stat.value} className="text-xl sm:text-4xl font-light text-white leading-none" />
+                  <EditableText
+                    as="span"
+                    path={`stats[${i}].label`}
+                    fallback={stat.label}
+                    className="text-[7px] sm:text-[10px] md:text-xs font-semibold tracking-wider text-white/60 uppercase mt-1 sm:mt-2"
+                  />
+                </div>
+              ))}
             </div>
+            {ctx && (
+              <AddItemButton
+                arrayPath="stats"
+                newItem={{ value: "0+", label: "NEW STAT" }}
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-white/25 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white/50 transition-colors hover:border-white/50 hover:text-white/80"
+              />
+            )}
           </div>
         </motion.div>
 
