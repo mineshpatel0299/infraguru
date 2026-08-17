@@ -70,8 +70,9 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
   // moves fluidly instead of in the raw, uneven steps the scroll event gives us.
   const smoothScrollProgress = useSpring(scrollYProgress, {
     stiffness: 300,
-    damping: 40,
-    mass: 0.5,
+    damping: 30,
+    mass: 0.4,
+    restDelta: 0.0005,
   });
 
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
           <div className="absolute inset-0 z-0 overflow-hidden">
             <video
               ref={videoRef}
-              src="/ffinal.mp4"
+              src="/danube.mp4"
               poster=""
               muted
               playsInline
@@ -139,6 +140,9 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
 
         {/* Color gradient overlay from bottom to top */}
         <div className="absolute bottom-0 left-0 right-0 h-[50%] z-1 bg-gradient-to-t from-[#132731] via-[#132731]/60 to-transparent pointer-events-none" />
+
+        {/* Top scrim — guarantees navbar legibility against bright video frames */}
+        <div className="absolute inset-x-0 top-0 h-40 sm:h-64 z-1 bg-gradient-to-b from-black/60 via-black/15 to-transparent pointer-events-none" />
 
         {/* Curtain reveal */}
         <motion.div

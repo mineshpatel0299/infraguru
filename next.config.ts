@@ -11,6 +11,13 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "infraguru.in" },
     ],
   },
+  experimental: {
+    serverActions: {
+      // Default is 1MB — the gallery's video upload action needs headroom
+      // for real video files (uploaded straight through to Cloudinary).
+      bodySizeLimit: "100mb",
+    },
+  },
 };
 
 export default nextConfig;

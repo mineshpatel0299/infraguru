@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Pool, type QueryResult } from "pg";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -17,20 +17,35 @@ function toPoolConfig(connectionString: string) {
   return { connectionString: url.toString(), ssl: { rejectUnauthorized: true } };
 }
 
-export function getPool(): Pool {
-  if (!global.__infraguruPool) {
-    const connectionString = process.env.DATABASE_URL;
-    if (!connectionString) {
-      throw new Error("DATABASE_URL is not set");
+let warnedMissingUrl = false;
+
+/** Returns null (instead of throwing) when DATABASE_URL isn't set yet, so
+ * the site stays browsable — with empty/default CMS content — before the
+ * database is configured. */
+export function getPool(): Pool | null {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    if (!warnedMissingUrl) {
+      console.warn("[db] DATABASE_URL is not set — pages will render with empty/default content until it's configured.");
+      warnedMissingUrl = true;
     }
+    return null;
+  }
+  if (!global.__infraguruPool) {
     global.__infraguruPool = new Pool({ ...toPoolConfig(connectionString), max: 5 });
   }
   return global.__infraguruPool;
 }
 
 export const db = {
-  query: <T extends Record<string, unknown> = Record<string, unknown>>(
+  query: async <T extends Record<string, unknown> = Record<string, unknown>>(
     text: string,
     params?: unknown[]
-  ) => getPool().query<T>(text, params),
+  ): Promise<QueryResult<T>> => {
+    const pool = getPool();
+    if (!pool) {
+      return { rows: [], rowCount: 0 } as unknown as QueryResult<T>;
+    }
+    return pool.query<T>(text, params);
+  },
 };

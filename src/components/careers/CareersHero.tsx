@@ -2,7 +2,6 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { CareerApplyModal } from "./CareerApplyModal";
 
@@ -141,19 +140,6 @@ export default function CareersHero() {
           >
             Send Your Resume
           </button>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 flex items-center gap-2 text-caption uppercase tracking-[0.25em] text-white/50 sm:mt-10"
-        >
-          <Link href="/" className="transition-colors hover:text-white">
-            Home
-          </Link>
-          <span className="text-gold-gradient">/</span>
-          <span className="text-white/80">Careers</span>
         </motion.div>
       </motion.div>
 

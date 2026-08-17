@@ -2,7 +2,6 @@
 
 import React, { useId, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
 const FADE_UP = (delay = 0) => ({
@@ -38,13 +37,6 @@ export default function ContactPageClient() {
           {/* Decorative background circle */}
           <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-secondary/5 blur-3xl pointer-events-none" />
           <div className="absolute top-20 right-0 w-[300px] h-[300px] rounded-full bg-white/3 blur-3xl pointer-events-none" />
-
-          {/* Breadcrumb */}
-          <motion.div {...FADE_UP(0.1)} className="mb-6 flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-white/40">
-            <Link href="/" className="transition-colors hover:text-white">Home</Link>
-            <span className="text-secondary">/</span>
-            <span className="text-white/70">Contact</span>
-          </motion.div>
 
           {/* Gold eyebrow */}
           <motion.div {...FADE_UP(0.2)} className="flex items-center gap-3 mb-8">

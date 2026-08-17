@@ -2,7 +2,6 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { ABOUT_HERO_DEFAULT_CONTENT, type AboutHeroContent } from "@/lib/pageSections";
 import { useSectionEdit } from "../pagebuilder/SectionEditBoundary";
@@ -142,19 +141,6 @@ export default function AboutHero({ content = ABOUT_HERO_DEFAULT_CONTENT }: { co
           className="mt-6 max-w-xl sm:mt-8"
         >
           <EditableText as="p" path="description" fallback={live.description} multiline className="text-body text-white/75" />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-8 flex items-center gap-2 text-caption uppercase tracking-[0.25em] text-white/50 sm:mt-10"
-        >
-          <Link href="/" className="transition-colors hover:text-white">
-            Home
-          </Link>
-          <span className="text-gold-gradient">/</span>
-          <span className="text-white/80">About</span>
         </motion.div>
       </motion.div>
     </section>

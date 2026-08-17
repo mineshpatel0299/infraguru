@@ -26,6 +26,7 @@ const LINK_COLUMNS = [
     links: [
       { label: 'About Us', href: '/about' },
       { label: 'Projects', href: '/projects' },
+      { label: 'Gallery', href: '/gallery' },
       { label: 'Careers', href: '/careers' },
       { label: 'Blog', href: '/blog' },
       { label: 'Contact', href: '/contact' },

@@ -478,6 +478,56 @@ export const ABOUT_CTA_DEFAULT_CONTENT: AboutCTAContent = {
   ctaHref: "#contact",
 };
 
+export type GalleryHeroContent = {
+  eyebrow: string;
+  headline: string;
+  description: string;
+};
+
+export const GALLERY_HERO_DEFAULT_CONTENT: GalleryHeroContent = {
+  eyebrow: "The Portfolio",
+  headline: "Gallery",
+  description:
+    "A curated visual journey through the addresses, interiors, and skylines that define InfraGuru.",
+};
+
+export type GalleryImage = { src: string; alt: string };
+
+export type GalleryContent = {
+  images: GalleryImage[];
+};
+
+export const GALLERY_DEFAULT_CONTENT: GalleryContent = {
+  images: [
+    { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80&auto=format&fit=crop", alt: "Contemporary residence with infinity pool at dusk" },
+    { src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=80&auto=format&fit=crop", alt: "Sunlit living room with panoramic glazing" },
+    { src: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80&auto=format&fit=crop", alt: "Poolside terrace of a private villa" },
+    { src: "https://images.unsplash.com/photo-1615873968403-89e068629265?w=1600&q=80&auto=format&fit=crop", alt: "Chef's kitchen finished in natural stone" },
+    { src: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&q=80&auto=format&fit=crop", alt: "Sculptural facade of a signature address" },
+    { src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80&auto=format&fit=crop", alt: "Minimalist living space with curated furnishings" },
+    { src: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&q=80&auto=format&fit=crop", alt: "Private estate framed by manicured landscaping" },
+    { src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&q=80&auto=format&fit=crop", alt: "Glass and steel commercial tower" },
+    { src: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1600&q=80&auto=format&fit=crop", alt: "Master suite with soft ambient lighting" },
+    { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1600&q=80&auto=format&fit=crop", alt: "Illuminated residence after sunset" },
+    { src: "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=1600&q=80&auto=format&fit=crop", alt: "Floor-to-ceiling glass pavilion" },
+    { src: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1600&q=80&auto=format&fit=crop", alt: "Tiered residential facade against a clear sky" },
+    { src: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1600&q=80&auto=format&fit=crop", alt: "Clean-lined exterior of a modern home" },
+    { src: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1600&q=80&auto=format&fit=crop", alt: "Architectural detail in natural light" },
+    { src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1600&q=80&auto=format&fit=crop", alt: "Landscaped entrance to a private residence" },
+    { src: "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?w=1600&q=80&auto=format&fit=crop", alt: "Twilight view of a poolside residence" },
+  ],
+};
+
+export type GalleryVideo = { src: string; poster?: string; title?: string };
+
+export type GalleryVideosContent = {
+  videos: GalleryVideo[];
+};
+
+export const GALLERY_VIDEOS_DEFAULT_CONTENT: GalleryVideosContent = {
+  videos: [],
+};
+
 // ── Page / section registry ──────────────────────────────────────────────
 
 export type SectionDef = {
@@ -524,6 +574,17 @@ export const PAGE_REGISTRY: PageDef[] = [
       { key: "timeline", label: "Timeline", pageSlug: "about" },
       { key: "founder", label: "Founder", pageSlug: "about" },
       { key: "cta", label: "Call To Action", pageSlug: "about" },
+      { key: "footer", label: "Footer (shown on all pages)", pageSlug: "global" },
+    ],
+  },
+  {
+    slug: "gallery",
+    label: "Gallery",
+    previewPath: "/gallery",
+    sections: [
+      { key: "hero", label: "Hero", pageSlug: "gallery" },
+      { key: "gallery", label: "Image Gallery", pageSlug: "gallery" },
+      { key: "videos", label: "Video Gallery", pageSlug: "gallery" },
       { key: "footer", label: "Footer (shown on all pages)", pageSlug: "global" },
     ],
   },

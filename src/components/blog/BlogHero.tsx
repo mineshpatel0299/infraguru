@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 
 const containerVariant: Variants = {
@@ -99,21 +98,6 @@ export default function BlogHero() {
             Market analysis, buying guides, and design perspective from the InfraGuru
             advisory desk — for readers who take real estate as seriously as we do.
           </motion.p>
-
-          {/* Gold divider + breadcrumb */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 flex items-center gap-4"
-          >
-            <div className="h-[1px] w-12 bg-gold-gradient opacity-60" />
-            <div className="flex items-center gap-2 text-caption uppercase tracking-[0.25em] text-white/40">
-              <Link href="/" className="transition-colors hover:text-white/80">Home</Link>
-              <span className="text-[#d4af37]">/</span>
-              <span className="text-white/70">Journal</span>
-            </div>
-          </motion.div>
         </div>
       </div>
 

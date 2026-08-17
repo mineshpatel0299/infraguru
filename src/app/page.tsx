@@ -82,7 +82,7 @@ export default async function Home({
       {wrap("stats", stats, <Stats content={stats} />)}
       {wrap("whyChooseUs", whyChooseUs, <WhyChooseUs content={whyChooseUs} />)}
       {wrap("exploreProperties", exploreProperties, <ExploreProperties content={exploreProperties} />)}
-      <FeaturedProjects projects={projects.slice(0, 5)} />
+      {projects.length > 0 && <FeaturedProjects projects={projects.slice(0, 5)} />}
       {wrap("services", services, <Services content={services} />)}
       {wrap("testimonials", testimonials, <Testimonials content={testimonials} />)}
       <DVSNetworkCTA />

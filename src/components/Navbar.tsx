@@ -15,6 +15,11 @@ const LINKS: NavLink[] = [
   // { href: '/projects', label: 'Projects' },
 ];
 
+// Rendered right after the Properties dropdown (both desktop and mobile),
+// not part of LINKS — Gallery needs to sit after Properties, not in the
+// plain alphabetical/registration order the LINKS array implies.
+const GALLERY_LINK: NavLink = { href: '/gallery', label: 'Gallery' };
+
 // Rendered until the real project-availability data loads — every location
 // starts as "Coming Soon" rather than guessing, so the dropdown never shows
 // a stale/incorrect link.
@@ -130,9 +135,12 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-md hover:bg-white/20'}`}
+                className={`group relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
               >
                 {link.label}
+                {!isSolid && (
+                  <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                )}
               </Link>
             ))}
 
@@ -146,7 +154,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 type="button"
                 onClick={() => setPropertiesOpen((v) => !v)}
                 aria-expanded={propertiesOpen}
-                className={`relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-md hover:bg-white/20'}`}
+                className={`group relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
               >
                 Properties
                 <svg
@@ -155,6 +163,9 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                 </svg>
+                {!isSolid && (
+                  <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                )}
               </button>
 
               <AnimatePresence>
@@ -201,10 +212,23 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
             </div>
 
             <Link
+              href={GALLERY_LINK.href}
+              className={`group relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
+            >
+              {GALLERY_LINK.label}
+              {!isSolid && (
+                <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
+              )}
+            </Link>
+
+            <Link
               href="/careers"
-              className={`relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-md hover:bg-white/20'}`}
+              className={`group relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
             >
               Careers
+              {!isSolid && (
+                <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
+              )}
             </Link>
           </div>
 
@@ -214,7 +238,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
               href="/contact"
               className={`hidden min-[901px]:inline-flex items-center gap-3 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${isSolid
                 ? 'rounded-full border border-transparent bg-gold-gradient text-primary-dark hover:brightness-110'
-                : 'rounded-[4px] border border-white/30 bg-transparent text-white hover:bg-white hover:text-black'
+                : 'rounded-[4px] border border-white/50 bg-black/10 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] backdrop-blur-sm hover:bg-white hover:text-black hover:border-white'
                 }`}
             >
               BOOK A CONSULTATION
@@ -315,6 +339,15 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                   )}
                 </AnimatePresence>
               </div>
+
+              <Link
+                href={GALLERY_LINK.href}
+                onClick={() => setMenuOpen(false)}
+                className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+              >
+                {GALLERY_LINK.label}
+                <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
+              </Link>
 
               <Link
                 href="/careers"
