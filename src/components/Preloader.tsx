@@ -5,35 +5,37 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 
 type Phase = 'loading' | 'revealing' | 'done';
-type LoaderType = 'video' | 'image';
+type LoaderType = 'splash' | 'lazy';
 
 export default function Preloader({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin') ?? false;
   
   const [phase, setPhase] = useState<Phase>(isAdmin ? 'done' : 'loading');
-  const [loaderType, setLoaderType] = useState<LoaderType>('video');
+  const [loaderType, setLoaderType] = useState<LoaderType>('splash');
   const isFirstMount = useRef(true);
 
   useEffect(() => {
     if (isAdmin) return;
 
-    let currentLoaderType: LoaderType = 'image';
-    let duration = 1500;
+    let currentLoaderType: LoaderType = 'lazy';
+    // lazyloader.mp4 runs ~5s — only the first second is ever shown here, so
+    // this timer (not onEnded) is what cuts it off.
+    let duration = 1000;
 
     if (isFirstMount.current) {
       isFirstMount.current = false;
       const lastLoad = sessionStorage.getItem('infraguru_preloader_time');
       const now = Date.now();
-      
+
       // If no last load or it was >20s ago, play the full video preloader
       if (!lastLoad || now - parseInt(lastLoad, 10) >= 20000) {
-        currentLoaderType = 'video';
-        // prefinal.mp4 runs ~7.4s — this is only a safety-net fallback in
-        // case onEnded never fires (e.g. autoplay blocked); it must exceed
+        currentLoaderType = 'splash';
+        // prefinal.mp4 runs ~4.4s (trimmed) — this is only a safety-net fallback
+        // in case onEnded never fires (e.g. autoplay blocked); it must exceed
         // the video's own length + its post-end pause, or it cuts the video
         // off mid-playback before onEnded gets a chance to run.
-        duration = 8200;
+        duration = 5200;
       }
       
       sessionStorage.setItem('infraguru_preloader_time', now.toString());
@@ -91,16 +93,16 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
 
       {phase !== 'done' && (
         <motion.div
-          className={`fixed inset-0 z-1000 flex items-center justify-center ${loaderType === 'video' ? 'bg-black' : 'bg-[#0B1320]'}`}
+          className="fixed inset-0 z-1000 flex items-center justify-center bg-black"
           initial={{ opacity: 1, scale: 1 }}
           animate={
             revealing
-              ? { opacity: 0, scale: loaderType === 'video' ? 1.35 : 1.15 }
+              ? { opacity: 0, scale: loaderType === 'splash' ? 1.35 : 1.15 }
               : { opacity: 1, scale: 1 }
           }
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
-          {loaderType === 'video' ? (
+          {loaderType === 'splash' ? (
             <video
               className="h-[85%] w-[85%] object-contain"
               src="/prefinal.mp4"
@@ -111,27 +113,13 @@ export default function Preloader({ children }: { children: React.ReactNode }) {
               onError={() => setPhase('revealing')}
             />
           ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative w-24 h-24 sm:w-32 sm:h-32"
-            >
-              <motion.img
-                src="/g.png"
-                alt="Loading"
-                className="w-full h-full object-contain brightness-0 invert"
-                animate={{ 
-                  opacity: [0.6, 1, 0.6],
-                  scale: [0.95, 1.05, 0.95]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            </motion.div>
+            <video
+              className="h-56 w-56 sm:h-72 sm:w-72 object-contain"
+              src="/lazyloader.mp4"
+              autoPlay
+              muted
+              playsInline
+            />
           )}
         </motion.div>
       )}

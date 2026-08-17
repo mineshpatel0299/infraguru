@@ -102,9 +102,9 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
           width: scrolled ? '94%' : '100%',
           maxWidth: scrolled ? 1180 : 2400,
           borderRadius: scrolled ? 999 : 0,
-          backgroundColor: isSolid ? 'rgba(11,19,32,0.82)' : 'rgba(11,19,32,0)',
-          borderColor: isSolid ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0)',
-          boxShadow: isSolid ? '0 12px 34px rgba(0,0,0,0.32)' : '0 0px 0px rgba(0,0,0,0)',
+          backgroundColor: isSolid ? 'rgba(255,255,255,0.92)' : 'rgba(11,19,32,0)',
+          borderColor: isSolid ? 'rgba(3,46,151,0.08)' : 'rgba(255,255,255,0)',
+          boxShadow: isSolid ? '0 20px 45px rgba(3,46,151,0.15)' : '0 0px 0px rgba(0,0,0,0)',
         }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={`w-full border transition-[backdrop-filter] duration-700 ${isSolid ? 'backdrop-blur-xl' : 'backdrop-blur-0'}`}
@@ -118,7 +118,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 alt="Infraguru"
                 width={280}
                 height={90}
-                className="object-contain transition-all duration-500 drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)] brightness-0 invert h-10 sm:h-[4.25rem] w-auto"
+                className="object-contain transition-all duration-500 h-10 sm:h-[4.25rem] w-auto"
                 priority
               />
             </Link>
@@ -130,7 +130,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+                className={`relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-md hover:bg-white/20'}`}
               >
                 {link.label}
               </Link>
@@ -146,7 +146,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 type="button"
                 onClick={() => setPropertiesOpen((v) => !v)}
                 aria-expanded={propertiesOpen}
-                className="relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+                className={`relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-md hover:bg-white/20'}`}
               >
                 Properties
                 <svg
@@ -202,7 +202,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
 
             <Link
               href="/careers"
-              className="relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg text-white drop-shadow-md hover:bg-white/20"
+              className={`relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-md hover:bg-white/20'}`}
             >
               Careers
             </Link>
@@ -226,9 +226,9 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Toggle menu"
             >
-              <span className={`block h-[1.5px] w-6 transition-all duration-300 origin-center bg-white ${menuOpen ? 'translate-y-[6.5px] rotate-45' : ''}`} />
-              <span className={`block h-[1.5px] w-6 transition-all duration-300 bg-white ${menuOpen ? 'opacity-0 scale-x-0' : ''}`} />
-              <span className={`block h-[1.5px] w-6 transition-all duration-300 origin-center bg-white ${menuOpen ? '-translate-y-[6.5px] -rotate-45' : ''}`} />
+              <span className={`block h-[1.5px] w-6 transition-all duration-300 origin-center ${isSolid ? 'bg-primary-dark' : 'bg-white'} ${menuOpen ? 'translate-y-[6.5px] rotate-45' : ''}`} />
+              <span className={`block h-[1.5px] w-6 transition-all duration-300 ${isSolid ? 'bg-primary-dark' : 'bg-white'} ${menuOpen ? 'opacity-0 scale-x-0' : ''}`} />
+              <span className={`block h-[1.5px] w-6 transition-all duration-300 origin-center ${isSolid ? 'bg-primary-dark' : 'bg-white'} ${menuOpen ? '-translate-y-[6.5px] -rotate-45' : ''}`} />
             </button>
           </div>
         </div>
