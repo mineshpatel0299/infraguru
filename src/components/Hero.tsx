@@ -87,25 +87,17 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
     };
     video.addEventListener('loadedmetadata', onLoadedMetadata);
 
-    const isMobile = window.matchMedia('(max-width: 640px)').matches;
-
-    if (isMobile) {
-      // On mobile, MP4 scrubbing is often laggy/broken due to hardware decoding limits.
-      // So we just play the video normally.
-      video.play().catch(() => {});
-    } else {
-      // On desktop, we scrub the video based on scroll position.
-      const tick = () => {
-        if (duration && video.readyState >= 2) {
-          const target = smoothScrollProgress.get() * duration;
-          if (Math.abs(target - video.currentTime) > 1 / 60) {
-            video.currentTime = target;
-          }
+    // Scrub the video based on scroll position, on mobile and desktop alike.
+    const tick = () => {
+      if (duration && video.readyState >= 2) {
+        const target = smoothScrollProgress.get() * duration;
+        if (Math.abs(target - video.currentTime) > 1 / 60) {
+          video.currentTime = target;
         }
-        rafId = requestAnimationFrame(tick);
-      };
+      }
       rafId = requestAnimationFrame(tick);
-    }
+    };
+    rafId = requestAnimationFrame(tick);
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
@@ -114,7 +106,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
   }, [smoothScrollProgress]);
 
   return (
-    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[100svh] sm:h-[300vh]">
+    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[300vh]">
       <Navbar />
 
       <div
@@ -127,14 +119,16 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
           <div className="absolute inset-0 z-0 overflow-hidden">
             <video
               ref={videoRef}
-              src="/danube.mp4"
               poster=""
               muted
               playsInline
               loop
               preload="auto"
               className="h-full w-full object-cover scale-[1.15] sm:scale-[1.2]"
-            />
+            >
+              <source src="/mhero.mp4" media="(max-width: 639px)" />
+              <source src="/danube.mp4" />
+            </video>
           </div>
         </motion.div>
 
@@ -153,21 +147,21 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
         />
 
         {/* Main Content Area (Centers the text block vertically) */}
-        <div className="container relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center w-full pb-36 sm:pb-0">
-          <motion.div className="flex flex-col items-start text-left w-full max-w-4xl">
-            <h1 className="mb-4 sm:mb-6 font-heading font-light uppercase text-[#132731] flex flex-col items-start">
+        <div className="container relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-end sm:justify-center w-full pb-6 sm:pb-0">
+          <motion.div className="flex flex-col items-center text-center sm:items-start sm:text-left w-full max-w-4xl mx-auto sm:mx-0">
+            <h1 className="mb-4 sm:mb-6 font-heading font-light uppercase text-white sm:text-[#132731] flex flex-col items-center sm:items-start">
               {ctx ? (
                 <EditableText
                   as="span"
                   path="eyebrow"
                   fallback={live.eyebrow}
-                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 text-[#132731]/80"
+                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-center sm:justify-start pb-2 sm:pb-4 text-white/80 sm:text-[#132731]/80"
                 />
               ) : (
                 <SlideUpWordReveal
                   text={content.eyebrow}
                   delay={1.2}
-                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 text-[#132731]/80"
+                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-center sm:justify-start pb-2 sm:pb-4 text-white/80 sm:text-[#132731]/80"
                 />
               )}
               {ctx ? (
@@ -175,13 +169,13 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
                   as="span"
                   path="headline"
                   fallback={live.headline}
-                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-start text-[#132731] drop-shadow-sm"
+                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-center sm:justify-start text-white sm:text-[#132731] drop-shadow-md sm:drop-shadow-sm"
                 />
               ) : (
                 <SlideUpWordReveal
                   text={content.headline}
                   delay={1.45}
-                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-start text-[#132731] drop-shadow-sm"
+                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-center sm:justify-start text-white sm:text-[#132731] drop-shadow-md sm:drop-shadow-sm"
                 />
               )}
             </h1>
