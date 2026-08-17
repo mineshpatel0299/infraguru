@@ -129,7 +129,7 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
+          className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
         >
           OUR <span className="font-bold text-gold-gradient">PORTFOLIO</span>
         </motion.h2>
@@ -216,7 +216,7 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
                   animate="center"
                   exit="exit"
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] as const }}
-                  className="font-heading text-[clamp(1.25rem,2.4vw,1.9rem)] font-medium tracking-normal text-gold-gradient"
+                  className="font-heading text-[clamp(1.25rem,1.6vw,1.9rem)] font-medium tracking-normal text-gold-gradient"
                 >
                   {projects[activeIndex].title === "Signature Global De-luxe DXP" ? (
                     <>

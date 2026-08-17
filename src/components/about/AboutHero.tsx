@@ -116,7 +116,7 @@ export default function AboutHero({ content = ABOUT_HERO_DEFAULT_CONTENT }: { co
           <div className="h-[2px] w-8 bg-gold-gradient" />
         </motion.div>
 
-        <h1 className="max-w-4xl text-center text-[clamp(2rem,6vw,5rem)] font-heading font-light uppercase leading-[1.2] tracking-tight text-white">
+        <h1 className="max-w-4xl text-center text-[clamp(2rem,4.2vw,5rem)] font-heading font-light uppercase leading-[1.2] tracking-tight text-white">
           {ctx ? (
             <>
               <EditableText as="span" path="line1" fallback={live.line1} className="block" />

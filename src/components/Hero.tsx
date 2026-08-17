@@ -167,7 +167,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
                 <SlideUpWordReveal
                   text={content.eyebrow}
                   delay={1.2}
-                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 flex-nowrap whitespace-nowrap text-[#132731]/80"
+                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-start pb-2 sm:pb-4 text-[#132731]/80"
                 />
               )}
               {ctx ? (
@@ -175,13 +175,13 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
                   as="span"
                   path="headline"
                   fallback={live.headline}
-                  className="text-[clamp(3.5rem,10vw,7rem)] leading-[0.85] tracking-[-0.02em] block justify-start text-[#132731] drop-shadow-sm"
+                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-start text-[#132731] drop-shadow-sm"
                 />
               ) : (
                 <SlideUpWordReveal
                   text={content.headline}
                   delay={1.45}
-                  className="text-[clamp(3.5rem,10vw,7rem)] leading-[0.85] tracking-[-0.02em] block justify-start flex-nowrap whitespace-nowrap text-[#132731] drop-shadow-sm"
+                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-start text-[#132731] drop-shadow-sm"
                 />
               )}
             </h1>

@@ -31,7 +31,7 @@ export default function CareersCTA() {
 
         <motion.h2
           variants={fadeUp}
-          className="font-heading text-[clamp(1.75rem,3.4vw,3.25rem)] font-light leading-tight tracking-tight text-white"
+          className="font-heading text-[clamp(1.75rem,2.7vw,3.25rem)] font-light leading-tight tracking-tight text-white"
         >
           We&apos;re always looking for people who{" "}
           <span className="font-semibold text-gold-gradient">raise the bar.</span>

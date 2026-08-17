@@ -45,7 +45,7 @@ export default function ContactPageClient() {
           </motion.div>
 
           {/* Main heading */}
-          <motion.h1 {...FADE_UP(0.3)} className="font-heading font-light uppercase text-white leading-[1.1] tracking-tight text-[clamp(2.2rem,4vw,3.5rem)] mb-6">
+          <motion.h1 {...FADE_UP(0.3)} className="font-heading font-light uppercase text-white leading-[1.1] tracking-tight text-[clamp(2.2rem,2.9vw,3.5rem)] mb-6">
             Let&apos;s Start a<br />
             <span className="text-secondary font-semibold">Conversation.</span>
           </motion.h1>
@@ -159,7 +159,7 @@ export default function ContactPageClient() {
                   <div className="h-[1px] w-6 bg-secondary" />
                   <span className="text-[9px] font-bold tracking-[0.3em] uppercase text-secondary font-body">Send a Message</span>
                 </div>
-                <h2 className="font-heading font-light uppercase text-neutral-900 text-[clamp(1.5rem,2.5vw,2.2rem)] leading-tight tracking-tight">
+                <h2 className="font-heading font-light uppercase text-neutral-900 text-[clamp(1.5rem,1.85vw,2.2rem)] leading-tight tracking-tight">
                   Book a <span className="font-semibold text-primary-dark">Consultation</span>
                 </h2>
               </div>

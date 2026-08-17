@@ -44,7 +44,7 @@ export default function AboutPillars({ content = ABOUT_PILLARS_DEFAULT_CONTENT }
             />
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </div>
-          <h2 className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light leading-tight tracking-normal text-white">
+          <h2 className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light leading-tight tracking-normal text-white">
             <EditableText as="span" path="headingPlain1" fallback={live.headingPlain1} />{" "}
             <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />{" "}
             <EditableText as="span" path="headingPlain2" fallback={live.headingPlain2} />

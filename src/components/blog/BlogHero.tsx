@@ -83,7 +83,7 @@ export default function BlogHero() {
           </motion.div>
 
           {/* Headline */}
-          <h1 className="text-[clamp(1.8rem,3.5vw,3.5rem)] font-heading font-light uppercase leading-[1.15] tracking-tight text-white">
+          <h1 className="text-[clamp(1.8rem,2.9vw,3.5rem)] font-heading font-light uppercase leading-[1.15] tracking-tight text-white">
             <SlideUpWordReveal text="Perspectives On" />
             <SlideUpWordReveal text="Property." className="text-gold-gradient font-semibold" />
           </h1>

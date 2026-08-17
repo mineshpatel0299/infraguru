@@ -29,7 +29,7 @@ export default function CareersIntro() {
             </span>
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </div>
-          <h2 className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light leading-tight tracking-normal text-primary-dark">
+          <h2 className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light leading-tight tracking-normal text-primary-dark">
             Careers Built With The Same{" "}
             <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] via-[#c5a028] to-[#d4af37]">
               Precision

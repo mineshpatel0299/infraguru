@@ -106,7 +106,7 @@ export default function BlogPostContent({ post, related }: { post: BlogPost; rel
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-3xl font-body text-[clamp(1.75rem,4.5vw,3.5rem)] font-light leading-[1.1] tracking-tight text-white"
+              className="max-w-3xl font-body text-[clamp(1.75rem,2.9vw,3.5rem)] font-light leading-[1.1] tracking-tight text-white"
             >
               {post.title}
             </motion.h1>

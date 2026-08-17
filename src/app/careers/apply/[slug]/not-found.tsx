@@ -12,7 +12,7 @@ export default function NotFound() {
         className="mb-10 h-11 w-auto object-contain"
       />
       <span className="eyebrow justify-center">Role Not Found</span>
-      <h1 className="mb-5 max-w-lg text-[clamp(2rem,4vw,3rem)] text-primary-dark">
+      <h1 className="mb-5 max-w-lg text-[clamp(2rem,2.5vw,3rem)] text-primary-dark">
         This Position Isn&rsquo;t On Record
       </h1>
       <p className="mb-10 max-w-md text-[1.02rem] leading-[1.7] text-muted">

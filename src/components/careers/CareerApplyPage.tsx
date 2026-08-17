@@ -200,7 +200,7 @@ export default function CareerApplyPage({
                 {job.department} · InfraGuru
               </span>
             </div>
-            <h1 className="max-w-4xl font-heading text-[clamp(2.1rem,4vw,3.75rem)] font-light leading-[1.08] tracking-normal text-white">
+            <h1 className="max-w-4xl font-heading text-[clamp(2.1rem,3.1vw,3.75rem)] font-light leading-[1.08] tracking-normal text-white">
               {job.title}
             </h1>
 

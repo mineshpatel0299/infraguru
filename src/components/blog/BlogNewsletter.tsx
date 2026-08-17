@@ -37,7 +37,7 @@ export default function BlogNewsletter() {
 
         <motion.h2
           variants={fadeUp}
-          className="font-body text-[clamp(1.5rem,3.4vw,2.75rem)] font-light leading-tight tracking-tight text-white"
+          className="font-body text-[clamp(1.5rem,2.3vw,2.75rem)] font-light leading-tight tracking-tight text-white"
         >
           Market intelligence, <span className="font-semibold text-gold-gradient">delivered monthly.</span>
         </motion.h2>

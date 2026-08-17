@@ -104,7 +104,7 @@ export default function CareersHero() {
           <div className="h-[2px] w-8 bg-gold-gradient" />
         </motion.div>
 
-        <h1 className="max-w-4xl text-center text-[clamp(2rem,6vw,5rem)] font-heading font-light uppercase leading-[1.2] tracking-tight text-white">
+        <h1 className="max-w-4xl text-center text-[clamp(2rem,4.2vw,5rem)] font-heading font-light uppercase leading-[1.2] tracking-tight text-white">
           <SlideUpWordReveal text="Build The Skyline." />
           <SlideUpWordReveal text="Build Your" />
           <SlideUpWordReveal text="Career." className="text-gold-gradient font-semibold mt-2 block" />

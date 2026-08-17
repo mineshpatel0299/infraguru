@@ -144,13 +144,13 @@ export function DVSNetworkCTA() {
           >
             <h2
               className="font-heading text-white leading-[1.05] mb-3 tracking-normal"
-              style={{ fontSize: "clamp(28px, 3.2vw, 42px)", fontWeight: 600 }}
+              style={{ fontSize: "clamp(28px, 2.2vw, 42px)", fontWeight: 600 }}
             >
               InfraGuru
             </h2>
             <h3
               className="font-heading text-white/80 leading-[1.05] mb-10"
-              style={{ fontSize: "clamp(19px, 2vw, 26px)", fontWeight: 400 }}
+              style={{ fontSize: "clamp(19px, 1.35vw, 26px)", fontWeight: 400 }}
             >
               Real estate, made easier.
             </h3>

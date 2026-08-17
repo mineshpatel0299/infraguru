@@ -22,29 +22,34 @@
   --shadow-strong: 0 30px 80px rgba(3, 46, 151, 0.18);
 
   /* ── Type scale ── every size is a clamp(), so responsiveness is baked in
-     and no per-section sm:/md:/lg: overrides are needed. ── */
-  --text-h1: clamp(1.8rem, 4.2vw, 4.5rem);
+     and no per-section sm:/md:/lg: overrides are needed. The vw ratio on
+     each is tuned so the max isn't reached until ~1920px viewport width —
+     otherwise text sits pinned at max on ordinary laptop/desktop screens
+     and then scales up raw (with no vw compensation) at 125%+ browser
+     zoom, since zoom shrinks the effective CSS viewport but a clamp's
+     rem-based max doesn't shrink with it. ── */
+  --text-h1: clamp(1.8rem, 3.75vw, 4.5rem);
   --text-h1--line-height: 1.1;
   --text-h1--letter-spacing: -0.02em;
 
-  --text-h2: clamp(1.75rem, 4.2vw, 3.5rem);
+  --text-h2: clamp(1.75rem, 2.9vw, 3.5rem);
   --text-h2--line-height: 1.15;
   --text-h2--letter-spacing: -0.01em;
 
-  --text-h3: clamp(1.5rem, 3vw, 2.5rem);
+  --text-h3: clamp(1.5rem, 2.1vw, 2.5rem);
   --text-h3--line-height: 1.2;
   --text-h3--letter-spacing: -0.01em;
 
-  --text-h4: clamp(1rem, 1.4vw, 1.15rem);
+  --text-h4: clamp(1rem, 1vw, 1.15rem);
   --text-h4--line-height: 1.35;
 
-  --text-body: clamp(0.8rem, 1vw, 0.95rem);
+  --text-body: clamp(0.8rem, 0.8vw, 0.95rem);
   --text-body--line-height: 1.7;
 
-  --text-caption: clamp(0.7rem, 0.85vw, 0.8rem);
+  --text-caption: clamp(0.7rem, 0.7vw, 0.8rem);
   --text-caption--line-height: 1.5;
 
-  --text-label: clamp(0.68rem, 0.8vw, 0.78rem);
+  --text-label: clamp(0.68rem, 0.65vw, 0.78rem);
   --text-label--line-height: 1.4;
   --text-label--letter-spacing: 0.12em;
 }

@@ -36,7 +36,7 @@ export default function AboutCTA({ content = ABOUT_CTA_DEFAULT_CONTENT }: { cont
 
         <motion.h2
           variants={fadeUp}
-          className="font-body text-[clamp(1.75rem,3.4vw,3.25rem)] font-light leading-tight tracking-tight text-white sm:whitespace-nowrap"
+          className="font-body text-[clamp(1.75rem,2.7vw,3.25rem)] font-light leading-tight tracking-tight text-white sm:whitespace-nowrap"
         >
           <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
           <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-semibold text-gold-gradient" />

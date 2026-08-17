@@ -51,7 +51,7 @@ export default function GalleryHero({
           whileInView="visible"
           viewport={viewportOnce}
           transition={{ delay: 0.08 }}
-          className="font-heading text-[clamp(2.5rem,7vw,5.5rem)] font-light uppercase leading-[1.05] tracking-tight text-white"
+          className="font-heading text-[clamp(2.5rem,4.2vw,5rem)] font-light uppercase leading-[1.05] tracking-tight text-white"
         >
           <EditableText as="span" path="headline" fallback={live.headline} />
         </motion.h1>

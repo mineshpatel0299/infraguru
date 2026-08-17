@@ -59,7 +59,7 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
+            className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light tracking-normal text-neutral-900 leading-tight"
           >
             <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
             <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />

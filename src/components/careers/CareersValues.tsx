@@ -55,7 +55,7 @@ export default function CareersValues() {
             </span>
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </div>
-          <h2 className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light leading-tight tracking-normal text-white">
+          <h2 className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light leading-tight tracking-normal text-white">
             Careers at <span className="font-bold text-gold-gradient">InfraGuru</span>
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-body font-light leading-relaxed text-white/70">

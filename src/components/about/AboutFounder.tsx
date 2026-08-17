@@ -44,7 +44,7 @@ export default function AboutFounder({ content = ABOUT_FOUNDER_DEFAULT_CONTENT }
             />
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </div>
-          <h2 className="font-heading text-[clamp(1.5rem,3.2vw,2.75rem)] font-light leading-tight tracking-normal text-primary-dark">
+          <h2 className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light leading-tight tracking-normal text-primary-dark">
             <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
             <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />
           </h2>
