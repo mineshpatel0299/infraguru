@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from 'react';
-import { motion, useScroll, useSpring, type Variants } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
 import { HERO_DEFAULT_CONTENT, type HeroContent } from '@/lib/pageSections';
 import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
@@ -75,6 +75,8 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
     restDelta: 0.0005,
   });
 
+  const parallaxScale = useTransform(smoothScrollProgress, [0, 1], [1, 1.12]);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -87,17 +89,27 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
     };
     video.addEventListener('loadedmetadata', onLoadedMetadata);
 
-    // Scrub the video based on scroll position, on mobile and desktop alike.
-    const tick = () => {
-      if (duration && video.readyState >= 2) {
-        const target = smoothScrollProgress.get() * duration;
-        if (Math.abs(target - video.currentTime) > 1 / 60) {
-          video.currentTime = target;
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
+    if (isMobile) {
+      // Real mobile hardware decoders often fail to render a frame when the
+      // video is only ever seeked via currentTime and never actually played
+      // (it just stays blank). So on mobile we let it play/loop normally,
+      // and get the "smooth on scroll" feel from the parallax scale instead.
+      video.play().catch(() => {});
+    } else {
+      // On desktop, we scrub the video based on scroll position.
+      const tick = () => {
+        if (duration && video.readyState >= 2) {
+          const target = smoothScrollProgress.get() * duration;
+          if (Math.abs(target - video.currentTime) > 1 / 60) {
+            video.currentTime = target;
+          }
         }
-      }
+        rafId = requestAnimationFrame(tick);
+      };
       rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
+    }
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
@@ -115,6 +127,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
         {/* Cinematic background */}
         <motion.div
           className="absolute inset-0 z-0 pointer-events-none"
+          style={{ scale: parallaxScale }}
         >
           <div className="absolute inset-0 z-0 overflow-hidden">
             <video
