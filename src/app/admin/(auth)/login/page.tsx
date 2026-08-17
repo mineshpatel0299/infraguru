@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { getAdminById } from "@/lib/db/admin";
 import LoginForm from "./LoginForm";
 
 export const metadata = { title: "Admin Login — InfraGuru CMS" };
@@ -9,8 +10,12 @@ export default async function AdminLoginPage({
 }: {
   searchParams: Promise<{ next?: string }>;
 }) {
+  // A well-signed session cookie can still point at an admin id that no
+  // longer exists (e.g. after switching DATABASE_URL to a different
+  // database) — redirecting on cookie validity alone bounces straight back
+  // into requireAdmin()'s own redirect to here, an infinite loop.
   const session = await getSession();
-  if (session) redirect("/admin");
+  if (session && (await getAdminById(session.sub))) redirect("/admin");
 
   const { next } = await searchParams;
 
