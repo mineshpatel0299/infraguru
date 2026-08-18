@@ -84,7 +84,7 @@ export default function ExploreProperties({
                   />
                 )}
               </EditableImage>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/0" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/0" />
 
               <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-8 lg:p-10">
                 <EditableText

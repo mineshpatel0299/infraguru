@@ -52,7 +52,7 @@ export default function AboutStory({ content = ABOUT_STORY_DEFAULT_CONTENT }: { 
                   />
                 )}
               </EditableImage>
-              <div className="absolute inset-0 bg-primary-dark/15 mix-blend-multiply" />
+              <div className="pointer-events-none absolute inset-0 bg-primary-dark/15 mix-blend-multiply" />
             </motion.div>
 
             <motion.div

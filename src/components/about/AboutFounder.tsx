@@ -72,7 +72,7 @@ export default function AboutFounder({ content = ABOUT_FOUNDER_DEFAULT_CONTENT }
                 )}
               </EditableImage>
             </motion.div>
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/50 via-transparent to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark/50 via-transparent to-transparent" />
 
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
               <EditableText as="p" path="name" fallback={live.name} className="font-body text-h4 font-medium text-white" />

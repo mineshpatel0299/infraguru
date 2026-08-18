@@ -75,8 +75,8 @@ export default function AboutHero({ content = ABOUT_HERO_DEFAULT_CONTENT }: { co
             />
           )}
         </EditableImage>
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/55 to-primary-dark/30" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/55 to-primary-dark/30" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent" />
       </motion.div>
 
       {/* Film grain, matches homepage cinematic hero */}

@@ -105,7 +105,7 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
                 </motion.div>
 
                 {/* Dark Blue Overlay */}
-                <div className={`absolute inset-0 z-10 transition-colors duration-700 ${isActive ? 'bg-black/20' : 'bg-primary-dark/80'}`} />
+                <div className={`pointer-events-none absolute inset-0 z-10 transition-colors duration-700 ${isActive ? 'bg-black/20' : 'bg-primary-dark/80'}`} />
 
                 {/* Ghost Number */}
                 <div className="absolute top-4 right-4 lg:top-6 lg:right-6 z-20 font-body text-3xl lg:text-6xl font-semibold text-white/10 leading-none">
@@ -113,8 +113,8 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
                 </div>
 
                 {/* Content Container */}
-                <div className="absolute inset-0 z-30 flex flex-col justify-end p-6 lg:p-10">
-                  
+                <div className="pointer-events-none absolute inset-0 z-30 flex flex-col justify-end p-6 lg:p-10">
+
                   {/* Inactive Vertical Title (Desktop only) */}
                   {!isActive && !isMobile && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -150,18 +150,18 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
                           as="h3"
                           path={`items[${idx}].title`}
                           fallback={item.title}
-                          className="font-body text-2xl sm:text-3xl font-medium text-gold-gradient mb-3 sm:mb-4 block"
+                          className="pointer-events-auto font-body text-2xl sm:text-3xl font-medium text-gold-gradient mb-3 sm:mb-4 block"
                         />
                         <EditableText
                           as="p"
                           path={`items[${idx}].description`}
                           fallback={item.description}
                           multiline
-                          className="text-white/80 text-sm sm:text-lg leading-relaxed max-w-lg mb-6 sm:mb-8"
+                          className="pointer-events-auto text-white/80 text-sm sm:text-lg leading-relaxed max-w-lg mb-6 sm:mb-8"
                         />
-                        
-                        <div>
-                          <Link 
+
+                        <div className="pointer-events-auto">
+                          <Link
                             href={item.link}
                             className="inline-flex items-center justify-center rounded-full border border-white/20 bg-transparent px-6 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-label font-semibold uppercase text-white transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-[#12223a] hover:shadow-[0_8px_20px_rgba(212,175,55,0.3)]"
                           >

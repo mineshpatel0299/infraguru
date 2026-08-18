@@ -100,7 +100,7 @@ export default function About({ content = ABOUT_DEFAULT_CONTENT }: { content?: A
                   />
                 )}
               </EditableImage>
-              <div className="absolute inset-0 bg-primary-dark/20 mix-blend-multiply" />
+              <div className="pointer-events-none absolute inset-0 bg-primary-dark/20 mix-blend-multiply" />
             </motion.div>
 
             {/* Secondary Image (Front) */}
