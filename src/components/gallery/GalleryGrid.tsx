@@ -1,17 +1,58 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { GALLERY_DEFAULT_CONTENT, type GalleryContent } from "@/lib/pageSections";
 import { useSectionEdit } from "../pagebuilder/SectionEditBoundary";
 import EditableImage from "../pagebuilder/EditableImage";
 import RemoveItemButton from "../pagebuilder/RemoveItemButton";
-import AddItemButton from "../pagebuilder/AddItemButton";
+import { uploadMediaAction } from "@/app/admin/media-actions";
 
 // Cycled by index so the masonry columns settle into a considered,
 // non-repetitive rhythm no matter how many photos the CMS content has.
 const ASPECT_PATTERN = ["aspect-[3/4]", "aspect-[4/3]", "aspect-square", "aspect-[4/5]", "aspect-[16/11]", "aspect-[3/4]"];
+
+/** Unlike the generic AddItemButton (which drops in a placeholder to edit
+ * afterwards), this opens the device file picker immediately and uploads
+ * straight into a new gallery slot — "Add photo" should add *your* photo,
+ * not a filler stock image you then have to remember to replace. */
+function AddPhotoButton({ onAdd, className }: { onAdd: (src: string) => void; className?: string }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  return (
+    <div className={className}>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = "";
+          if (!file) return;
+          setUploading(true);
+          setError(null);
+          uploadMediaAction(file)
+            .then(({ url }) => onAdd(url))
+            .catch((err: Error) => setError(err.message))
+            .finally(() => setUploading(false));
+        }}
+      />
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        disabled={uploading}
+        className="flex h-full w-full flex-col items-center justify-center gap-1 text-center"
+      >
+        <span>{uploading ? "Uploading…" : "+ Add photo"}</span>
+        {error && <span className="text-[10px] font-semibold normal-case text-red-600">{error}</span>}
+      </button>
+    </div>
+  );
+}
 
 export default function GalleryGrid({
   content = GALLERY_DEFAULT_CONTENT,
@@ -109,10 +150,8 @@ export default function GalleryGrid({
           })}
 
           {ctx && (
-            <AddItemButton
-              arrayPath="images"
-              newItem={{ src: "/about-1.jpg", alt: "New gallery photo" }}
-              label="Add photo"
+            <AddPhotoButton
+              onAdd={(src) => ctx.addItem("images", { src, alt: "New gallery photo" })}
               className="mb-5 flex aspect-[4/5] w-full items-center justify-center rounded-2xl border-2 border-dashed border-[#032E97]/25 text-xs font-bold uppercase tracking-wide text-[#032E97]/60 transition-colors hover:border-[#d4af37]/60 hover:text-[#032E97]"
             />
           )}
