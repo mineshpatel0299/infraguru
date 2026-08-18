@@ -24,7 +24,7 @@ export default function EditableImage({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!ctx) return <>{children(fallback)}</>;
+  if (!ctx) return <div className={wrapperClassName}>{children(fallback)}</div>;
 
   const src = (getPath(ctx.content, path) as string | undefined) ?? fallback;
 
