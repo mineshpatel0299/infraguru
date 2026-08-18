@@ -55,53 +55,58 @@ export default function GalleryGrid({
     <section className="relative w-full bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-10">
         <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
-          {images.map((image, i) => (
-            <div key={i} className="group relative mb-5 break-inside-avoid">
-              <button
-                type="button"
-                onClick={() => {
-                  if (ctx) return;
-                  setActiveIndex(i);
-                }}
-                className={`relative block w-full overflow-hidden rounded-2xl bg-bg-soft ring-1 ring-transparent transition-all duration-500 hover:ring-secondary/50 ${
-                  ctx ? "cursor-default" : "cursor-zoom-in"
-                } ${ASPECT_PATTERN[i % ASPECT_PATTERN.length]}`}
-                aria-label={ctx ? undefined : `Open photo: ${image.alt}`}
-              >
-                <EditableImage
-                  path={`images[${i}].src`}
-                  fallback={image.src}
-                  wrapperClassName="relative h-full w-full"
+          {images.map((image, i) => {
+            // In edit mode EditableImage renders its own "Replace" <button>,
+            // so this wrapper must not also be a <button> — a <button> can't
+            // legally contain another <button>, and the browser's parser
+            // auto-closes the outer one, breaking hydration and swallowing
+            // clicks on Replace. Only render it as a button for the public
+            // lightbox, where EditableImage renders no button at all.
+            const Wrapper = ctx ? "div" : "button";
+            return (
+              <div key={i} className="group relative mb-5 break-inside-avoid">
+                <Wrapper
+                  {...(ctx ? {} : { type: "button", onClick: () => setActiveIndex(i) })}
+                  className={`relative block w-full overflow-hidden rounded-2xl bg-bg-soft ring-1 ring-transparent transition-all duration-500 hover:ring-secondary/50 ${
+                    ctx ? "cursor-default" : "cursor-zoom-in"
+                  } ${ASPECT_PATTERN[i % ASPECT_PATTERN.length]}`}
+                  aria-label={ctx ? undefined : `Open photo: ${image.alt}`}
                 >
-                  {(src) => (
-                    <Image
-                      src={src}
-                      alt={image.alt || "InfraGuru gallery photo"}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-                    />
+                  <EditableImage
+                    path={`images[${i}].src`}
+                    fallback={image.src}
+                    wrapperClassName="relative h-full w-full"
+                  >
+                    {(src) => (
+                      <Image
+                        src={src}
+                        alt={image.alt || "InfraGuru gallery photo"}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                      />
+                    )}
+                  </EditableImage>
+
+                  {!ctx && (
+                    <>
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                      <span className="pointer-events-none absolute bottom-3 left-4 font-heading text-xs font-light tracking-[0.2em] text-white opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 translate-y-1.5">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="pointer-events-none absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:opacity-100">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
+                        </svg>
+                      </span>
+                    </>
                   )}
-                </EditableImage>
+                </Wrapper>
 
-                {!ctx && (
-                  <>
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                    <span className="pointer-events-none absolute bottom-3 left-4 font-heading text-xs font-light tracking-[0.2em] text-white opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 translate-y-1.5">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="pointer-events-none absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:opacity-100">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
-                      </svg>
-                    </span>
-                  </>
-                )}
-              </button>
-
-              {ctx && <RemoveItemButton arrayPath="images" index={i} />}
-            </div>
-          ))}
+                {ctx && <RemoveItemButton arrayPath="images" index={i} />}
+              </div>
+            );
+          })}
 
           {ctx && (
             <AddItemButton

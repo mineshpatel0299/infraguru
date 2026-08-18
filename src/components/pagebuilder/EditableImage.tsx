@@ -22,6 +22,7 @@ export default function EditableImage({
   const ctx = useSectionEdit();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!ctx) return <>{children(fallback)}</>;
 
@@ -40,8 +41,10 @@ export default function EditableImage({
           e.target.value = "";
           if (!file) return;
           setUploading(true);
+          setError(null);
           uploadMediaAction(file)
             .then(({ url }) => ctx.setField(path, url))
+            .catch((err: Error) => setError(err.message))
             .finally(() => setUploading(false));
         }}
       />
@@ -55,6 +58,11 @@ export default function EditableImage({
           {uploading ? "Uploading…" : "Replace"}
         </span>
       </button>
+      {error && (
+        <span className="pointer-events-none absolute inset-x-2 bottom-2 z-20 rounded-md bg-red-600/95 px-2 py-1 text-center text-[11px] font-semibold text-white">
+          {error}
+        </span>
+      )}
     </div>
   );
 }
