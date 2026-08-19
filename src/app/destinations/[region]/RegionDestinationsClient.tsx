@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -16,6 +17,10 @@ export default function RegionDestinationsClient({
   region: LocationRegion;
   locations: LocationWithFlag[];
 }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const heroImage = locations[0]?.image;
   const isIndia = region === "India";
 

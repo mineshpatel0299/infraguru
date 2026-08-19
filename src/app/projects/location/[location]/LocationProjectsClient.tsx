@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from "framer-motion";
@@ -275,6 +275,10 @@ export default function LocationProjectsClient({
   pageSlug: string;
   editMode: boolean;
 }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Same hero structure as the main /projects page for every city (Indian or
   // international) — only the images and copy change, scoped to this location.
   const [category, setCategory] = useState<Category>("Residential");
