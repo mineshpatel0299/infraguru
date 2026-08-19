@@ -85,26 +85,26 @@ function LocationHero({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          className="max-w-2xl"
+          className="max-w-2xl mt-[-10vh] md:mt-0"
         >
-          <div className="flex items-center gap-3 mb-5">
-            <div className="h-[1px] w-8 bg-secondary" />
-            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-secondary">
+          <div className="flex items-center gap-3 mb-4 md:mb-5">
+            <div className="h-[1px] w-6 md:w-8 bg-secondary" />
+            <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-secondary">
               {location.region}
             </span>
           </div>
-          <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-light text-white uppercase leading-tight mb-4 drop-shadow-md">
-            {location.label} <span className="font-bold text-gold-gradient">Projects</span>
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white uppercase leading-tight mb-3 md:mb-4 drop-shadow-md">
+            {location.label} <span className="font-bold text-gold-gradient block md:inline">Projects</span>
           </h1>
-          <p className="text-white/90 text-lg max-w-md font-body drop-shadow">
+          <p className="text-white/90 text-sm md:text-lg max-w-sm md:max-w-md font-body drop-shadow-lg">
             Discover exclusive {category.toLowerCase()} properties curated by Infraguru in {location.label}.
           </p>
         </motion.div>
 
         {/* Right side circle image toggles */}
-        <div className="absolute right-6 sm:right-10 lg:right-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-6 z-20">
+        <div className="absolute right-4 md:right-6 sm:right-10 lg:right-16 bottom-[22%] md:bottom-auto md:top-1/2 md:-translate-y-1/2 flex flex-col items-end md:items-center gap-4 md:gap-6 z-20">
           {/* Residential Toggle */}
-          <div className="relative flex items-center justify-center">
+          <div className="relative flex items-center justify-end md:justify-center">
             <AnimatePresence>
               {category === "Residential" && (
                 <motion.div
@@ -117,7 +117,7 @@ function LocationHero({
                     initial={{ opacity: 0, x: 10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1, duration: 0.4 }}
-                    className="text-white font-body text-sm md:text-base tracking-[0.2em] uppercase font-medium mr-2 md:mr-4"
+                    className="text-white font-body text-[11px] md:text-base tracking-[0.15em] md:tracking-[0.2em] uppercase font-medium mr-2 md:mr-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                   >
                     Residential
                   </motion.span>
@@ -125,7 +125,7 @@ function LocationHero({
                     initial={{ clipPath: "inset(0 0 0 100%)" }}
                     animate={{ clipPath: "inset(0 0 0 0%)" }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="w-12 md:w-20 h-px border-b-[3px] border-dotted border-white/80"
+                    className="w-6 md:w-20 h-px border-b-[2px] md:border-b-[3px] border-dotted border-white/80"
                   />
                 </motion.div>
               )}
@@ -143,8 +143,8 @@ function LocationHero({
               }}
               className={`relative rounded-full overflow-hidden transition-all duration-500 shadow-2xl shrink-0 bg-primary-dark cursor-pointer ${
                 category === "Residential"
-                  ? "w-24 h-24 md:w-32 md:h-32 border-[3px] border-white z-20 shadow-[0_0_30px_rgba(0,0,0,0.6)] scale-100"
-                  : "w-14 h-14 md:w-16 md:h-16 border-2 border-white/60 opacity-70 hover:opacity-100 scale-90 hover:scale-100 z-10"
+                  ? "w-16 h-16 md:w-32 md:h-32 border-[2px] md:border-[3px] border-white z-20 shadow-[0_0_30px_rgba(0,0,0,0.6)] scale-100"
+                  : "w-10 h-10 md:w-16 md:h-16 border-2 border-white/60 opacity-70 hover:opacity-100 scale-90 hover:scale-100 z-10"
               }`}
             >
               <EditableImage path="residentialImage" fallback={resImg} wrapperClassName="absolute inset-0">
@@ -154,7 +154,7 @@ function LocationHero({
           </div>
 
           {/* Commercial Toggle */}
-          <div className="relative flex items-center justify-center">
+          <div className="relative flex items-center justify-end md:justify-center">
             <AnimatePresence>
               {category === "Commercial" && (
                 <motion.div
@@ -167,7 +167,7 @@ function LocationHero({
                     initial={{ opacity: 0, x: 10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1, duration: 0.4 }}
-                    className="text-white font-body text-sm md:text-base tracking-[0.2em] uppercase font-medium mr-2 md:mr-4"
+                    className="text-white font-body text-[11px] md:text-base tracking-[0.15em] md:tracking-[0.2em] uppercase font-medium mr-2 md:mr-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                   >
                     Commercial
                   </motion.span>
@@ -175,7 +175,7 @@ function LocationHero({
                     initial={{ clipPath: "inset(0 0 0 100%)" }}
                     animate={{ clipPath: "inset(0 0 0 0%)" }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="w-12 md:w-20 h-px border-b-[3px] border-dotted border-white/80"
+                    className="w-6 md:w-20 h-px border-b-[2px] md:border-b-[3px] border-dotted border-white/80"
                   />
                 </motion.div>
               )}
@@ -193,8 +193,8 @@ function LocationHero({
               }}
               className={`relative rounded-full overflow-hidden transition-all duration-500 shadow-2xl shrink-0 bg-primary-dark cursor-pointer ${
                 category === "Commercial"
-                  ? "w-24 h-24 md:w-32 md:h-32 border-[3px] border-white z-20 shadow-[0_0_30px_rgba(0,0,0,0.6)] scale-100"
-                  : "w-14 h-14 md:w-16 md:h-16 border-2 border-white/60 opacity-70 hover:opacity-100 scale-90 hover:scale-100 z-10"
+                  ? "w-16 h-16 md:w-32 md:h-32 border-[2px] md:border-[3px] border-white z-20 shadow-[0_0_30px_rgba(0,0,0,0.6)] scale-100"
+                  : "w-10 h-10 md:w-16 md:h-16 border-2 border-white/60 opacity-70 hover:opacity-100 scale-90 hover:scale-100 z-10"
               }`}
             >
               <EditableImage path="commercialImage" fallback={comImg} wrapperClassName="absolute inset-0">
@@ -205,42 +205,42 @@ function LocationHero({
         </div>
 
         {/* Search/Filter Bar (Floating at bottom) */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[90%] max-w-5xl bg-white shadow-2xl border border-neutral-100 p-2 md:p-4 flex flex-col md:flex-row items-center justify-between gap-4 z-30">
-          <div className="flex-1 w-full flex items-center px-4">
-            <svg className="w-5 h-5 text-neutral-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <div>
-              <label className="block text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Location</label>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[70%] md:translate-y-1/2 w-[92%] md:w-[90%] max-w-5xl bg-white/95 md:bg-white backdrop-blur-2xl md:backdrop-blur-none shadow-[0_20px_50px_rgba(0,0,0,0.3)] md:shadow-2xl rounded-2xl md:rounded-none border border-white/50 md:border-neutral-100 p-3 md:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-4 z-30">
+          <div className="flex-1 w-full flex items-center px-3 py-2 md:py-0 md:px-4 bg-white/60 md:bg-transparent rounded-lg md:rounded-none border border-white/40 md:border-none shadow-sm md:shadow-none">
+            <svg className="w-4 h-4 md:w-5 md:h-5 text-neutral-400 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <div className="w-full">
+              <label className="block text-[9px] md:text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Location</label>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                placeholder={`Search within ${location.label}`}
+                placeholder={`Search ${location.label}`}
                 className="w-full text-sm font-medium text-neutral-900 bg-transparent border-none focus:ring-0 p-0 placeholder-neutral-400"
               />
             </div>
           </div>
 
-          <div className="w-full md:w-px h-px md:h-12 bg-neutral-200" />
+          <div className="hidden md:block w-px h-12 bg-neutral-200" />
 
-          <div className="flex-1 w-full flex items-center px-4">
-            <svg className="w-5 h-5 text-neutral-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m3-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-            <div>
-              <label className="block text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Type</label>
+          <div className="flex-1 w-full flex items-center px-3 py-2 md:py-0 md:px-4 bg-white/60 md:bg-transparent rounded-lg md:rounded-none border border-white/40 md:border-none shadow-sm md:shadow-none">
+            <svg className="w-4 h-4 md:w-5 md:h-5 text-neutral-400 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m3-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+            <div className="w-full">
+              <label className="block text-[9px] md:text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Type</label>
               <p className="text-sm font-medium text-neutral-900">{category}</p>
             </div>
           </div>
 
-          <div className="w-full md:w-px h-px md:h-12 bg-neutral-200" />
+          <div className="hidden md:block w-px h-12 bg-neutral-200" />
 
-          <div className="flex-1 w-full flex items-center px-4">
-            <svg className="w-5 h-5 text-neutral-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <div>
-              <label className="block text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Price Range</label>
+          <div className="flex-1 w-full flex items-center px-3 py-2 md:py-0 md:px-4 bg-white/60 md:bg-transparent rounded-lg md:rounded-none border border-white/40 md:border-none shadow-sm md:shadow-none">
+            <svg className="w-4 h-4 md:w-5 md:h-5 text-neutral-400 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div className="w-full">
+              <label className="block text-[9px] md:text-[10px] font-body font-bold text-neutral-500 uppercase tracking-widest">Price Range</label>
               <select
                 value={priceRange}
                 onChange={(e) => setPriceRange(e.target.value as PriceRangeFilter)}
-                className="w-full text-sm font-medium text-neutral-900 bg-transparent border-none focus:ring-0 p-0 appearance-none"
+                className="w-full text-sm font-medium text-neutral-900 bg-transparent border-none focus:ring-0 p-0 appearance-none outline-none cursor-pointer"
               >
                 {PRICE_RANGE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -251,9 +251,9 @@ function LocationHero({
 
           <button
             onClick={handleSearch}
-            className="w-full md:w-auto mt-4 md:mt-0 bg-neutral-900 hover:bg-[#12223a] text-white p-4 md:px-8 flex items-center justify-center transition-colors"
+            className="w-full md:w-auto mt-2 md:mt-0 bg-neutral-900 hover:bg-[#12223a] text-white p-3 md:p-4 md:px-8 flex items-center justify-center transition-colors rounded-lg md:rounded-none shadow-lg md:shadow-none"
           >
-            <span className="md:hidden font-body font-bold uppercase tracking-widest mr-2">Search</span>
+            <span className="md:hidden font-body font-bold text-sm uppercase tracking-widest mr-2">Search</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           </button>
         </div>
@@ -346,7 +346,7 @@ export default function LocationProjectsClient({
       )}
 
       {/* Grid / empty state */}
-      <section ref={gridRef} className="pt-40 pb-24 max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-24">
+      <section ref={gridRef} className="pt-[18rem] sm:pt-[20rem] md:pt-40 pb-24 max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 xl:px-24">
         {categoryProjects.length > 0 ? (
           <>
             <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
