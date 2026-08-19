@@ -114,7 +114,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={`w-full border transition-[backdrop-filter] duration-700 ${isSolid ? 'backdrop-blur-xl' : 'backdrop-blur-0'}`}
       >
-        <div className="container mx-auto px-5 sm:px-8 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-1 sm:py-3 lg:py-4">
+        <div className="container mx-auto px-5 sm:px-8 grid grid-cols-2 min-[901px]:grid-cols-3 items-center py-2.5 sm:py-3 lg:py-4">
           {/* Left: Logo */}
           <div className="flex justify-start">
             <Link href="/" className="inline-flex items-center shrink-0 z-10">
@@ -123,7 +123,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 alt="Infraguru"
                 width={280}
                 height={90}
-                className="object-contain transition-all duration-500 h-10 sm:h-[4.25rem] w-auto"
+                className={`object-contain transition-all duration-500 h-12 sm:h-[4.25rem] w-auto min-[901px]:filter-none ${isSolid ? '' : 'brightness-0 invert'}`}
                 priority
               />
             </Link>
@@ -246,7 +246,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
             </Link>
 
             <button
-              className="z-[110] flex h-9 w-9 flex-col items-center justify-center gap-[5px] min-[901px]:hidden"
+              className="z-[110] flex h-10 w-10 flex-col items-center justify-center gap-[5px] min-[901px]:hidden"
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Toggle menu"
             >
