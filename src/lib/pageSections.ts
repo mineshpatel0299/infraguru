@@ -344,6 +344,32 @@ export const ABOUT_STORY_DEFAULT_CONTENT: AboutStoryContent = {
   ],
 };
 
+export type AboutVisionMissionContent = {
+  eyebrow: string;
+  headingPlain1: string;
+  headingHighlight: string;
+  headingPlain2: string;
+  vision: { title: string; description: string };
+  mission: { title: string; description: string };
+};
+
+export const ABOUT_VISION_MISSION_DEFAULT_CONTENT: AboutVisionMissionContent = {
+  eyebrow: "Our Compass",
+  headingPlain1: "Guided by",
+  headingHighlight: "Purpose,",
+  headingPlain2: "Not Just Property",
+  vision: {
+    title: "Our Vision",
+    description:
+      "To be India's most trusted real estate advisory — where every address we curate becomes a benchmark for quality, integrity, and lasting value, for generations to come.",
+  },
+  mission: {
+    title: "Our Mission",
+    description:
+      "To guide every client — from first-time buyers to institutional investors — through real estate decisions with uncompromising transparency, deep market intelligence, and a standard of service that earns trust for life.",
+  },
+};
+
 export type AboutPillarsContent = {
   eyebrow: string;
   headingPlain1: string;
@@ -475,7 +501,7 @@ export const ABOUT_CTA_DEFAULT_CONTENT: AboutCTAContent = {
   subcopy:
     "Book a private consultation with our advisory team and discover what a truly considered real estate partnership feels like.",
   ctaLabel: "Book A Consultation",
-  ctaHref: "#contact",
+  ctaHref: "/contact",
 };
 
 export type GalleryHeroContent = {
@@ -589,6 +615,7 @@ export const PAGE_REGISTRY: PageDef[] = [
     sections: [
       { key: "hero", label: "Hero", pageSlug: "about" },
       { key: "story", label: "Our Story", pageSlug: "about" },
+      { key: "visionMission", label: "Vision & Mission", pageSlug: "about" },
       { key: "pillars", label: "Pillars", pageSlug: "about" },
       { key: "stats", label: "Stats", pageSlug: "about" },
       { key: "timeline", label: "Timeline", pageSlug: "about" },

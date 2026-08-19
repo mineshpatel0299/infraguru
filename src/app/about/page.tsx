@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AboutHero from "@/components/about/AboutHero";
 import AboutStory from "@/components/about/AboutStory";
+import AboutVisionMission from "@/components/about/AboutVisionMission";
 import AboutStats from "@/components/about/AboutStats";
 import AboutPillars from "@/components/about/AboutPillars";
 import AboutTimeline from "@/components/about/AboutTimeline";
@@ -20,6 +21,7 @@ import {
   resolveSection,
   ABOUT_HERO_DEFAULT_CONTENT,
   ABOUT_STORY_DEFAULT_CONTENT,
+  ABOUT_VISION_MISSION_DEFAULT_CONTENT,
   ABOUT_PILLARS_DEFAULT_CONTENT,
   ABOUT_STATS_DEFAULT_CONTENT,
   ABOUT_TIMELINE_DEFAULT_CONTENT,
@@ -61,6 +63,7 @@ export default async function AboutPage({
 
   const hero = resolveSection(sections, sectionByKey.hero, ABOUT_HERO_DEFAULT_CONTENT);
   const story = resolveSection(sections, sectionByKey.story, ABOUT_STORY_DEFAULT_CONTENT);
+  const visionMission = resolveSection(sections, sectionByKey.visionMission, ABOUT_VISION_MISSION_DEFAULT_CONTENT);
   const pillars = resolveSection(sections, sectionByKey.pillars, ABOUT_PILLARS_DEFAULT_CONTENT);
   const stats = resolveSection(sections, sectionByKey.stats, ABOUT_STATS_DEFAULT_CONTENT);
   const timeline = resolveSection(sections, sectionByKey.timeline, ABOUT_TIMELINE_DEFAULT_CONTENT);
@@ -82,6 +85,7 @@ export default async function AboutPage({
       <Navbar />
       {wrap("hero", hero, <AboutHero content={hero} />)}
       {wrap("story", story, <AboutStory content={story} />)}
+      {wrap("visionMission", visionMission, <AboutVisionMission content={visionMission} />)}
       {wrap("stats", stats, <AboutStats content={stats} />)}
       {wrap("pillars", pillars, <AboutPillars content={pillars} />)}
       {wrap("timeline", timeline, <AboutTimeline content={timeline} />)}
