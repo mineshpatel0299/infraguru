@@ -26,7 +26,10 @@ export default function EditableImage({
 
   if (!ctx) return <div className={wrapperClassName}>{children(fallback)}</div>;
 
-  const src = (getPath(ctx.content, path) as string | undefined) ?? fallback;
+  // `|| fallback` (not `?? fallback`): an empty-string value means "no
+  // image set yet", same as undefined — it should fall back too, not render
+  // a blank `src`.
+  const src = (getPath(ctx.content, path) as string | undefined) || fallback;
 
   return (
     <div className={`group/editable-image ${wrapperClassName}`}>

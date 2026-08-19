@@ -528,6 +528,26 @@ export const GALLERY_VIDEOS_DEFAULT_CONTENT: GalleryVideosContent = {
   videos: [],
 };
 
+// ── Location project pages (/projects/location/[slug]) ──────────────────────
+// One "hero" section per city in LOCATIONS, holding the two hero images shown
+// on that city's /projects/location/[slug] page — a distinct image for the
+// Residential toggle and one for the Commercial toggle. An empty string means
+// "no admin override yet"; the page falls back to a matching project's photo.
+
+export type LocationHeroContent = {
+  residentialImage: string;
+  commercialImage: string;
+};
+
+export const LOCATION_HERO_DEFAULT_CONTENT: LocationHeroContent = {
+  residentialImage: "",
+  commercialImage: "",
+};
+
+export function locationPageSlug(citySlug: string): string {
+  return `location-${citySlug}`;
+}
+
 // ── Page / section registry ──────────────────────────────────────────────
 
 export type SectionDef = {
@@ -588,6 +608,9 @@ export const PAGE_REGISTRY: PageDef[] = [
       { key: "footer", label: "Footer (shown on all pages)", pageSlug: "global" },
     ],
   },
+  // Location project pages (/projects/location/[slug]) are intentionally NOT
+  // listed here — they get their own dedicated admin screen at
+  // /admin/project-hero instead of showing up in the generic Pages grid.
 ];
 
 export function getPageDef(slug: string): PageDef | undefined {
