@@ -86,22 +86,22 @@ export default function ExploreProperties({
               </EditableImage>
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/0" />
 
-              <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-8 lg:p-10">
+              <div className="pointer-events-none relative z-10 h-full flex flex-col justify-end p-6 sm:p-8 lg:p-10">
                 <EditableText
                   as="h3"
                   path={`destinations[${idx}].title`}
                   fallback={dest.title}
-                  className="font-heading text-2xl sm:text-3xl font-semibold text-white uppercase leading-tight mb-2 drop-shadow block"
+                  className="pointer-events-auto font-heading text-2xl sm:text-3xl font-semibold text-white uppercase leading-tight mb-2 drop-shadow block"
                 />
                 <EditableText
                   as="p"
                   path={`destinations[${idx}].subtitle`}
                   fallback={dest.subtitle}
-                  className="font-body text-white/85 text-sm sm:text-base mb-6"
+                  className="pointer-events-auto font-body text-white/85 text-sm sm:text-base mb-6"
                 />
                 <Link
                   href={dest.href}
-                  className="group/btn inline-flex w-fit items-center gap-2.5 rounded-full bg-gold-gradient px-6 py-3 text-label font-bold uppercase text-primary-dark shadow-[0_12px_30px_rgba(212,175,55,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
+                  className="pointer-events-auto group/btn inline-flex w-fit items-center gap-2.5 rounded-full bg-gold-gradient px-6 py-3 text-label font-bold uppercase text-primary-dark shadow-[0_12px_30px_rgba(212,175,55,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
                 >
                   <EditableText as="span" path={`destinations[${idx}].cta`} fallback={dest.cta} />
                   <svg
