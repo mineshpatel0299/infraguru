@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Stats from "@/components/Stats";
 import WhyChooseUs from "@/components/WhyChooseUs";
+import Awards from "@/components/Awards";
 import ExploreProperties from "@/components/ExploreProperties";
 import Services from "@/components/Services";
 import FeaturedProjects from "@/components/FeaturedProjects";
@@ -23,6 +24,7 @@ import {
   ABOUT_DEFAULT_CONTENT,
   STATS_DEFAULT_CONTENT,
   WHY_CHOOSE_US_DEFAULT_CONTENT,
+  AWARDS_DEFAULT_CONTENT,
   EXPLORE_PROPERTIES_DEFAULT_CONTENT,
   SERVICES_DEFAULT_CONTENT,
   TESTIMONIALS_DEFAULT_CONTENT,
@@ -57,6 +59,7 @@ export default async function Home({
   const about = resolveSection(sections, sectionByKey.about, ABOUT_DEFAULT_CONTENT);
   const stats = resolveSection(sections, sectionByKey.stats, STATS_DEFAULT_CONTENT);
   const whyChooseUs = resolveSection(sections, sectionByKey.whyChooseUs, WHY_CHOOSE_US_DEFAULT_CONTENT);
+  const awards = resolveSection(sections, sectionByKey.awards, AWARDS_DEFAULT_CONTENT);
   const exploreProperties = resolveSection(sections, sectionByKey.exploreProperties, EXPLORE_PROPERTIES_DEFAULT_CONTENT);
   const services = resolveSection(sections, sectionByKey.services, SERVICES_DEFAULT_CONTENT);
   const testimonials = resolveSection(sections, sectionByKey.testimonials, TESTIMONIALS_DEFAULT_CONTENT);
@@ -81,6 +84,7 @@ export default async function Home({
       {wrap("about", about, <About content={about} />)}
       {wrap("stats", stats, <Stats content={stats} />)}
       {wrap("whyChooseUs", whyChooseUs, <WhyChooseUs content={whyChooseUs} />)}
+      {wrap("awards", awards, <Awards content={awards} />)}
       {wrap("exploreProperties", exploreProperties, <ExploreProperties content={exploreProperties} />)}
       {projects.length > 0 && <FeaturedProjects projects={projects.slice(0, 5)} />}
       {wrap("services", services, <Services content={services} />)}

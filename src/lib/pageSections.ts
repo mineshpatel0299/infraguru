@@ -114,6 +114,76 @@ export const WHY_CHOOSE_US_DEFAULT_CONTENT: WhyChooseUsContent = {
   ],
 };
 
+export type AwardItem = {
+  title: string;
+  issuer: string;
+  year: string;
+  /** Empty string = no photo uploaded yet; card renders a placeholder. */
+  image: string;
+  /** Optional ceremony/moment clip. Empty string = no video attached. */
+  video: string;
+};
+
+export type AwardsContent = {
+  eyebrow: string;
+  headingPlain: string;
+  headingHighlight: string;
+  subheading: string;
+  items: AwardItem[];
+};
+
+export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
+  eyebrow: "RECOGNITION",
+  headingPlain: "AWARDS &",
+  headingHighlight: "ACCOLADES",
+  subheading:
+    "A legacy measured not only in addresses delivered, but in the trust and recognition earned along the way.",
+  items: [
+    {
+      title: "Best Luxury Real Estate Advisory",
+      issuer: "Realty Excellence Awards",
+      year: "2025",
+      image: "",
+      video: "",
+    },
+    {
+      title: "Developer Partner of the Year",
+      issuer: "India Real Estate Summit",
+      year: "2024",
+      image: "",
+      video: "",
+    },
+    {
+      title: "Top Real Estate Consultancy — North India",
+      issuer: "National Realty Icons",
+      year: "2024",
+      image: "",
+      video: "",
+    },
+    {
+      title: "Customer Trust Award",
+      issuer: "PropTech India",
+      year: "2023",
+      image: "",
+      video: "",
+    },
+    {
+      title: "Excellence in Client Service",
+      issuer: "Gurugram Business Awards",
+      year: "2023",
+      image: "",
+      video: "",
+    },
+    {
+      title: "Emerging Real Estate Brand",
+      issuer: "CREDAI Recognition",
+      year: "2022",
+      image: "",
+      video: "",
+    },
+  ],
+};
+
 export type Destination = {
   title: string;
   subtitle: string;
@@ -602,6 +672,7 @@ export const PAGE_REGISTRY: PageDef[] = [
       { key: "about", label: "About Intro", pageSlug: "home" },
       { key: "stats", label: "Stats", pageSlug: "home" },
       { key: "whyChooseUs", label: "Why Choose Us", pageSlug: "home" },
+      { key: "awards", label: "Awards & Recognition", pageSlug: "home" },
       { key: "exploreProperties", label: "Explore Properties", pageSlug: "home" },
       { key: "services", label: "Services", pageSlug: "home" },
       { key: "testimonials", label: "Testimonials", pageSlug: "home" },
