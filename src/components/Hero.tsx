@@ -160,7 +160,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
         />
 
         {/* Main Content Area (Centers the text block vertically) */}
-        <div className="container relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-end sm:justify-center w-full pb-6 sm:pb-0">
+        <div className="max-w-[1600px] relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-end sm:justify-center w-full pb-6 sm:pb-0">
           <motion.div className="flex flex-col items-center text-center sm:items-start sm:text-left w-full max-w-4xl mx-auto sm:mx-0">
             <h1 className="mb-4 sm:mb-6 font-heading font-light uppercase text-white sm:text-[#132731] flex flex-col items-center sm:items-start">
               {ctx ? (
@@ -168,13 +168,13 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
                   as="span"
                   path="eyebrow"
                   fallback={live.eyebrow}
-                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-center sm:justify-start pb-2 sm:pb-4 text-white/80 sm:text-[#132731]/80"
+                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-center sm:justify-start pb-2 sm:pb-4 text-white/80 sm:text-[#132731]/80 drop-shadow-md sm:drop-shadow-[0_2px_12px_rgba(255,255,255,0.8)]"
                 />
               ) : (
                 <SlideUpWordReveal
                   text={content.eyebrow}
                   delay={1.2}
-                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-center sm:justify-start pb-2 sm:pb-4 text-white/80 sm:text-[#132731]/80"
+                  className="font-body text-[clamp(1rem,3vw,1.5rem)] sm:text-[clamp(1.2rem,2vw,2rem)] tracking-[0.25em] block justify-center sm:justify-start pb-2 sm:pb-4 text-white/80 sm:text-[#132731]/80 drop-shadow-md sm:drop-shadow-[0_2px_12px_rgba(255,255,255,0.8)]"
                 />
               )}
               {ctx ? (
@@ -182,13 +182,13 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
                   as="span"
                   path="headline"
                   fallback={live.headline}
-                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-center sm:justify-start text-white sm:text-[#132731] drop-shadow-md sm:drop-shadow-sm"
+                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-center sm:justify-start text-white sm:text-[#132731] drop-shadow-md sm:drop-shadow-[0_2px_18px_rgba(255,255,255,0.85)]"
                 />
               ) : (
                 <SlideUpWordReveal
                   text={content.headline}
                   delay={1.45}
-                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-center sm:justify-start text-white sm:text-[#132731] drop-shadow-md sm:drop-shadow-sm"
+                  className="text-[clamp(3.5rem,5vw,6rem)] leading-[0.85] tracking-[-0.02em] block justify-center sm:justify-start text-white sm:text-[#132731] drop-shadow-md sm:drop-shadow-[0_2px_18px_rgba(255,255,255,0.85)]"
                 />
               )}
             </h1>
@@ -205,7 +205,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
                  path="description"
                  fallback={live.description}
                  multiline
-                 className="text-sm sm:text-base lg:text-lg text-white sm:text-[#132731] leading-relaxed font-body font-medium max-w-md drop-shadow-md sm:drop-shadow-none"
+                 className="text-sm sm:text-base lg:text-lg text-white sm:text-[#132731] leading-relaxed font-body font-medium max-w-md drop-shadow-md sm:drop-shadow-[0_2px_14px_rgba(255,255,255,0.85)]"
                />
             </motion.div>
 
@@ -230,7 +230,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="container mx-auto px-2 sm:px-8 pb-4 sm:pb-8">
+          <div className="max-w-[1600px] mx-auto px-2 sm:px-8 pb-4 sm:pb-8">
             <div className="grid grid-cols-4 gap-0 divide-x divide-white/15">
               {live.stats.map((stat, i) => (
                 <div key={i} className="group relative flex flex-col items-center justify-center text-center px-1 sm:px-2">

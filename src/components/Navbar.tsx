@@ -123,7 +123,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 alt="Infraguru"
                 width={280}
                 height={90}
-                className={`object-contain transition-all duration-500 h-12 sm:h-[4.25rem] w-auto min-[901px]:filter-none ${isSolid ? '' : 'brightness-0 invert'}`}
+                className={`object-contain transition-all duration-500 h-12 sm:h-[4.25rem] w-auto ${isSolid ? '' : 'brightness-0 invert'}`}
                 priority
               />
             </Link>

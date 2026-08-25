@@ -20,7 +20,7 @@ export default function ExploreProperties({
   const DESTINATIONS = live.destinations;
   return (
     <section id="explore-properties" className="bg-white">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
+      <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 py-16 sm:py-20 lg:py-24">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
           <motion.div

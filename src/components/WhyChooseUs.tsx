@@ -7,6 +7,12 @@ import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
 import EditableText from './pagebuilder/EditableText';
 import RemoveItemButton from './pagebuilder/RemoveItemButton';
 import AddItemButton from './pagebuilder/AddItemButton';
+import { icons } from 'lucide-react';
+
+const LucideIcon = ({ name, className }: { name: string; className?: string }) => {
+  const IconComponent = (icons as any)[name] || icons.Star;
+  return <IconComponent className={className} />;
+};
 
 export default function WhyChooseUs({
   content = WHY_CHOOSE_US_DEFAULT_CONTENT,
@@ -15,10 +21,12 @@ export default function WhyChooseUs({
 }) {
   const ctx = useSectionEdit();
   const live = (ctx?.content as WhyChooseUsContent | undefined) ?? content;
+  const FALLBACK_ICONS = ["HeartHandshake", "ShieldCheck", "Clock", "Building", "Map"];
   const CARDS = live.cards.map((card, i) => ({
     number: String(i + 1).padStart(2, "0"),
     title: card.title,
     description: card.description,
+    icon: card.icon || FALLBACK_ICONS[i % FALLBACK_ICONS.length],
   }));
 
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -128,12 +136,15 @@ export default function WhyChooseUs({
                   <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 transition-all duration-500 rounded-[inherit]" />
                   <RemoveItemButton arrayPath="cards" index={idx} />
 
-                  {/* Top Left Card Number */}
+                  {/* Top Left Card Number & Icon */}
                   <div className="flex items-start justify-between relative z-10">
                     <span className="font-body text-4xl sm:text-5xl lg:text-6xl font-semibold text-white/10 tracking-tight transition-all duration-500 group-hover:text-gold-gradient">
                       {card.number}
                     </span>
-                    <span className="h-2 w-2 rounded-full bg-white/20 transition-all duration-500 group-hover:bg-gold-gradient group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
+                    <div className="flex items-center gap-4">
+                      <LucideIcon name={card.icon} className="w-8 h-8 sm:w-10 sm:h-10 text-white/30 transition-all duration-500 group-hover:text-gold-gradient group-hover:scale-110" />
+                      <span className="h-2 w-2 rounded-full bg-white/20 transition-all duration-500 group-hover:bg-gold-gradient group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
+                    </div>
                   </div>
 
                   {/* Middle / Bottom Content Block */}
@@ -156,7 +167,7 @@ export default function WhyChooseUs({
               ))}
               {ctx && (
                 <div className="flex w-[240px] shrink-0 items-center justify-center">
-                  <AddItemButton arrayPath="cards" newItem={{ title: "NEW CARD", description: "Describe this card…" }} />
+                  <AddItemButton arrayPath="cards" newItem={{ title: "NEW CARD", description: "Describe this card…", icon: "Star" }} />
                 </div>
               )}
             </motion.div>

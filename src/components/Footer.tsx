@@ -86,13 +86,13 @@ export default function Footer({ content = FOOTER_DEFAULT_CONTENT }: { content?:
       </div>
 
       {/* Divider */}
-      <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 mt-8 sm:mt-16">
+      <div className="relative z-10 mx-auto max-w-[1600px] px-5 sm:px-6 lg:px-10 mt-8 sm:mt-16">
         <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
 
       {/* Main Footer Grid */}
       <motion.div
-        className="relative z-10 container mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 sm:py-24 grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-12 lg:grid-cols-[1.4fr_0.9fr_0.9fr_0.9fr_1fr]"
+        className="relative z-10 container mx-auto max-w-[1600px] px-5 sm:px-6 lg:px-10 py-16 sm:py-24 grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-12 lg:grid-cols-[1.4fr_0.9fr_0.9fr_0.9fr_1fr]"
         variants={staggerContainer(0.1)}
         initial="hidden"
         whileInView="visible"
@@ -220,7 +220,7 @@ export default function Footer({ content = FOOTER_DEFAULT_CONTENT }: { content?:
 
       {/* Bottom Bar */}
       <div className="relative z-10 border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-5 sm:py-6 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="mx-auto max-w-[1600px] px-5 sm:px-6 lg:px-10 py-5 sm:py-6 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <span className="text-caption text-white/50">
             © {new Date().getFullYear()} Infraguru. All rights reserved.
           </span>

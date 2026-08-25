@@ -60,7 +60,7 @@ export default function Awards({
       {/* Faint gold vignette for depth, matching the site's premium-dark sections */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.08),transparent_60%)]" />
 
-      <div className="relative mx-auto max-w-[1600px] px-6 py-20 sm:px-10 sm:py-24 md:px-14 lg:px-16 lg:py-28">
+      <div className="relative mx-auto max-w-[1760px] px-6 py-20 sm:px-10 sm:py-24 md:px-14 lg:px-16 lg:py-28">
         {/* ── Header ── */}
         <div className="mx-auto mb-14 max-w-2xl text-center sm:mb-16 lg:mb-20">
           <motion.div

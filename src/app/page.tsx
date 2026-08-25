@@ -9,6 +9,7 @@ import ExploreProperties from "@/components/ExploreProperties";
 import Services from "@/components/Services";
 import FeaturedProjects from "@/components/FeaturedProjects";
 import Testimonials from "@/components/Testimonials";
+import GoogleReviews from "@/components/GoogleReviews";
 import { DVSNetworkCTA } from "@/components/DVSNetworkCTA";
 import Footer from "@/components/Footer";
 import { listPublishedProjects } from "@/lib/db/projects";
@@ -89,6 +90,7 @@ export default async function Home({
       {projects.length > 0 && <FeaturedProjects projects={projects.slice(0, 5)} />}
       {wrap("services", services, <Services content={services} />)}
       {wrap("testimonials", testimonials, <Testimonials content={testimonials} />)}
+      <GoogleReviews />
       <DVSNetworkCTA />
       {wrap("footer", footer, <Footer content={footer} />)}
     </main>

@@ -101,7 +101,7 @@ export function DVSNetworkCTA() {
 
       {/* ── Desktop Layout ──────────────────────────────────── */}
       <div
-        className="hidden lg:block relative mx-auto max-w-[92rem] px-8 xl:px-10"
+        className="hidden lg:block relative mx-auto max-w-[1600px] px-8 xl:px-10"
         style={{ height: 620, overflow: "hidden" }}
       >
         {/* Premium Glass Card */}

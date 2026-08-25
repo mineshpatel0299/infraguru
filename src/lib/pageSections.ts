@@ -70,7 +70,7 @@ export const STATS_DEFAULT_CONTENT: StatsContent = {
   ],
 };
 
-export type WhyChooseUsCard = { title: string; description: string };
+export type WhyChooseUsCard = { title: string; description: string; icon: string; };
 
 export type WhyChooseUsContent = {
   eyebrow: string;
@@ -90,26 +90,31 @@ export const WHY_CHOOSE_US_DEFAULT_CONTENT: WhyChooseUsContent = {
       title: "SMOOTH & STRESS-FREE PROCESS",
       description:
         "Infra Guru is a professional real estate consulting company that helps clients find the right home and property investment with a seamless and stress-free process.",
+      icon: "Sparkles",
     },
     {
       title: "TRUSTED GUIDANCE & SUPPORT",
       description:
         "We focus on delivering trusted guidance and complete transaction support throughout your entire real estate journey.",
+      icon: "ShieldCheck",
     },
     {
       title: "10+ YEARS OF EXPERIENCE",
       description:
         "With more than a decade in the real estate industry, Infra Guru has been operating as a trusted brand in Gurgaon, Haryana since 2021.",
+      icon: "Clock",
     },
     {
       title: "WIDE RANGE OF PROPERTIES",
       description:
         "We handle a comprehensive variety of property categories, specializing in residential properties, commercial properties, and farmland.",
+      icon: "Building",
     },
     {
       title: "RENTALS & LAND DEVELOPMENT",
       description:
         "Our expertise extends across the market, covering commercial rental properties, residential rentals, as well as land and development projects.",
+      icon: "Map",
     },
   ],
 };

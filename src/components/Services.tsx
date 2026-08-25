@@ -33,7 +33,7 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
 
   return (
     <section id="services" className="bg-white relative overflow-hidden py-24 sm:py-32">
-      <div className="w-full max-w-[1600px] 2xl:max-w-[1920px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
+      <div className="w-full max-w-[1760px] 2xl:max-w-[2100px] mx-auto px-6 sm:px-10 lg:px-16 relative z-10">
         
         {/* Premium Header */}
         <div className="text-center mb-16 sm:mb-24">
