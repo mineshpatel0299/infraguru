@@ -649,6 +649,27 @@ export function locationPageSlug(citySlug: string): string {
   return `location-${citySlug}`;
 }
 
+// ── Destination pages (/destinations/[region]) ──────────────────────────
+// One row per region ("destinations-india" / "destinations-international"):
+// the banner image for that region's hero, plus per-location overrides for
+// the destination cards below it. An empty heroImage falls back to the
+// region's first location image; a location missing from cardImages falls
+// back to that location's default `image` in LOCATIONS (src/lib/locations.ts).
+
+export type DestinationsRegionContent = {
+  heroImage: string;
+  cardImages: { slug: string; image: string }[];
+};
+
+export const DESTINATIONS_REGION_DEFAULT_CONTENT: DestinationsRegionContent = {
+  heroImage: "",
+  cardImages: [],
+};
+
+export function destinationsPageSlug(regionSlug: string): string {
+  return `destinations-${regionSlug}`;
+}
+
 // ── Page / section registry ──────────────────────────────────────────────
 
 export type SectionDef = {
@@ -711,9 +732,10 @@ export const PAGE_REGISTRY: PageDef[] = [
       { key: "footer", label: "Footer (shown on all pages)", pageSlug: "global" },
     ],
   },
-  // Location project pages (/projects/location/[slug]) are intentionally NOT
-  // listed here — they get their own dedicated admin screen at
-  // /admin/project-hero instead of showing up in the generic Pages grid.
+  // Location project pages (/projects/location/[slug]) and the destination
+  // pages (/destinations/[region]) are intentionally NOT listed here — they
+  // get their own dedicated admin screens (/admin/project-hero and
+  // /admin/destinations) instead of showing up in the generic Pages grid.
 ];
 
 export function getPageDef(slug: string): PageDef | undefined {

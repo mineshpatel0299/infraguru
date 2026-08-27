@@ -13,15 +13,16 @@ type LocationWithFlag = LocationConfig & { hasProjects: boolean };
 export default function RegionDestinationsClient({
   region,
   locations,
+  heroImage,
 }: {
   region: LocationRegion;
   locations: LocationWithFlag[];
+  heroImage?: string;
 }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const heroImage = locations[0]?.image;
   const isIndia = region === "India";
 
   return (

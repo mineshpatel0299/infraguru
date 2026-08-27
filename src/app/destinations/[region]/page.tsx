@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { listPublishedProjects } from "@/lib/db/projects";
 import { LOCATIONS, projectBelongsToLocation, type LocationRegion } from "@/lib/locations";
+import { getSection } from "@/lib/db/pageContent";
+import {
+  destinationsPageSlug,
+  DESTINATIONS_REGION_DEFAULT_CONTENT,
+  type DestinationsRegionContent,
+} from "@/lib/pageSections";
 import RegionDestinationsClient from "./RegionDestinationsClient";
 
 export const dynamic = "force-dynamic";
@@ -44,11 +50,20 @@ export default async function RegionDestinationsPage({
   const heading = REGION_BY_SLUG[region];
   if (!heading) notFound();
 
-  const projects = await listPublishedProjects();
+  const [projects, saved] = await Promise.all([
+    listPublishedProjects(),
+    getSection(destinationsPageSlug(region), "content"),
+  ]);
+  const content = (saved as DestinationsRegionContent | null) ?? DESTINATIONS_REGION_DEFAULT_CONTENT;
+  const cardImageBySlug = new Map(content.cardImages.map((c) => [c.slug, c.image]));
+
   const locations = LOCATIONS.filter((loc) => loc.region === heading).map((loc) => ({
     ...loc,
+    image: cardImageBySlug.get(loc.slug) || loc.image,
     hasProjects: projects.some((p) => projectBelongsToLocation(p, loc)),
   }));
 
-  return <RegionDestinationsClient region={heading} locations={locations} />;
+  const heroImage = content.heroImage || locations[0]?.image;
+
+  return <RegionDestinationsClient region={heading} locations={locations} heroImage={heroImage} />;
 }
