@@ -349,7 +349,7 @@ export type FooterContent = {
 };
 
 export const FOOTER_DEFAULT_CONTENT: FooterContent = {
-  tagline: "A tradition of trust — engineering premium infrastructure and real estate legacies since 2011.",
+  tagline: "A tradition of trust — engineering premium infrastructure and real estate legacies since 2017.",
   addressLine1: "Unit No. 1129, Spaze IT Tech Park",
   addressLine2: "Sector - 49, Gurugram",
   email: "info@infraguru.in",
@@ -383,7 +383,7 @@ export const ABOUT_HERO_DEFAULT_CONTENT: AboutHeroContent = {
   line3: "Not Just",
   line4: "Listings.",
   description:
-    "Since 2011, InfraGuru has stood at the intersection of trust and craftsmanship — curating real estate that is bought once and cherished for generations.",
+    "Since 2017, InfraGuru has stood at the intersection of trust and craftsmanship — curating real estate that is bought once and cherished for generations.",
   image: "/about.jpg",
 };
 
@@ -406,12 +406,12 @@ export const ABOUT_STORY_DEFAULT_CONTENT: AboutStoryContent = {
   headingHighlight: "addresses",
   headingPlain2: "into legacies.",
   paragraphs: [
-    "InfraGuru began with a simple conviction — that real estate advisory should feel like a partnership, not a transaction. Since 2011, we've worked from Gurugram outward, guiding individuals, families, and enterprises through the residential, commercial, and infrastructure markets with quiet precision.",
+    "InfraGuru began with a simple conviction — that real estate advisory should feel like a partnership, not a transaction. Since 2017, we've worked from Gurugram outward, guiding individuals, families, and enterprises through the residential, commercial, and infrastructure markets with quiet precision.",
     "We don't chase volume. Every mandate — whether it's a flagship commercial tower, a private residence, or a joint-development structure — is handled with the same architect's eye for detail and a fiduciary's sense of responsibility.",
   ],
   image1: "/about-1.jpg",
   image2: "/about-2.jpg",
-  badgeYear: "2011",
+  badgeYear: "2017",
   badgeLabel: "Est.",
   stats: [
     { value: "15+", label: "Years of Trust" },
@@ -510,7 +510,7 @@ export const ABOUT_TIMELINE_DEFAULT_CONTENT: AboutTimelineContent = {
   headingHighlight: "One Standard.",
   milestones: [
     {
-      year: "2011",
+      year: "2017",
       title: "InfraGuru Founded",
       description: "Opened our doors in Gurugram with a single mandate: real estate advisory built on trust.",
     },
