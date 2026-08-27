@@ -75,7 +75,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
     restDelta: 0.0005,
   });
 
-  const parallaxScale = useTransform(smoothScrollProgress, [0, 1], [1, 1.12]);
+  const parallaxScale = useTransform(smoothScrollProgress, [0, 1], [1, 1.05]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -137,7 +137,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
               playsInline
               loop
               preload="auto"
-              className="h-full w-full object-cover scale-[1.15] sm:scale-[1.2]"
+              className="h-full w-full object-cover scale-[1.02]"
             >
               <source src="/mhero.mp4" media="(max-width: 639px)" />
               <source src="/danube.mp4" />
