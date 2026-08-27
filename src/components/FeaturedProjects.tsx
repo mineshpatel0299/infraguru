@@ -202,7 +202,7 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
 
             {/* Step Counter */}
             <span className="mb-3 font-body text-label font-semibold text-white/50 uppercase">
-              {`0${activeIndex + 1} —— 0${projects.length}`}
+              {`0${activeIndex + 1} / 0${projects.length}`}
             </span>
 
             {/* Title (Crossfading on step change) */}

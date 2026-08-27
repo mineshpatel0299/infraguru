@@ -14,7 +14,7 @@ const BENEFITS = [
   },
   {
     title: "Performance Bonuses",
-    description: "Transparent, uncapped incentive structures that reward results — not just tenure.",
+    description: "Transparent, uncapped incentive structures that reward results, not just tenure.",
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8c-1.657 0-3 .672-3 1.5S10.343 11 12 11s3 .672 3 1.5-1.343 1.5-3 1.5m0-6V6m0 1v6m0 0v1m0-1c-1.657 0-3 .672-3 1.5S10.343 16 12 16s3-.672 3-1.5M12 3a9 9 0 100 18 9 9 0 000-18z" />
     ),
@@ -35,14 +35,14 @@ const BENEFITS = [
   },
   {
     title: "Team Retreats",
-    description: "Annual offsites and quarterly team celebrations — because milestones deserve marking.",
+    description: "Annual offsites and quarterly team celebrations, because milestones deserve marking.",
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 3h18M4 21h16M4 21V8l8-5 8 5v13M9 21v-6h6v6" />
     ),
   },
   {
     title: "Modern Workspace",
-    description: "Premium offices designed the way we design our properties — thoughtfully, for people.",
+    description: "Premium offices designed the way we design our properties, thoughtfully, for people.",
     icon: (
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m-1 4h1m4-4h1m-1 4h1m-5 8v-5a1 1 0 011-1h2a1 1 0 011 1v5" />
     ),

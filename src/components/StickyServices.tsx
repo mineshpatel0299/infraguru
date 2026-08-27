@@ -7,42 +7,42 @@ import Link from 'next/link';
 
 export const SERVICES_ITEMS = [
   {
-    step: "01 —— 06",
+    step: "01 / 06",
     title: "Property to Buy",
     bgImage: "/Projects/M3M%20Antalya/544304004_m3m-antalya-hills-gallery-3.webp",
     description: "Property to buy means a land or building that is available for sale and can be legally purchased by a buyer.",
     link: "#contact",
   },
   {
-    step: "02 —— 06",
+    step: "02 / 06",
     title: "Property to Sell",
     bgImage: "/Projects/SIgnature/WhatsApp-Image-2026-02-26-at-124237-PM-Picsart-AiImageEnhancer.webp",
     description: "Property to sell means a land or building that the owner is offering for sale and can be legally sold to a buyer.",
     link: "#contact",
   },
   {
-    step: "03 —— 06",
+    step: "03 / 06",
     title: "Property to Rent",
     bgImage: "/Projects/SignatureDeluxe/image-Picsart-AiImageEnhancer-1-scaled.webp",
     description: "Property to rent means a land or building that is given to someone for temporary use in exchange for rent, without transferring ownership.",
     link: "#contact",
   },
   {
-    step: "04 —— 06",
+    step: "04 / 06",
     title: "Property to Lease",
     bgImage: "/Projects/M3M/Artboard_4_1_-_8jpuMAmC4FGE.webp",
     description: "Property to lease means a land or building given for long-term use to a tenant under a lease agreement, without transferring ownership.",
     link: "#contact",
   },
   {
-    step: "05 —— 06",
+    step: "05 / 06",
     title: "Property to Invest",
     bgImage: "/Projects/M3M%20Antalya/about_2_-_LKRZFgeqKGJ4_-_CfWwyPz3TLPk.webp",
     description: "Property to invest means properties specially selected for long-term returns, rental income and capital growth.",
     link: "#contact",
   },
   {
-    step: "06 —— 06",
+    step: "06 / 06",
     title: "Property for Joint Development",
     bgImage: "/Projects/SIgnature/WhatsApp-Image-2026-02-26-at-124128-PM-Picsart-AiImageEnhancer.webp",
     description: "Property for joint development is when a land owner and developer partner together to develop a project, sharing the resulting benefits without either party bearing the full cost alone.",

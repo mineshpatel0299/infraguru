@@ -19,7 +19,7 @@ export async function generateMetadata({
   const { location } = await params;
   const config = getLocationConfig(location);
   if (!config) {
-    return { title: "Location Not Found — Infraguru" };
+    return { title: "Location Not Found | Infraguru" };
   }
 
   const projects = await listPublishedProjects();
@@ -36,7 +36,7 @@ export async function generateMetadata({
     alternates: { canonical: url },
     robots: matches.length ? { index: true, follow: true } : { index: false, follow: true },
     openGraph: {
-      title: `${title} — Infraguru`,
+      title: `${title} | Infraguru`,
       description,
       url,
     },

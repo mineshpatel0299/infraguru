@@ -16,10 +16,10 @@ export async function generateMetadata({
   const project = await getProjectById(id);
 
   if (!project) {
-    return { title: "Deed Not Found — Infraguru" };
+    return { title: "Deed Not Found | Infraguru" };
   }
 
-  const title = project.seoTitle || `${project.title} — Infraguru`;
+  const title = project.seoTitle || `${project.title} | Infraguru`;
   const description = project.seoDescription || project.tagline || undefined;
   const image = project.ogImage || project.image || DEFAULT_OG_IMAGE;
   const url = `/projects/${project.id}`;

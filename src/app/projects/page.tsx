@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Explore Infraguru's curated portfolio of ultra-premium residential and commercial projects across Gurugram, Delhi NCR, Goa, Europe, Australia and Dubai.",
   alternates: { canonical: "/projects" },
   openGraph: {
-    title: "Projects — Infraguru",
+    title: "Projects | Infraguru",
     description:
       "Explore Infraguru's curated portfolio of ultra-premium residential and commercial projects.",
     url: "/projects",

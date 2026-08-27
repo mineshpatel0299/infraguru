@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "A curated visual journey through the addresses, interiors, and skylines that define InfraGuru.",
   alternates: { canonical: "/gallery" },
   openGraph: {
-    title: "Gallery — Infraguru",
+    title: "Gallery | Infraguru",
     description:
       "A curated visual journey through the addresses, interiors, and skylines that define InfraGuru.",
     url: "/gallery",

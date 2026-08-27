@@ -13,11 +13,11 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Careers",
-  description: "Join the Infraguru team — explore open roles in sales, marketing, design, and operations.",
+  description: "Join the Infraguru team and explore open roles in sales, marketing, design, and operations.",
   alternates: { canonical: "/careers" },
   openGraph: {
-    title: "Careers — Infraguru",
-    description: "Join the Infraguru team — explore open roles in sales, marketing, design, and operations.",
+    title: "Careers | Infraguru",
+    description: "Join the Infraguru team and explore open roles in sales, marketing, design, and operations.",
     url: "/careers",
   },
 };

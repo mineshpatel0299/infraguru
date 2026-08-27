@@ -159,7 +159,7 @@ export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
       video: "",
     },
     {
-      title: "Top Real Estate Consultancy — North India",
+      title: "Top Real Estate Consultancy, North India",
       issuer: "National Realty Icons",
       year: "2024",
       image: "",
@@ -349,7 +349,7 @@ export type FooterContent = {
 };
 
 export const FOOTER_DEFAULT_CONTENT: FooterContent = {
-  tagline: "A tradition of trust — engineering premium infrastructure and real estate legacies since 2017.",
+  tagline: "A tradition of trust, engineering premium infrastructure and real estate legacies since 2017.",
   addressLine1: "Unit No. 1129, Spaze IT Tech Park",
   addressLine2: "Sector - 49, Gurugram",
   email: "info@infraguru.in",
@@ -383,7 +383,7 @@ export const ABOUT_HERO_DEFAULT_CONTENT: AboutHeroContent = {
   line3: "Not Just",
   line4: "Listings.",
   description:
-    "Since 2017, InfraGuru has stood at the intersection of trust and craftsmanship — curating real estate that is bought once and cherished for generations.",
+    "Since 2017, InfraGuru has stood at the intersection of trust and craftsmanship, curating real estate that is bought once and cherished for generations.",
   image: "/about.jpg",
 };
 
@@ -406,8 +406,8 @@ export const ABOUT_STORY_DEFAULT_CONTENT: AboutStoryContent = {
   headingHighlight: "addresses",
   headingPlain2: "into legacies.",
   paragraphs: [
-    "InfraGuru began with a simple conviction — that real estate advisory should feel like a partnership, not a transaction. Since 2017, we've worked from Gurugram outward, guiding individuals, families, and enterprises through the residential, commercial, and infrastructure markets with quiet precision.",
-    "We don't chase volume. Every mandate — whether it's a flagship commercial tower, a private residence, or a joint-development structure — is handled with the same architect's eye for detail and a fiduciary's sense of responsibility.",
+    "InfraGuru began with a simple conviction: that real estate advisory should feel like a partnership, not a transaction. Since 2017, we've worked from Gurugram outward, guiding individuals, families, and enterprises through the residential, commercial, and infrastructure markets with quiet precision.",
+    "We don't chase volume. Every mandate, whether it's a flagship commercial tower, a private residence, or a joint-development structure, is handled with the same architect's eye for detail and a fiduciary's sense of responsibility.",
   ],
   image1: "/about-1.jpg",
   image2: "/about-2.jpg",
@@ -436,12 +436,12 @@ export const ABOUT_VISION_MISSION_DEFAULT_CONTENT: AboutVisionMissionContent = {
   vision: {
     title: "Our Vision",
     description:
-      "To be India's most trusted real estate advisory — where every address we curate becomes a benchmark for quality, integrity, and lasting value, for generations to come.",
+      "To be India's most trusted real estate advisory, where every address we curate becomes a benchmark for quality, integrity, and lasting value, for generations to come.",
   },
   mission: {
     title: "Our Mission",
     description:
-      "To guide every client — from first-time buyers to institutional investors — through real estate decisions with uncompromising transparency, deep market intelligence, and a standard of service that earns trust for life.",
+      "To guide every client, from first-time buyers to institutional investors, through real estate decisions with uncompromising transparency, deep market intelligence, and a standard of service that earns trust for life.",
   },
 };
 
@@ -462,7 +462,7 @@ export const ABOUT_PILLARS_DEFAULT_CONTENT: AboutPillarsContent = {
     {
       title: "Integrity First",
       description:
-        "Every recommendation is made with full transparency — no hidden margins, no conflicted interests, only what genuinely serves you.",
+        "Every recommendation is made with full transparency: no hidden margins, no conflicted interests, only what genuinely serves you.",
     },
     {
       title: "Precision Curation",
@@ -477,7 +477,7 @@ export const ABOUT_PILLARS_DEFAULT_CONTENT: AboutPillarsContent = {
     {
       title: "Lifetime Partnership",
       description:
-        "Our relationship doesn't end at the signature — from documentation to resale, we remain your standing advisory.",
+        "Our relationship doesn't end at the signature. From documentation to resale, we remain your standing advisory.",
     },
   ],
 };
@@ -532,7 +532,7 @@ export const ABOUT_TIMELINE_DEFAULT_CONTENT: AboutTimelineContent = {
     {
       year: "2026",
       title: "500+ Clients, 25+ Awards",
-      description: "A decade and a half later — a trusted name behind Gurugram's most discerning acquisitions.",
+      description: "A decade and a half later, a trusted name behind Gurugram's most discerning acquisitions.",
     },
   ],
 };
@@ -556,7 +556,7 @@ export const ABOUT_FOUNDER_DEFAULT_CONTENT: AboutFounderContent = {
   name: "Baljeet Singh",
   role: "Founder & CEO",
   quote:
-    "I started InfraGuru on a belief that's stayed with me since day one — real estate isn't about square footage, it's about the life that happens inside it. Every client walks away with more than a property; they walk away with a decision they'll never second-guess.",
+    "I started InfraGuru on a belief that's stayed with me since day one: real estate isn't about square footage, it's about the life that happens inside it. Every client walks away with more than a property; they walk away with a decision they'll never second-guess.",
   bio: "With over fifteen years navigating Gurugram's real estate landscape, Baljeet founded InfraGuru to close the gap between what buyers are promised and what they actually receive. That principle still shapes every mandate the firm takes on today.",
 };
 

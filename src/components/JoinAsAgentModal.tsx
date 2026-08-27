@@ -93,7 +93,7 @@ export function JoinAsAgentModal({
                   Apply to Join DVS
                 </h3>
                 <p className="mb-8 font-body text-sm text-[#0b2761]/60">
-                  Tell us a bit about yourself — every application is reviewed personally.
+                  Tell us a bit about yourself, every application is reviewed personally.
                 </p>
 
                 <form

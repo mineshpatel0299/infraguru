@@ -81,7 +81,7 @@ export const PROJECTS: Project[] = [
     description: [
       'M3M India presents M3M Mansion, a premium residential project designed for those who enjoy a grand lifestyle. Located in the heart of Sector 113, Gurgaon, right on the Dwarka Expressway, it offers excellent connectivity and convenience as part of a large 250-acre master plan.',
       'M3M Mansion offers thoughtfully designed 3.5 BHK, 4.5 BHK, and 5 BHK residences, complete with a study, family lounge, and house help quarters. Apartment sizes range from 2,100 sq. ft. to 3,800 sq. ft., while penthouses span up to a lavish 7,000 sq. ft., each with a private deck and expansive balconies.',
-      'Spread across 10.22 acres, the project features eight stylish high-rise towers, each rising to 32 floors, with air-conditioned lift lobbies and four high-speed elevators per tower. A 7.5-acre Central Vista and Club Imperial — with a five-star lobby, café, and temperature-controlled pool — anchor the resident experience.',
+      'Spread across 10.22 acres, the project features eight stylish high-rise towers, each rising to 32 floors, with air-conditioned lift lobbies and four high-speed elevators per tower. A 7.5-acre Central Vista and Club Imperial (with a five-star lobby, café, and temperature-controlled pool) anchor the resident experience.',
     ],
     highlights: [
       { label: 'Configuration', value: '3, 3.5, 4, 4.5 BHK Residences' },
@@ -93,7 +93,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P1, P2, P3],
-    architect: 'M3M India — In-House Design Studio',
+    architect: 'M3M India, In-House Design Studio',
     developer: 'M3M India',
     possession: 'New Launch',
     rera: 'Available on request',
@@ -103,7 +103,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'M3M Mansion pairs a genuinely grand scale — eight towers, a 7.5-acre Central Vista — with the everyday convenience of the Dwarka Expressway address.',
+        'M3M Mansion pairs a genuinely grand scale (eight towers, a 7.5-acre Central Vista) with the everyday convenience of the Dwarka Expressway address.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -122,7 +122,7 @@ export const PROJECTS: Project[] = [
     description: [
       'M3M Antalya Hills is a luxurious residential project offering low-rise independent floors in Sector 79, Gurgaon, designed for those who seek comfort, peace, and a refined lifestyle while staying well connected to the city.',
       'The project offers thoughtfully planned 2.5 BHK and 3.5 BHK independent floors, each featuring a private terrace and basement, with views toward the Aravalli Hills and a calm, resort-style ambience. The community follows a nature-first design philosophy, with vertical gardens, shaded walkways, and green parking zones woven into every cluster.',
-      'Antalya Hills is planned as a multigenerational community with a decentralised layout — each residential cluster is a self-sufficient pocket with parks, clubs, and essential amenities within a 2-minute walk.',
+      'Antalya Hills is planned as a multigenerational community with a decentralised layout. Each residential cluster is a self-sufficient pocket with parks, clubs, and essential amenities within a 2-minute walk.',
     ],
     highlights: [
       { label: 'Configuration', value: '2.5 BHK / 3.5 BHK Independent Floors' },
@@ -134,7 +134,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P4, P5, P6],
-    architect: 'M3M India — In-House Design Studio',
+    architect: 'M3M India, In-House Design Studio',
     developer: 'M3M India',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -146,7 +146,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'A rare low-rise format in Gurugram — private terraces and basements, planned around a genuine nature-first, walk-to-everything community layout.',
+        'A rare low-rise format in Gurugram: private terraces and basements, planned around a genuine nature-first, walk-to-everything community layout.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -163,7 +163,7 @@ export const PROJECTS: Project[] = [
     specs: '3, 3.5, 4 BHK · 1800 – 2495 Sqft',
     image: P7,
     description: [
-      'Signature Global Sarvam is a thoughtfully crafted residential development rooted in the principles of ancient Vaastu and surrounded by nature\'s calm rhythm — more a living experience shaped by intention and balance than a conventional apartment block.',
+      'Signature Global Sarvam is a thoughtfully crafted residential development rooted in the principles of ancient Vaastu and surrounded by nature\'s calm rhythm, more a living experience shaped by intention and balance than a conventional apartment block.',
       'Every tower is carefully positioned to make nature the project\'s greatest luxury, with homes designed to enjoy expansive skyline views, abundant daylight, and excellent cross-ventilation. Peaceful green pockets, open corridors, and landscaped surroundings encourage a slower, healthier, more balanced lifestyle.',
     ],
     highlights: [
@@ -176,7 +176,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P7, P8, P9],
-    architect: 'Signature Global — In-House Design Team',
+    architect: 'Signature Global, In-House Design Team',
     developer: 'Signature Global',
     possession: 'New Launch',
     rera: 'Available on request',
@@ -185,7 +185,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Sarvam plans its towers around Vaastu and daylight rather than density — the kind of quiet, considered layout that ages well.',
+        'Sarvam plans its towers around Vaastu and daylight rather than density, the kind of quiet, considered layout that ages well.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -214,7 +214,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P10, P11, P12],
-    architect: 'Signature Global — In-House Design Team',
+    architect: 'Signature Global, In-House Design Team',
     developer: 'Signature Global',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -223,7 +223,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'De-luxe DXP earns its name from the numbers alone — up to 4,500 sq ft of well-planned family living in Sector 37.',
+        'De-luxe DXP earns its name from the numbers alone: up to 4,500 sq ft of well-planned family living in Sector 37.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -253,7 +253,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P1, P5, P9],
-    architect: 'Signature Global — In-House Design Team',
+    architect: 'Signature Global, In-House Design Team',
     developer: 'Signature Global',
     possession: 'New Launch',
     rera: 'Available on request',
@@ -265,7 +265,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Titanium\'s floor plans are unusually generous for the price point — 2,780 sq ft and up, with real cross-ventilation.',
+        'Titanium\'s floor plans are unusually generous for the price point, 2,780 sq ft and up, with real cross-ventilation.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -295,7 +295,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P2, P6, P10],
-    architect: 'Smart World Developers — In-House Design Team',
+    architect: 'Smart World Developers, In-House Design Team',
     developer: 'Smart World Developers',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -307,7 +307,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Sky Arch\'s size range is the story here — 2,200 sq ft entry residences up to 7,000 sq ft, on one of Gurugram\'s most established corridors.',
+        'Sky Arch\'s size range is the story here: 2,200 sq ft entry residences up to 7,000 sq ft, on one of Gurugram\'s most established corridors.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -337,7 +337,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P3, P7, P11],
-    architect: 'Smart World Developers — In-House Design Team',
+    architect: 'Smart World Developers, In-House Design Team',
     developer: 'Smart World Developers',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -349,7 +349,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Edition keeps to just two configurations — 3 and 4 BHK — and uses the discipline to give every unit genuinely large room proportions.',
+        'Edition keeps to just two configurations, 3 and 4 BHK, and uses the discipline to give every unit genuinely large room proportions.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -379,7 +379,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P4, P8, P12],
-    architect: 'Ganga Realty — In-House Design Team',
+    architect: 'Ganga Realty, In-House Design Team',
     developer: 'Ganga Realty',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -388,7 +388,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Ganga Valley reads as a township rather than a single tower — genuine independent floors with room to breathe.',
+        'Ganga Valley reads as a township rather than a single tower, genuine independent floors with room to breathe.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -418,7 +418,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P5, P9, P1],
-    architect: 'Whiteland Corporation — In-House Design Team',
+    architect: 'Whiteland Corporation, In-House Design Team',
     developer: 'Whiteland Corporation',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -427,7 +427,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Westin Residences carries the Westin brand into private ownership — the finish quality shows in the details.',
+        'Westin Residences carries the Westin brand into private ownership. The finish quality shows in the details.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -457,7 +457,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P6, P10, P2],
-    architect: 'Sobha Limited — In-House Design Team',
+    architect: 'Sobha Limited, In-House Design Team',
     developer: 'Sobha Limited',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -466,7 +466,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Sobha\'s build-quality reputation is the headline at Arya — large layouts backed by a developer known for finishing what it promises.',
+        'Sobha\'s build-quality reputation is the headline at Arya, large layouts backed by a developer known for finishing what it promises.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -496,7 +496,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P7, P11, P3],
-    architect: 'Signature Global — In-House Design Team',
+    architect: 'Signature Global, In-House Design Team',
     developer: 'Signature Global',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -505,7 +505,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Daxin Vistas keeps things straightforward — a single, well-built 3 BHK configuration at an accessible entry price.',
+        'Daxin Vistas keeps things straightforward, a single, well-built 3 BHK configuration at an accessible entry price.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -535,7 +535,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P8, P12, P4],
-    architect: 'Signature Global — In-House Design Team',
+    architect: 'Signature Global, In-House Design Team',
     developer: 'Signature Global',
     possession: 'New Launch',
     rera: 'Available on request',
@@ -574,7 +574,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P9, P1, P5],
-    architect: 'M3M India — In-House Design Studio',
+    architect: 'M3M India, In-House Design Studio',
     developer: 'M3M India',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -583,7 +583,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Forestia bundles residential and retail in one Manesar address — useful for owners who want daily conveniences on the doorstep.',
+        'Forestia bundles residential and retail in one Manesar address, useful for owners who want daily conveniences on the doorstep.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -622,7 +622,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'A designer-branded collaboration at this scale is rare in Gurugram — Elie Saab is priced and positioned accordingly.',
+        'A designer-branded collaboration at this scale is rare in Gurugram. Elie Saab is priced and positioned accordingly.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -652,7 +652,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P11, P3, P7],
-    architect: 'Signature Global — In-House Design Team',
+    architect: 'Signature Global, In-House Design Team',
     developer: 'Signature Global',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -661,7 +661,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Twin Tower spans a wide configuration range in one address — useful for families comparing 3 BHK against 4.5 BHK side by side.',
+        'Twin Tower spans a wide configuration range in one address, useful for families comparing 3 BHK against 4.5 BHK side by side.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -691,7 +691,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P12, P4, P8],
-    architect: 'Elan Group — In-House Design Team',
+    architect: 'Elan Group, In-House Design Team',
     developer: 'Elan Group',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -700,7 +700,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'A 2,450 to 7,200 sq ft range under one roof is unusual — Presidential effectively covers three buyer segments at once.',
+        'A 2,450 to 7,200 sq ft range under one roof is unusual. Presidential effectively covers three buyer segments at once.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -730,7 +730,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P1, P5, P9],
-    architect: 'Elan Group — In-House Design Team',
+    architect: 'Elan Group, In-House Design Team',
     developer: 'Elan Group',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -763,14 +763,14 @@ export const PROJECTS: Project[] = [
     highlights: [
       { label: 'Configuration', value: '2.5, 3.5, 4.5 BHK Apartments' },
       { label: 'Saleable Area', value: '1,121 – 2,326 Sqft' },
-      { label: 'Project Type', value: 'Mixed Use — Retail & Residential Hub' },
+      { label: 'Project Type', value: 'Mixed Use, Retail & Residential Hub' },
       { label: 'Developer', value: 'Smart World Developers' },
       { label: 'Status', value: 'Under Construction' },
       { label: 'Location', value: 'Sector 113, Gurugram' },
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P2, P6, P10],
-    architect: 'Smart World Developers — In-House Design Team',
+    architect: 'Smart World Developers, In-House Design Team',
     developer: 'Smart World Developers',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -810,7 +810,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P3, P7, P11],
-    architect: 'Natures Court — In-House Design Team',
+    architect: 'Natures Court, In-House Design Team',
     developer: 'Natures Court',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -849,7 +849,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P4, P8, P12],
-    architect: 'AIPL — In-House Design Team',
+    architect: 'AIPL, In-House Design Team',
     developer: 'AIPL (Advance India Projects Limited)',
     possession: 'New Launch',
     rera: 'Available on request',
@@ -858,7 +858,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Revante 103 spans 2 BHK through 4 BHK in one launch — a practical range for families upgrading within the same address.',
+        'Revante 103 spans 2 BHK through 4 BHK in one launch, a practical range for families upgrading within the same address.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -888,7 +888,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: RESIDENTIAL_AMENITIES,
     gallery: [P5, P9, P1],
-    architect: 'Sobha Limited — In-House Design Team',
+    architect: 'Sobha Limited, In-House Design Team',
     developer: 'Sobha Limited',
     possession: 'Under Construction',
     rera: 'Available on request',
@@ -898,7 +898,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Altus brings Sobha\'s build quality to a strictly 4 & 5 BHK format — a focused offer for larger families.',
+        'Altus brings Sobha\'s build quality to a strictly 4 & 5 BHK format, a focused offer for larger families.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },
@@ -929,7 +929,7 @@ export const PROJECTS: Project[] = [
     ],
     amenities: COMMERCIAL_AMENITIES,
     gallery: [P6, P10, P2],
-    architect: 'Omaxe — In-House Design Team',
+    architect: 'Omaxe, In-House Design Team',
     developer: 'Omaxe',
     possession: 'New Launch',
     rera: 'Available on request',
@@ -939,7 +939,7 @@ export const PROJECTS: Project[] = [
     ],
     testimonial: {
       quote:
-        'Omaxe\'s unit sizes start as low as 40 sq ft — a genuinely low entry ticket for first-time commercial investors.',
+        'Omaxe\'s unit sizes start as low as 40 sq ft, a genuinely low entry ticket for first-time commercial investors.',
       author: 'Infraguru Advisory Team',
       role: ADVISORY_ROLE,
     },

@@ -60,7 +60,7 @@ export default function CareersHero() {
       <motion.div style={{ scale: imgScale, y: imgY }} className="absolute inset-0 z-0">
         <Image
           src="/heroi.jpg"
-          alt="InfraGuru — where careers are built as thoughtfully as our addresses"
+          alt="InfraGuru, where careers are built as thoughtfully as our addresses"
           fill
           priority
           sizes="100vw"
@@ -117,7 +117,7 @@ export default function CareersHero() {
           className="mt-6 max-w-xl text-body text-white/75 sm:mt-8"
         >
           Join a team that treats every address, and every career, as something worth building
-          properly — with craft, integrity, and room to grow.
+          properly, with craft, integrity, and room to grow.
         </motion.p>
 
         <motion.div

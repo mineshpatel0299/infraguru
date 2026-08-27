@@ -14,18 +14,18 @@ export async function generateMetadata({
   const job = await getJobBySlug(slug);
 
   if (!job) {
-    return { title: "Role Not Found — InfraGuru Careers" };
+    return { title: "Role Not Found | InfraGuru Careers" };
   }
 
   const url = `/careers/apply/${job.slug}`;
 
   return {
-    title: `Apply — ${job.title} — InfraGuru Careers`,
+    title: `Apply | ${job.title} | InfraGuru Careers`,
     description: job.overview,
     alternates: { canonical: url },
     robots: job.status === "open" ? { index: true, follow: true } : { index: false, follow: false },
     openGraph: {
-      title: `Apply — ${job.title}`,
+      title: `Apply | ${job.title}`,
       description: job.overview,
       url,
     },

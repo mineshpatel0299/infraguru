@@ -18,7 +18,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { region } = await params;
   const heading = REGION_BY_SLUG[region];
-  if (!heading) return { title: "Destinations Not Found — Infraguru" };
+  if (!heading) return { title: "Destinations Not Found | Infraguru" };
 
   const title = heading === "India" ? "India Properties" : "International Properties";
   const description =
@@ -31,7 +31,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: url },
-    openGraph: { title: `${title} — Infraguru`, description, url },
+    openGraph: { title: `${title} | Infraguru`, description, url },
   };
 }
 

@@ -37,7 +37,7 @@ export default function CareersIntro() {
             As Our Portfolios
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-body font-light leading-relaxed text-muted">
-            We hire people who obsess over the details — because in real estate, and in a career,
+            We hire people who obsess over the details, because in real estate, and in a career,
             the details are the difference. Here, ambition is matched with mentorship, and every
             role comes with real ownership.
           </p>

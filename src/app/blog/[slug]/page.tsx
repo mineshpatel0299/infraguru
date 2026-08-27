@@ -15,10 +15,10 @@ export async function generateMetadata({
   const post = await getPostBySlug(slug);
 
   if (!post) {
-    return { title: "Article Not Found — InfraGuru" };
+    return { title: "Article Not Found | InfraGuru" };
   }
 
-  const title = `${post.title} — InfraGuru Journal`;
+  const title = `${post.title} | InfraGuru Journal`;
   const url = `/blog/${post.slug}`;
   const image = post.coverImage || DEFAULT_OG_IMAGE;
 

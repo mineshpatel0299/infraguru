@@ -45,7 +45,7 @@ export default function AboutStory({ content = ABOUT_STORY_DEFAULT_CONTENT }: { 
                 {(src) => (
                   <Image
                     src={src}
-                    alt="InfraGuru — a decade of curated real estate"
+                    alt="InfraGuru, a decade of curated real estate"
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 80vw, 40vw"

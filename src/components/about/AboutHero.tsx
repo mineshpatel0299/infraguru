@@ -67,7 +67,7 @@ export default function AboutHero({ content = ABOUT_HERO_DEFAULT_CONTENT }: { co
           {(src) => (
             <Image
               src={src}
-              alt="InfraGuru — the story behind the address"
+              alt="InfraGuru, the story behind the address"
               fill
               priority
               sizes="100vw"

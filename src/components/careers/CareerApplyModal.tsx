@@ -130,7 +130,7 @@ export function CareerApplyModal({
                     Send Us Your Resume
                   </h3>
                   <p className="mb-8 font-body text-sm text-ink/60">
-                    Tell us a bit about yourself — every application is reviewed personally by our team.
+                    Tell us a bit about yourself, every application is reviewed personally by our team.
                   </p>
 
                   <form ref={formRef} className="flex flex-col gap-4" onSubmit={handleSubmit}>

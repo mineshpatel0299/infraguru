@@ -40,7 +40,7 @@ export const OPENINGS: JobOpening[] = [
       {
         items: [
           "Lead, mentor and manage a team of sales consultants to meet and exceed monthly targets.",
-          "Own the full sales cycle for premium listings — from lead qualification to final closing.",
+          "Own the full sales cycle for premium listings, from lead qualification to final closing.",
           "Build and maintain long-term relationships with high-value clients and developer partners.",
           "Analyze market trends and pricing to guide the team's sales strategy.",
           "Report on team performance and pipeline health to leadership.",
@@ -185,7 +185,7 @@ export const OPENINGS: JobOpening[] = [
       "Excellent written English.",
     ],
     overview:
-      "We are looking for a Content & Brand Strategist to shape how InfraGuru sounds and looks everywhere — from listing narratives to campaign concepts — with an editorial, luxury-first lens.",
+      "We are looking for a Content & Brand Strategist to shape how InfraGuru sounds and looks everywhere, from listing narratives to campaign concepts, with an editorial, luxury-first lens.",
     responsibilities: [
       {
         items: [
@@ -260,7 +260,7 @@ export const OPENINGS: JobOpening[] = [
       "Real estate or luxury services background preferred.",
     ],
     overview:
-      "We are looking for a Customer Relationship Manager to own the post-sale client journey — documentation, handovers and long-term relationship management for our repeat buyers.",
+      "We are looking for a Customer Relationship Manager to own the post-sale client journey: documentation, handovers and long-term relationship management for our repeat buyers.",
     responsibilities: [
       {
         items: [
@@ -298,7 +298,7 @@ export const OPENINGS: JobOpening[] = [
       "Working knowledge of MS Office / Google Workspace.",
     ],
     overview:
-      "We are looking for an organized Operations Associate to keep the engine running — coordinating between sales, legal and developer teams to ensure every transaction closes without friction.",
+      "We are looking for an organized Operations Associate to keep the engine running, coordinating between sales, legal and developer teams to ensure every transaction closes without friction.",
     responsibilities: [
       {
         items: [

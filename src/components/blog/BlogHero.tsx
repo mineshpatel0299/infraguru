@@ -96,7 +96,7 @@ export default function BlogHero() {
             className="mt-8 max-w-md text-base text-white/60 leading-relaxed font-body"
           >
             Market analysis, buying guides, and design perspective from the InfraGuru
-            advisory desk — for readers who take real estate as seriously as we do.
+            advisory desk, for readers who take real estate as seriously as we do.
           </motion.p>
         </div>
       </div>

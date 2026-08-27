@@ -39,7 +39,7 @@ export default function CareersCTA() {
 
         <motion.p variants={fadeUp} className="max-w-lg text-body font-light text-white/70">
           If you believe you belong on this team but don&apos;t see an open role that fits,
-          send us your resume — we review every application personally.
+          send us your resume, we review every application personally.
         </motion.p>
 
         <motion.div variants={fadeUp}>

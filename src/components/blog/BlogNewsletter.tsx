@@ -50,7 +50,7 @@ export default function BlogNewsletter() {
         <motion.form variants={fadeUp} onSubmit={handleSubmit} className="mt-2 w-full max-w-md">
           {submitted ? (
             <p className="rounded-xl border border-white/15 bg-white/5 px-6 py-4 text-sm font-medium text-gold-gradient">
-              Thank you — you&apos;re on the list.
+              Thank you, you&apos;re on the list.
             </p>
           ) : (
             <div className="flex flex-col gap-3 sm:flex-row">
