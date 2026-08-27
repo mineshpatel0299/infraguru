@@ -5,7 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { JoinAsAgentModal } from "./JoinAsAgentModal";
 
-const BUILDING_IMAGE = "/ggh.png";
+const BUILDING_IMAGE = "/cta.png";
 
 function HighRiseBuilding({
   width,
@@ -102,7 +102,7 @@ export function DVSNetworkCTA() {
       {/* ── Desktop Layout ──────────────────────────────────── */}
       <div
         className="hidden lg:block relative mx-auto max-w-[1600px] px-8 xl:px-10"
-        style={{ height: 620, overflow: "hidden" }}
+        style={{ height: 920, overflow: "hidden" }}
       >
         {/* Premium Glass Card */}
         <motion.div

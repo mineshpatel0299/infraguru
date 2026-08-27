@@ -164,7 +164,7 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  style={{ willChange: 'transform, opacity', scaleY: 1.06 }}
+                  style={{ willChange: 'transform, opacity', scaleY: 1.02, backfaceVisibility: 'hidden' }}
                   className="flex-1 w-full overflow-hidden relative"
                 >
                   <img
@@ -172,10 +172,16 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
                     alt=""
                     style={{
                       position: 'absolute',
-                      top: `${-100 * i}%`,
+                      // Offset in vh (tied to the actual viewport, same basis as this
+                      // section's h-screen height) rather than a percentage of this
+                      // slat's own flex-rounded box height — 16 flex items rarely
+                      // divide the viewport evenly, and using that rounded height as
+                      // the basis for a 1600%-tall image amplifies the rounding error
+                      // up to 16x, which is what showed up as shimmering seam lines.
+                      top: `${-i * (100 / 16)}vh`,
                       left: 0,
                       width: '100%',
-                      height: '1600%',
+                      height: '100vh',
                       objectFit: 'cover',
                     }}
                   />
