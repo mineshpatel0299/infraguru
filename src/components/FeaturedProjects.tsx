@@ -49,12 +49,16 @@ const textVariants: Variants = {
   }),
 };
 
+const SLAT_COUNT = 16;
+
 export default function FeaturedProjects({ projects }: { projects: Project[] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  
+  const [containerH, setContainerH] = useState(0);
+
   const activeIndexRef = useRef(0);
   const targetIndexRef = useRef(0);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -72,6 +76,28 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
       if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
     };
   }, []);
+
+  // Slat boundaries are measured in real, rounded pixels (not vh/percentage)
+  // and shared between every slat's own box and the image slice inside it.
+  // vh/percentage math still leaves a fractional-pixel remainder at each of
+  // the 16 boundaries, and the browser anti-aliases/blends that fractional
+  // edge against whatever is behind it — that blended sliver is what showed
+  // up as shimmering seam lines across the image. Snapping every boundary to
+  // a whole pixel up front removes the fractional edge entirely.
+  React.useLayoutEffect(() => {
+    const el = stickyRef.current;
+    if (!el) return;
+    const update = () => setContainerH(el.getBoundingClientRect().height);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const slatBounds = React.useMemo(
+    () => Array.from({ length: SLAT_COUNT + 1 }, (_, i) => Math.round((i * containerH) / SLAT_COUNT)),
+    [containerH]
+  );
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     let target = Math.floor(latest * n);
@@ -136,7 +162,7 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
       </div>
 
       <div ref={sectionRef} style={{ height: `${n * 100}vh` }} className="relative w-full">
-        <div className="sticky top-0 h-screen w-full overflow-hidden bg-neutral-900 flex items-center justify-center shadow-2xl">
+        <div ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden bg-neutral-900 flex items-center justify-center shadow-2xl">
 
           {/* ── Base Background ── */}
           <div className="absolute inset-0 z-0 pointer-events-none">
@@ -150,46 +176,62 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
             <div className="absolute inset-0 bg-black/30" />
           </div>
 
-          {/* ── Background Shimmer Up via 16 Horizontal Slats ── */}
-          <AnimatePresence mode="popLayout" custom={direction}>
-            <motion.div
-              key={activeIndex}
-              className="absolute inset-0 z-10 flex flex-col w-full h-full pointer-events-none"
-            >
-              {Array.from({ length: 16 }).map((_, i) => (
-                <motion.div
-                  key={i}
-                  custom={{ dir: direction, idx: i }}
-                  variants={bgSlatVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  style={{ willChange: 'transform, opacity', scaleY: 1.02, backfaceVisibility: 'hidden' }}
-                  className="flex-1 w-full overflow-hidden relative"
-                >
-                  <img
-                    src={projects[activeIndex].image}
-                    alt=""
-                    style={{
-                      position: 'absolute',
-                      // Offset in vh (tied to the actual viewport, same basis as this
-                      // section's h-screen height) rather than a percentage of this
-                      // slat's own flex-rounded box height — 16 flex items rarely
-                      // divide the viewport evenly, and using that rounded height as
-                      // the basis for a 1600%-tall image amplifies the rounding error
-                      // up to 16x, which is what showed up as shimmering seam lines.
-                      top: `${-i * (100 / 16)}vh`,
-                      left: 0,
-                      width: '100%',
-                      height: '100vh',
-                      objectFit: 'cover',
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black/30" />
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+          {/* ── Background Shimmer Up via 16 Horizontal Slats ──
+              Every slat's box and the image slice inside it share the same
+              slatBounds array (whole, rounded pixels — see the useLayoutEffect
+              above). That guarantees adjacent slats abut with zero fractional
+              remainder, so the browser never has to anti-alias/blend a
+              sub-pixel edge — which is what was showing up as shimmering
+              seam lines across the image. */}
+          {containerH > 0 && (
+            <AnimatePresence mode="popLayout" custom={direction}>
+              <motion.div
+                key={activeIndex}
+                className="absolute inset-0 z-10 w-full h-full pointer-events-none"
+              >
+                {Array.from({ length: SLAT_COUNT }).map((_, i) => {
+                  const top = slatBounds[i];
+                  const height = slatBounds[i + 1] - slatBounds[i];
+                  return (
+                    <motion.div
+                      key={i}
+                      custom={{ dir: direction, idx: i }}
+                      variants={bgSlatVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      style={{
+                        willChange: 'transform, opacity',
+                        backfaceVisibility: 'hidden',
+                        top,
+                        left: 0,
+                        width: '100%',
+                        height,
+                      }}
+                      className="absolute overflow-hidden"
+                    >
+                      <img
+                        src={projects[activeIndex].image}
+                        alt=""
+                        style={{
+                          position: 'absolute',
+                          // Same pixel coordinate system as this slat's own
+                          // top/height above, so the image slice can never
+                          // drift out of alignment with its box.
+                          top: -top,
+                          left: 0,
+                          width: '100%',
+                          height: containerH,
+                          objectFit: 'cover',
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-black/30" />
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
+          )}
 
           {/* ── Side Badges ── */}
           <div className="absolute left-6 sm:left-10 lg:left-16 top-1/2 -translate-y-1/2 z-20 hidden md:block">

@@ -9,16 +9,15 @@ export type LocationConfig = {
   keywords: string[];
   // Representative destination-card image (used on /destinations/[region]).
   image: string;
+  // Optional developer display priority for this location's /projects/location
+  // listing — projects are grouped by developer in this order (matched
+  // case-insensitively as a substring against the project's `developer`
+  // field), with any unmatched/unlisted developer's projects kept after all
+  // listed ones, in their existing relative order.
+  developerOrder?: string[];
 };
 
 export const LOCATIONS: LocationConfig[] = [
-  {
-    slug: "delhi",
-    label: "Delhi",
-    region: "India",
-    keywords: ["delhi"],
-    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80",
-  },
   {
     slug: "gurgaon",
     label: "Gurgaon",
@@ -27,11 +26,19 @@ export const LOCATIONS: LocationConfig[] = [
     image: "https://images.unsplash.com/photo-1695667424131-a9680e0307ee?w=1200&auto=format&fit=crop&q=80",
   },
   {
-    slug: "goa",
-    label: "Goa",
+    slug: "delhi",
+    label: "Delhi",
     region: "India",
-    keywords: ["goa"],
-    image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1200&auto=format&fit=crop&q=80",
+    keywords: ["delhi"],
+    image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80",
+  },
+  {
+    slug: "dubai",
+    label: "Dubai",
+    region: "International",
+    keywords: ["dubai"],
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&auto=format&fit=crop&q=80",
+    developerOrder: ["damac", "sobha", "danube", "azizi", "samana"],
   },
   {
     slug: "dholera",
@@ -39,6 +46,13 @@ export const LOCATIONS: LocationConfig[] = [
     region: "India",
     keywords: ["dholera"],
     image: "https://images.unsplash.com/photo-1650868469306-3b9a0a198945?w=1200&auto=format&fit=crop&q=80",
+  },
+  {
+    slug: "goa",
+    label: "Goa",
+    region: "India",
+    keywords: ["goa"],
+    image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1200&auto=format&fit=crop&q=80",
   },
   {
     slug: "europe",
@@ -53,13 +67,6 @@ export const LOCATIONS: LocationConfig[] = [
     region: "International",
     keywords: ["australia"],
     image: "https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?w=1200&auto=format&fit=crop&q=80",
-  },
-  {
-    slug: "dubai",
-    label: "Dubai",
-    region: "International",
-    keywords: ["dubai"],
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&auto=format&fit=crop&q=80",
   },
 ];
 
@@ -83,4 +90,25 @@ export function projectBelongsToLocation(
 ): boolean {
   if (project.locationSlug) return project.locationSlug === config.slug;
   return projectMatchesLocation(project.location, config);
+}
+
+/** Stable-sorts projects by a location's `developerOrder` (see LocationConfig)
+ * — projects whose `developer` matches an earlier name in the list sort
+ * first; projects with no match (or when no order is configured) keep their
+ * existing relative order at the end. */
+export function sortProjectsByDeveloperOrder<T extends { developer: string }>(
+  projects: T[],
+  developerOrder: string[] | undefined
+): T[] {
+  if (!developerOrder || developerOrder.length === 0) return projects;
+  const order = developerOrder.map((d) => d.toLowerCase());
+  const priority = (developer: string) => {
+    const d = developer.toLowerCase();
+    const idx = order.findIndex((name) => d.includes(name));
+    return idx === -1 ? order.length : idx;
+  };
+  return projects
+    .map((project, index) => ({ project, index, rank: priority(project.developer) }))
+    .sort((a, b) => a.rank - b.rank || a.index - b.index)
+    .map((entry) => entry.project);
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { AWARDS_DEFAULT_CONTENT, type AwardsContent } from "@/lib/pageSections";
@@ -53,6 +53,57 @@ export default function Awards({
     };
   }, [activeVideo, close]);
 
+  // ── Carousel scroll tracking ──
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  const updateScrollState = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    setCanScrollPrev(el.scrollLeft > 4);
+    setCanScrollNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    const ro = new ResizeObserver(updateScrollState);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      ro.disconnect();
+    };
+  }, [updateScrollState, items.length]);
+
+  // A horizontal-only scroll track has no vertical scroll room of its own,
+  // so browsers redirect vertical mouse-wheel input into the track's
+  // horizontal scroll instead of letting it bubble up as page scroll — that's
+  // what hijacked the page when hovering the cards. Only take over the wheel
+  // event for a horizontally-dominant gesture (trackpad swipe); a vertical
+  // one is forwarded to the page manually instead of letting the browser's
+  // default redirection consume it.
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        window.scrollBy({ top: e.deltaY, left: 0 });
+      }
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
+  };
+
   if (items.length === 0 && !ctx) return null;
 
   return (
@@ -102,8 +153,48 @@ export default function Awards({
           </motion.p>
         </div>
 
-        {/* ── Awards Grid ── */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3 lg:gap-8">
+        {/* ── Carousel nav ── */}
+        <div className="mb-6 flex items-center justify-end gap-3 sm:mb-7">
+          <button
+            type="button"
+            onClick={() => scrollByCard(-1)}
+            disabled={!canScrollPrev}
+            aria-label="Previous awards"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-all duration-300 hover:scale-105 hover:bg-white/20 active:scale-95 disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByCard(1)}
+            disabled={!canScrollNext}
+            aria-label="Next awards"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-gold-gradient text-primary-dark shadow-md transition-all duration-300 hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* ── Awards Carousel ── */}
+        <div className="relative">
+          {/* Edge fades hint that more cards are reachable by scrolling */}
+          <div
+            aria-hidden
+            className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-primary-dark to-transparent transition-opacity duration-300 sm:w-16 ${canScrollPrev ? "opacity-100" : "opacity-0"}`}
+          />
+          <div
+            aria-hidden
+            className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-primary-dark to-transparent transition-opacity duration-300 sm:w-16 ${canScrollNext ? "opacity-100" : "opacity-0"}`}
+          />
+
+          <div
+            ref={trackRef}
+            className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-visible scroll-smooth pt-2 pb-2 sm:gap-7 lg:gap-8"
+          >
           {items.map((item, idx) => (
             <motion.div
               key={idx}
@@ -111,7 +202,7 @@ export default function Awards({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7, delay: 0.06 * idx, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative flex flex-col"
+              className="group relative flex w-[78%] shrink-0 snap-start flex-col sm:w-[46%] lg:w-[31%]"
             >
               <RemoveItemButton arrayPath="items" index={idx} />
 
@@ -218,9 +309,10 @@ export default function Awards({
               arrayPath="items"
               newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", image: "", video: "" }}
               label="Add award"
-              className="flex aspect-[4/5] w-full items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70"
+              className="flex aspect-[4/5] w-[78%] shrink-0 snap-start items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70 sm:w-[46%] lg:w-[31%]"
             />
           )}
+          </div>
         </div>
 
         {items.length === 0 && ctx && (

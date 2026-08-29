@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform, type MotionValue } from "framer-motion";
 import type { Project } from "@/lib/db/types";
-import type { LocationConfig } from "@/lib/locations";
+import { sortProjectsByDeveloperOrder, type LocationConfig } from "@/lib/locations";
 import type { LocationHeroContent } from "@/lib/pageSections";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -295,8 +295,9 @@ export default function LocationProjectsClient({
   const isResidential = (cat: string) => cat === "Residential";
   const isCommercial = (cat: string) => cat === "Commercial";
 
-  const categoryProjects = projects.filter((p) =>
-    category === "Residential" ? isResidential(p.category) : isCommercial(p.category)
+  const categoryProjects = sortProjectsByDeveloperOrder(
+    projects.filter((p) => (category === "Residential" ? isResidential(p.category) : isCommercial(p.category))),
+    location.developerOrder
   );
 
   const displayProjects = useMemo(() => {
