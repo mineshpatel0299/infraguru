@@ -9,6 +9,7 @@ import EditableText from "./pagebuilder/EditableText";
 import EditableImage from "./pagebuilder/EditableImage";
 import EditableVideo from "./pagebuilder/EditableVideo";
 import RemoveItemButton from "./pagebuilder/RemoveItemButton";
+import RemoveFieldButton from "./pagebuilder/RemoveFieldButton";
 import AddItemButton from "./pagebuilder/AddItemButton";
 
 function MedalIcon({ className }: { className?: string }) {
@@ -106,6 +107,14 @@ export default function Awards({
 
   if (items.length === 0 && !ctx) return null;
 
+  // Heading and paragraph are optional — an admin can remove either
+  // independently via RemoveFieldButton, which clears the underlying
+  // field(s) to empty. Once empty, that block simply stops rendering here
+  // (outside edit mode); in edit mode it still renders so it can be typed
+  // back in.
+  const hasTitle = Boolean(live.eyebrow.trim() || live.headingPlain.trim() || live.headingHighlight.trim());
+  const hasSubheading = Boolean(live.subheading.trim());
+
   return (
     <section id="awards" className="relative overflow-hidden bg-primary-dark">
       {/* Faint gold vignette for depth, matching the site's premium-dark sections */}
@@ -113,45 +122,57 @@ export default function Awards({
 
       <div className="relative mx-auto max-w-[1760px] px-6 py-20 sm:px-10 sm:py-24 md:px-14 lg:px-16 lg:py-28">
         {/* ── Header ── */}
-        <div className="mx-auto mb-14 max-w-2xl text-center sm:mb-16 lg:mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-4 flex items-center justify-center gap-3"
-          >
-            <div className="h-[2px] w-8 bg-gold-gradient" />
-            <EditableText
-              as="span"
-              path="eyebrow"
-              fallback={live.eyebrow}
-              className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide"
-            />
-            <div className="h-[2px] w-8 bg-gold-gradient" />
-          </motion.div>
+        {(ctx || hasTitle || hasSubheading) && (
+          <div className="mx-auto mb-14 max-w-2xl text-center sm:mb-16 lg:mb-20">
+            {(ctx || hasTitle) && (
+              <div className="group relative">
+                <RemoveFieldButton paths={["eyebrow", "headingPlain", "headingHighlight"]} label="Remove title" />
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="mb-4 flex items-center justify-center gap-3"
+                >
+                  <div className="h-[2px] w-8 bg-gold-gradient" />
+                  <EditableText
+                    as="span"
+                    path="eyebrow"
+                    fallback={live.eyebrow}
+                    className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide"
+                  />
+                  <div className="h-[2px] w-8 bg-gold-gradient" />
+                </motion.div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 45 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light tracking-normal text-white leading-tight"
-          >
-            <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
-            <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />
-          </motion.h2>
+                <motion.h2
+                  initial={{ opacity: 0, y: 45 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                  className="font-heading text-[clamp(1.5rem,2.3vw,2.75rem)] font-light tracking-normal text-white leading-tight"
+                >
+                  <EditableText as="span" path="headingPlain" fallback={live.headingPlain} />{" "}
+                  <EditableText as="span" path="headingHighlight" fallback={live.headingHighlight} className="font-bold text-gold-gradient" />
+                </motion.h2>
+              </div>
+            )}
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-5 text-body font-light text-white/60"
-          >
-            <EditableText as="span" path="subheading" fallback={live.subheading} multiline />
-          </motion.p>
-        </div>
+            {(ctx || hasSubheading) && (
+              <div className="group relative">
+                <RemoveFieldButton paths={["subheading"]} label="Remove paragraph" />
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="mt-5 text-body font-light text-white/60"
+                >
+                  <EditableText as="span" path="subheading" fallback={live.subheading} multiline />
+                </motion.p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* ── Carousel nav ── */}
         <div className="mb-6 flex items-center justify-end gap-3 sm:mb-7">
@@ -246,15 +267,38 @@ export default function Awards({
                 {/* Bottom gradient for text legibility */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark/95 via-primary-dark/15 to-transparent" />
 
-                {/* Year pill */}
-                <div className="absolute left-4 top-4 z-10">
-                  <EditableText
-                    as="span"
-                    path={`items[${idx}].year`}
-                    fallback={item.year}
-                    className="inline-block rounded-full bg-gold-gradient px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-dark shadow-sm"
-                  />
-                </div>
+                {/* Year pill — optional like title/issuer: removable via
+                    RemoveFieldButton. Unlike plain text, an empty pill still
+                    shows its gold background/padding with nothing inside, so
+                    once cleared it's hidden completely (edit mode included)
+                    rather than left as a blank badge — re-added via a small
+                    dashed ghost "+" instead of ever showing an empty pill. */}
+                {item.year.trim() ? (
+                  <div className="group/year absolute left-4 top-4 z-10 flex items-center gap-1.5">
+                    <EditableText
+                      as="span"
+                      path={`items[${idx}].year`}
+                      fallback={item.year}
+                      className="inline-block rounded-full bg-gold-gradient px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-dark shadow-sm"
+                    />
+                    <RemoveFieldButton
+                      paths={[`items[${idx}].year`]}
+                      label="Remove year"
+                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/year:opacity-100"
+                    />
+                  </div>
+                ) : (
+                  ctx && (
+                    <button
+                      type="button"
+                      onClick={() => ctx.setField(`items[${idx}].year`, "2026")}
+                      aria-label="Add year"
+                      className="absolute left-4 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-white/30 text-sm leading-none text-white/50 opacity-0 transition-opacity hover:border-white/60 hover:text-white/80 group-hover:opacity-100"
+                    >
+                      +
+                    </button>
+                  )
+                )}
 
                 {/* Watch video button */}
                 {!ctx && item.video && (
@@ -268,20 +312,40 @@ export default function Awards({
                   </button>
                 )}
 
-                {/* Title / issuer overlay */}
+                {/* Title / issuer overlay — each is independently optional:
+                    removable to blank via RemoveFieldButton, and skipped
+                    entirely outside edit mode once empty. */}
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5">
-                  <EditableText
-                    as="h3"
-                    path={`items[${idx}].title`}
-                    fallback={item.title}
-                    className="pointer-events-auto block font-body text-sm font-semibold uppercase tracking-wide text-white leading-snug"
-                  />
-                  <EditableText
-                    as="p"
-                    path={`items[${idx}].issuer`}
-                    fallback={item.issuer}
-                    className="pointer-events-auto mt-1 block text-caption font-medium text-white/60"
-                  />
+                  {(ctx || item.title.trim()) && (
+                    <div className="group/title relative flex items-start justify-between gap-2 pointer-events-auto">
+                      <EditableText
+                        as="h3"
+                        path={`items[${idx}].title`}
+                        fallback={item.title}
+                        className="block flex-1 font-body text-sm font-semibold uppercase tracking-wide text-white leading-snug"
+                      />
+                      <RemoveFieldButton
+                        paths={[`items[${idx}].title`]}
+                        label="Remove title"
+                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/title:opacity-100"
+                      />
+                    </div>
+                  )}
+                  {(ctx || item.issuer.trim()) && (
+                    <div className="group/issuer relative mt-1 flex items-start justify-between gap-2 pointer-events-auto">
+                      <EditableText
+                        as="p"
+                        path={`items[${idx}].issuer`}
+                        fallback={item.issuer}
+                        className="block flex-1 text-caption font-medium text-white/60"
+                      />
+                      <RemoveFieldButton
+                        paths={[`items[${idx}].issuer`]}
+                        label="Remove issuer"
+                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/issuer:opacity-100"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
