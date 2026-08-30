@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeUp, staggerContainer, viewportMirror } from '@/lib/motion';
 import { getNavLocationGroups, type NavLocationItem } from '@/lib/nav-locations';
-import { LOCATIONS } from '@/lib/locations';
+import { LOCATIONS, FEATURED_LOCATION_SLUG } from '@/lib/locations';
 import { FOOTER_DEFAULT_CONTENT, type FooterContent } from '@/lib/pageSections';
 import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
 import EditableText from './pagebuilder/EditableText';
@@ -179,10 +179,19 @@ export default function Footer({ content = FOOTER_DEFAULT_CONTENT }: { content?:
                 <li key={loc.slug}>
                   <Link
                     href={loc.href}
-                    className="text-body text-white/80 transition-all duration-200 hover:text-white hover:translate-x-1 inline-flex items-center gap-2 group"
+                    className={`inline-flex items-center gap-2 transition-all duration-200 hover:translate-x-1 group ${
+                      loc.slug === FEATURED_LOCATION_SLUG
+                        ? 'text-body font-semibold text-gold-gradient'
+                        : 'text-body text-white/80 hover:text-white'
+                    }`}
                   >
-                    <span className="w-0 h-px bg-white transition-all duration-200 group-hover:w-3" />
+                    <span className={`h-px transition-all duration-200 group-hover:w-3 ${loc.slug === FEATURED_LOCATION_SLUG ? 'w-1.5 bg-gold-gradient' : 'w-0 bg-white'}`} />
                     {loc.label}
+                    {loc.slug === FEATURED_LOCATION_SLUG && (
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-gold-gradient opacity-70">
+                        Featured
+                      </span>
+                    )}
                   </Link>
                 </li>
               ) : (

@@ -33,14 +33,6 @@ export const LOCATIONS: LocationConfig[] = [
     image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=1200&auto=format&fit=crop&q=80",
   },
   {
-    slug: "dubai",
-    label: "Dubai",
-    region: "International",
-    keywords: ["dubai"],
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&auto=format&fit=crop&q=80",
-    developerOrder: ["damac", "sobha", "danube", "azizi", "samana"],
-  },
-  {
     slug: "dholera",
     label: "Dholera",
     region: "India",
@@ -53,6 +45,16 @@ export const LOCATIONS: LocationConfig[] = [
     region: "India",
     keywords: ["goa"],
     image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1200&auto=format&fit=crop&q=80",
+  },
+  // International — Dubai listed first and given featured styling in the
+  // Navbar dropdown and Footer locations list (see DUBAI_SLUG below).
+  {
+    slug: "dubai",
+    label: "Dubai",
+    region: "International",
+    keywords: ["dubai"],
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&auto=format&fit=crop&q=80",
+    developerOrder: ["damac", "sobha", "danube", "azizi", "samana"],
   },
   {
     slug: "europe",
@@ -69,6 +71,10 @@ export const LOCATIONS: LocationConfig[] = [
     image: "https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?w=1200&auto=format&fit=crop&q=80",
   },
 ];
+
+/** Dubai is the flagship international destination — called out with
+ * featured styling wherever locations are listed (Navbar dropdown, Footer). */
+export const FEATURED_LOCATION_SLUG = "dubai";
 
 export function getLocationConfig(slug: string): LocationConfig | undefined {
   return LOCATIONS.find((l) => l.slug === slug);

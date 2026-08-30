@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getNavLocationGroups, type NavLocationGroup } from '@/lib/nav-locations';
-import { LOCATIONS } from '@/lib/locations';
+import { LOCATIONS, FEATURED_LOCATION_SLUG } from '@/lib/locations';
 
 type NavLink = { href: string; label: string };
 
@@ -105,7 +105,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
         animate={{
           marginTop: scrolled ? 14 : 0,
           width: scrolled ? '94%' : '100%',
-          maxWidth: scrolled ? 1180 : 2400,
+          maxWidth: scrolled ? 1340 : 2400,
           borderRadius: scrolled ? 999 : 0,
           backgroundColor: isSolid ? 'rgba(255,255,255,0.92)' : 'rgba(11,19,32,0)',
           borderColor: isSolid ? 'rgba(3,46,151,0.08)' : 'rgba(255,255,255,0)',
@@ -130,12 +130,12 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
           </div>
 
           {/* Center: Desktop Links */}
-          <div className="hidden min-[901px]:flex justify-center items-center gap-2">
+          <div className="hidden min-[901px]:flex justify-center items-center gap-1">
             {LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`group relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
+                className={`group relative px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
               >
                 {link.label}
                 {!isSolid && (
@@ -154,7 +154,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 type="button"
                 onClick={() => setPropertiesOpen((v) => !v)}
                 aria-expanded={propertiesOpen}
-                className={`group relative flex items-center gap-1.5 px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
+                className={`group relative flex items-center gap-1.5 px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
               >
                 Properties
                 <svg
@@ -189,9 +189,18 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                                 <Link
                                   href={item.href}
                                   onClick={() => setPropertiesOpen(false)}
-                                  className="block rounded-lg px-2 py-1.5 text-sm text-white/75 hover:text-white hover:bg-white/10 transition-colors duration-200"
+                                  className={`flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors duration-200 ${
+                                    item.slug === FEATURED_LOCATION_SLUG
+                                      ? 'font-semibold text-gold-gradient hover:brightness-110'
+                                      : 'text-white/75 hover:text-white hover:bg-white/10'
+                                  }`}
                                 >
                                   {item.label}
+                                  {item.slug === FEATURED_LOCATION_SLUG && (
+                                    <span className="text-[8px] font-bold uppercase tracking-wider text-gold-gradient opacity-70">
+                                      Featured
+                                    </span>
+                                  )}
                                 </Link>
                               </li>
                             ) : (
@@ -213,7 +222,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
 
             <Link
               href={GALLERY_LINK.href}
-              className={`group relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
+              className={`group relative px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
             >
               {GALLERY_LINK.label}
               {!isSolid && (
@@ -223,7 +232,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
 
             <Link
               href="/careers"
-              className={`group relative px-5 py-2.5 text-sm font-semibold tracking-[0.1em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
+              className={`group relative px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
             >
               Careers
               {!isSolid && (
@@ -236,7 +245,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
           <div className="flex justify-end items-center">
             <Link
               href="/contact"
-              className={`hidden min-[901px]:inline-flex items-center gap-3 px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${isSolid
+              className={`hidden min-[901px]:inline-flex items-center gap-3 px-6 py-2.5 text-[13px] font-bold uppercase tracking-widest transition-all duration-500 ${isSolid
                 ? 'rounded-full border border-transparent bg-gold-gradient text-primary-dark hover:brightness-110'
                 : 'rounded-[4px] border border-white/50 bg-black/10 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] backdrop-blur-sm hover:bg-white hover:text-black hover:border-white'
                 }`}
@@ -317,9 +326,18 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                                     <Link
                                       href={item.href}
                                       onClick={() => { setMenuOpen(false); setMobilePropertiesOpen(false); }}
-                                      className="block rounded-lg px-2 py-2 text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors duration-200"
+                                      className={`flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-xs font-medium transition-colors duration-200 ${
+                                        item.slug === FEATURED_LOCATION_SLUG
+                                          ? 'font-bold text-gold-gradient'
+                                          : 'text-white/70 hover:text-white hover:bg-white/5'
+                                      }`}
                                     >
                                       {item.label}
+                                      {item.slug === FEATURED_LOCATION_SLUG && (
+                                        <span className="text-[8px] font-bold uppercase tracking-wider text-gold-gradient opacity-70">
+                                          Featured
+                                        </span>
+                                      )}
                                     </Link>
                                   </li>
                                 ) : (
@@ -359,7 +377,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
               </Link>
               <Link
                 href="/contact"
-                className="mt-4 flex w-full items-center justify-center rounded-full bg-gold-gradient py-4 text-center text-[11px] font-bold text-[#132731] uppercase tracking-widest shadow-[0_10px_30px_rgba(212,175,55,0.2)] transition-all duration-300 hover:brightness-110 hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)]"
+                className="mt-4 flex w-full items-center justify-center rounded-full bg-gold-gradient py-4 text-center text-[13px] font-bold text-[#132731] uppercase tracking-widest shadow-[0_10px_30px_rgba(212,175,55,0.2)] transition-all duration-300 hover:brightness-110 hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)]"
                 onClick={() => setMenuOpen(false)}
               >
                 BOOK A CONSULTATION
