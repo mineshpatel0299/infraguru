@@ -29,6 +29,14 @@ function PlayIcon({ className }: { className?: string }) {
   );
 }
 
+function ExpandIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 4H4v5m0-5 6 6m5-6h5v5m0-5-6 6M9 20H4v-5m0 5 6-6m5 6h5v-5m0 5-6-6" />
+    </svg>
+  );
+}
+
 export default function Awards({
   content = AWARDS_DEFAULT_CONTENT,
 }: {
@@ -38,11 +46,12 @@ export default function Awards({
   const live = (ctx?.content as AwardsContent | undefined) ?? content;
   const items = live.items ?? [];
 
-  const [activeVideo, setActiveVideo] = useState<{ src: string; title: string } | null>(null);
-  const close = useCallback(() => setActiveVideo(null), []);
+  // Shared fullscreen lightbox for both image and video award cards.
+  const [activeMedia, setActiveMedia] = useState<{ type: "image" | "video"; src: string; title: string } | null>(null);
+  const close = useCallback(() => setActiveMedia(null), []);
 
   useEffect(() => {
-    if (!activeVideo) return;
+    if (!activeMedia) return;
     document.body.style.overflow = "hidden";
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
@@ -52,7 +61,7 @@ export default function Awards({
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [activeVideo, close]);
+  }, [activeMedia, close]);
 
   // ── Carousel scroll tracking ──
   const trackRef = useRef<HTMLDivElement>(null);
@@ -92,7 +101,14 @@ export default function Awards({
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         e.preventDefault();
-        window.scrollBy({ top: e.deltaY, left: 0 });
+        // `behavior: "instant"` is required here — the site sets
+        // `scroll-behavior: smooth` globally on <html>, and without an
+        // explicit override each of these calls inherits that and kicks off
+        // its own smooth-scroll animation. A wheel gesture fires this dozens
+        // of times a second, so those animations piled up and fought each
+        // other, which is what made the page feel like it was getting stuck
+        // while scrolling over the cards.
+        window.scrollBy({ top: e.deltaY, left: 0, behavior: "instant" });
       }
     };
     el.addEventListener("wheel", onWheel, { passive: false });
@@ -216,7 +232,13 @@ export default function Awards({
             ref={trackRef}
             className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-visible scroll-smooth pt-2 pb-2 sm:gap-7 lg:gap-8"
           >
-          {items.map((item, idx) => (
+          {items.map((item, idx) => {
+            // Decided once, when the award was added (see the two "Add
+            // Award" buttons below) — legacy rows saved before this field
+            // existed fall back to "video" only if they already have a clip
+            // attached, otherwise "image".
+            const mediaType = item.mediaType ?? (item.video ? "video" : "image");
+            return (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 40 }}
@@ -227,9 +249,44 @@ export default function Awards({
             >
               <RemoveItemButton arrayPath="items" index={idx} />
 
-              {/* Media panel */}
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[24px] ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.25)] transition-all duration-500 group-hover:-translate-y-1.5 group-hover:ring-secondary/40 group-hover:shadow-[0_24px_60px_rgba(212,175,55,0.18)]">
-                {ctx ? (
+              {/* Media panel — an image or a video uploader, decided once at
+                  add-time via the item's mediaType. Image cards open a
+                  fullscreen lightbox on click (outside edit mode, where a
+                  click instead triggers EditableImage's replace overlay). */}
+              <div
+                onClick={
+                  !ctx && mediaType === "image" && item.image
+                    ? () => setActiveMedia({ type: "image", src: item.image, title: item.title })
+                    : undefined
+                }
+                className={`relative aspect-[4/5] w-full overflow-hidden rounded-[24px] ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.25)] transition-all duration-500 group-hover:-translate-y-1.5 group-hover:ring-secondary/40 group-hover:shadow-[0_24px_60px_rgba(212,175,55,0.18)] ${
+                  !ctx && mediaType === "image" && item.image ? "cursor-pointer" : ""
+                }`}
+              >
+                {mediaType === "video" ? (
+                  ctx ? (
+                    <EditableVideo path={`items[${idx}].video`} fallback={item.video} wrapperClassName="relative h-full w-full">
+                      {(src) =>
+                        src ? (
+                          <video src={src} muted loop autoPlay playsInline className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
+                            <PlayIcon className="h-9 w-9 text-secondary/60" />
+                            <span className="text-[11px] font-semibold uppercase tracking-wide text-white/35">
+                              Award video coming soon
+                            </span>
+                          </div>
+                        )
+                      }
+                    </EditableVideo>
+                  ) : item.video ? (
+                    <video src={item.video} muted loop autoPlay playsInline className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
+                      <PlayIcon className="h-9 w-9 text-secondary/60" />
+                    </div>
+                  )
+                ) : ctx ? (
                   <EditableImage path={`items[${idx}].image`} fallback={item.image} wrapperClassName="relative h-full w-full">
                     {(src) =>
                       src ? (
@@ -261,6 +318,15 @@ export default function Awards({
                 ) : (
                   <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
                     <MedalIcon className="h-9 w-9 text-secondary/60" />
+                  </div>
+                )}
+
+                {/* Expand-icon hint for image cards — the click target is
+                    the whole panel (see onClick above); this is purely a
+                    discoverability cue on hover. */}
+                {!ctx && mediaType === "image" && item.image && (
+                  <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
+                    <ExpandIcon className="h-4 w-4" />
                   </div>
                 )}
 
@@ -300,11 +366,13 @@ export default function Awards({
                   )
                 )}
 
-                {/* Watch video button */}
-                {!ctx && item.video && (
+                {/* Expand button for video cards — the inline video above
+                    plays muted/looping as a preview; this opens the full
+                    lightbox below with sound and controls. */}
+                {!ctx && mediaType === "video" && item.video && (
                   <button
                     type="button"
-                    onClick={() => setActiveVideo({ src: item.video, title: item.title })}
+                    onClick={() => setActiveMedia({ type: "video", src: item.video, title: item.title })}
                     aria-label={`Watch video: ${item.title}`}
                     className="absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-gold-gradient hover:text-primary-dark"
                   >
@@ -349,32 +417,25 @@ export default function Awards({
                 </div>
               </div>
 
-              {/* Optional award-video uploader (edit mode only) */}
-              {ctx && (
-                <div className="mt-3 flex items-center gap-2 rounded-xl border border-dashed border-white/15 px-3 py-2">
-                  <PlayIcon className="h-3.5 w-3.5 shrink-0 text-white/40" />
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-white/40">
-                    {item.video ? "Award video attached" : "Attach award video (optional)"}
-                  </span>
-                  <EditableVideo path={`items[${idx}].video`} fallback={item.video} wrapperClassName="relative ml-auto">
-                    {() => (
-                      <span className="cursor-pointer text-[11px] font-bold uppercase tracking-wide text-gold-gradient">
-                        {item.video ? "Replace" : "Upload"}
-                      </span>
-                    )}
-                  </EditableVideo>
-                </div>
-              )}
             </motion.div>
-          ))}
+            );
+          })}
 
           {ctx && (
-            <AddItemButton
-              arrayPath="items"
-              newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", image: "", video: "" }}
-              label="Add award"
-              className="flex aspect-[4/5] w-[78%] shrink-0 snap-start items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70 sm:w-[46%] lg:w-[31%]"
-            />
+            <div className="flex aspect-[4/5] w-[78%] shrink-0 snap-start flex-col gap-3 sm:w-[46%] lg:w-[31%]">
+              <AddItemButton
+                arrayPath="items"
+                newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", mediaType: "image", image: "", video: "" }}
+                label="Add Award (Image)"
+                className="flex flex-1 items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70"
+              />
+              <AddItemButton
+                arrayPath="items"
+                newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", mediaType: "video", image: "", video: "" }}
+                label="Add Award (Video)"
+                className="flex flex-1 items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70"
+              />
+            </div>
           )}
           </div>
         </div>
@@ -384,9 +445,9 @@ export default function Awards({
         )}
       </div>
 
-      {/* Video lightbox */}
+      {/* Fullscreen lightbox — shared by image and video award cards */}
       <AnimatePresence>
-        {activeVideo && (
+        {activeMedia && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -414,9 +475,15 @@ export default function Awards({
               onClick={(e) => e.stopPropagation()}
               className="relative mx-auto flex h-[78vh] w-[92vw] max-w-5xl flex-col items-center justify-center gap-4 sm:h-[82vh]"
             >
-              <video src={activeVideo.src} controls autoPlay playsInline className="h-full w-full object-contain" />
+              {activeMedia.type === "video" ? (
+                <video src={activeMedia.src} controls autoPlay playsInline className="h-full w-full object-contain" />
+              ) : (
+                <div className="relative h-full w-full">
+                  <Image src={activeMedia.src} alt={activeMedia.title} fill sizes="92vw" className="object-contain" />
+                </div>
+              )}
               <p className="text-center font-body text-sm font-medium uppercase tracking-wide text-white/70">
-                {activeVideo.title}
+                {activeMedia.title}
               </p>
             </motion.div>
           </motion.div>

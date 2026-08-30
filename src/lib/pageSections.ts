@@ -123,9 +123,13 @@ export type AwardItem = {
   title: string;
   issuer: string;
   year: string;
+  /** Chosen once when the award is added — decides whether the card's media
+   * panel is an image or a video uploader. Missing on legacy rows (added
+   * before this field existed); treat those as "image". */
+  mediaType?: "image" | "video";
   /** Empty string = no photo uploaded yet; card renders a placeholder. */
   image: string;
-  /** Optional ceremony/moment clip. Empty string = no video attached. */
+  /** Empty string = no video uploaded yet; card renders a placeholder. */
   video: string;
 };
 
@@ -148,6 +152,7 @@ export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
       title: "Best Luxury Real Estate Advisory",
       issuer: "Realty Excellence Awards",
       year: "2025",
+      mediaType: "image",
       image: "",
       video: "",
     },
@@ -155,6 +160,7 @@ export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
       title: "Developer Partner of the Year",
       issuer: "India Real Estate Summit",
       year: "2024",
+      mediaType: "image",
       image: "",
       video: "",
     },
@@ -162,6 +168,7 @@ export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
       title: "Top Real Estate Consultancy, North India",
       issuer: "National Realty Icons",
       year: "2024",
+      mediaType: "image",
       image: "",
       video: "",
     },
@@ -169,6 +176,7 @@ export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
       title: "Customer Trust Award",
       issuer: "PropTech India",
       year: "2023",
+      mediaType: "image",
       image: "",
       video: "",
     },
@@ -176,6 +184,7 @@ export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
       title: "Excellence in Client Service",
       issuer: "Gurugram Business Awards",
       year: "2023",
+      mediaType: "image",
       image: "",
       video: "",
     },
@@ -183,6 +192,7 @@ export const AWARDS_DEFAULT_CONTENT: AwardsContent = {
       title: "Emerging Real Estate Brand",
       issuer: "CREDAI Recognition",
       year: "2022",
+      mediaType: "image",
       image: "",
       video: "",
     },
