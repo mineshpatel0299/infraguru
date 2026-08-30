@@ -37,6 +37,27 @@ function ExpandIcon({ className }: { className?: string }) {
   );
 }
 
+/** Autoplaying muted video preview for award cards. The declarative
+ * `muted`/`autoPlay` attributes alone are unreliable in production builds:
+ * React doesn't always commit the `muted` DOM property before the browser
+ * evaluates autoplay eligibility, and that race is far more likely to be
+ * lost when hydration is fast (prod) than when it's slow (dev) — which is
+ * exactly why this can work on localhost and silently fail once deployed.
+ * Explicitly setting `.muted` and calling `.play()` from a ref sidesteps
+ * that race entirely. */
+function AutoplayVideo({ src, className }: { src: string; className?: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    video.muted = true;
+    video.play().catch(() => {});
+  }, [src]);
+
+  return <video ref={ref} src={src} muted loop autoPlay playsInline className={className} />;
+}
+
 export default function Awards({
   content = AWARDS_DEFAULT_CONTENT,
 }: {
@@ -268,7 +289,7 @@ export default function Awards({
                     <EditableVideo path={`items[${idx}].video`} fallback={item.video} wrapperClassName="relative h-full w-full">
                       {(src) =>
                         src ? (
-                          <video src={src} muted loop autoPlay playsInline className="h-full w-full object-cover" />
+                          <AutoplayVideo src={src} className="h-full w-full object-cover" />
                         ) : (
                           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
                             <PlayIcon className="h-9 w-9 text-secondary/60" />
@@ -280,7 +301,7 @@ export default function Awards({
                       }
                     </EditableVideo>
                   ) : item.video ? (
-                    <video src={item.video} muted loop autoPlay playsInline className="h-full w-full object-cover" />
+                    <AutoplayVideo src={item.video} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
                       <PlayIcon className="h-9 w-9 text-secondary/60" />
