@@ -4,6 +4,18 @@ export type Testimonial = { quote: string; author: string; role: string };
 
 export type ProjectStatus = "draft" | "published";
 
+// Optional content blocks on the public project detail page that an admin
+// can choose to hide (e.g. a project with no photos yet shouldn't show an
+// empty Gallery strip). See ProjectExperience.tsx for where each is rendered.
+export const PROJECT_SECTION_KEYS = ["highlights", "amenities", "gallery", "landmarks"] as const;
+export type ProjectSectionKey = (typeof PROJECT_SECTION_KEYS)[number];
+export const PROJECT_SECTION_LABELS: Record<ProjectSectionKey, string> = {
+  highlights: "Highlights strip",
+  amenities: "Signature Amenities",
+  gallery: "Gallery",
+  landmarks: "Location & Connectivity",
+};
+
 // Nullable TEXT columns are coerced to "" by the row mapper in db/projects.ts,
 // so the public Project shape matches the original static data (plain strings) —
 // components can interpolate these fields directly with no null-guards.
@@ -34,6 +46,7 @@ export type Project = {
   testimonial: Testimonial | null;
   status: ProjectStatus;
   sortOrder: number;
+  hiddenSections: ProjectSectionKey[];
   // SEO — all optional overrides. Public pages fall back to title/tagline/image
   // when these are blank, so components can also interpolate these directly.
   seoTitle: string;

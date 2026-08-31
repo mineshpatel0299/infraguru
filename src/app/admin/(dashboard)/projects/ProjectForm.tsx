@@ -12,6 +12,7 @@ import SaveBar from "@/components/admin/SaveBar";
 import { inputClass, labelClass } from "@/components/admin/formStyles";
 import { slugify } from "@/lib/slugify";
 import type { Project } from "@/lib/db/types";
+import { PROJECT_SECTION_KEYS, PROJECT_SECTION_LABELS, type ProjectSectionKey } from "@/lib/db/types";
 import type { ProjectInput } from "@/lib/db/projects";
 import { LOCATIONS } from "@/lib/locations";
 import { saveProjectAction } from "./actions";
@@ -42,6 +43,7 @@ function toInput(p?: Project): ProjectInput {
     testimonial: p?.testimonial ?? { quote: "", author: "Infraguru Advisory Team", role: "Real Estate Consultants, Gurugram" },
     status: p?.status ?? "draft",
     sortOrder: p?.sortOrder ?? 0,
+    hiddenSections: p?.hiddenSections ?? [],
     seoTitle: p?.seoTitle ?? "",
     seoDescription: p?.seoDescription ?? "",
     seoKeywords: p?.seoKeywords ?? [],
@@ -399,6 +401,35 @@ export default function ProjectForm({ project }: { project?: Project }) {
               Lower numbers appear first. Tip: on the Projects list, drag rows by their handle to reorder without typing a number.
             </p>
           </label>
+        </div>
+      </FormSection>
+
+      <FormSection
+        title="Section Visibility"
+        description="Hide a section from the public project page — e.g. a project with no photos yet shouldn't show an empty Gallery."
+      >
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {PROJECT_SECTION_KEYS.map((key) => {
+            const hidden = form.hiddenSections.includes(key);
+            return (
+              <label key={key} className="flex items-center gap-2.5">
+                <input
+                  type="checkbox"
+                  checked={hidden}
+                  onChange={(e) => {
+                    const next: ProjectSectionKey[] = e.target.checked
+                      ? [...form.hiddenSections, key]
+                      : form.hiddenSections.filter((k) => k !== key);
+                    set("hiddenSections", next);
+                  }}
+                  className="h-4 w-4 rounded border-[#032E97]/20 text-[#d4af37] focus:ring-[#d4af37]"
+                />
+                <span className="text-sm font-medium text-[#0a1435]">
+                  Hide &ldquo;{PROJECT_SECTION_LABELS[key]}&rdquo;
+                </span>
+              </label>
+            );
+          })}
         </div>
       </FormSection>
 

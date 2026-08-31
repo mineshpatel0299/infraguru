@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getNavLocationGroups, type NavLocationGroup } from '@/lib/nav-locations';
 import { LOCATIONS, FEATURED_LOCATION_SLUG } from '@/lib/locations';
@@ -52,6 +53,9 @@ type NavbarProps = {
 };
 
 export default function Navbar({ solid = false }: NavbarProps = {}) {
+  const pathname = usePathname();
+  const isActivePath = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const propertiesActive = pathname.startsWith('/projects');
   const [scrolled, setScrolled] = useState(false);
   const isSolid = solid || scrolled;
   const [menuOpen, setMenuOpen] = useState(false);
@@ -131,18 +135,22 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
 
           {/* Center: Desktop Links */}
           <div className="hidden min-[901px]:flex justify-center items-center gap-1">
-            {LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`group relative px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
-              >
-                {link.label}
-                {!isSolid && (
-                  <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
-                )}
-              </Link>
-            ))}
+            {LINKS.map((link) => {
+              const active = isActivePath(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={`group relative px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
+                >
+                  {link.label}
+                  <span
+                    className={`pointer-events-none absolute inset-x-5 -bottom-0.5 h-[2px] origin-center rounded-full bg-secondary shadow-[0_0_6px_rgba(212,175,55,0.6)] transition-transform duration-300 ease-out group-hover:scale-x-100 ${active ? 'scale-x-100' : 'scale-x-0'}`}
+                  />
+                </Link>
+              );
+            })}
 
             {/* Properties dropdown — driven by which locations actually have published projects */}
             <div
@@ -154,6 +162,7 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 type="button"
                 onClick={() => setPropertiesOpen((v) => !v)}
                 aria-expanded={propertiesOpen}
+                aria-current={propertiesActive ? 'page' : undefined}
                 className={`group relative flex items-center gap-1.5 px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
               >
                 Properties
@@ -163,9 +172,9 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                 </svg>
-                {!isSolid && (
-                  <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
-                )}
+                <span
+                  className={`pointer-events-none absolute inset-x-5 -bottom-0.5 h-[2px] origin-center rounded-full bg-secondary shadow-[0_0_6px_rgba(212,175,55,0.6)] transition-transform duration-300 ease-out group-hover:scale-x-100 ${propertiesActive ? 'scale-x-100' : 'scale-x-0'}`}
+                />
               </button>
 
               <AnimatePresence>
@@ -222,22 +231,24 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
 
             <Link
               href={GALLERY_LINK.href}
+              aria-current={isActivePath(GALLERY_LINK.href) ? 'page' : undefined}
               className={`group relative px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
             >
               {GALLERY_LINK.label}
-              {!isSolid && (
-                <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
-              )}
+              <span
+                className={`pointer-events-none absolute inset-x-5 -bottom-0.5 h-[2px] origin-center rounded-full bg-secondary shadow-[0_0_6px_rgba(212,175,55,0.6)] transition-transform duration-300 ease-out group-hover:scale-x-100 ${isActivePath(GALLERY_LINK.href) ? 'scale-x-100' : 'scale-x-0'}`}
+              />
             </Link>
 
             <Link
               href="/careers"
+              aria-current={isActivePath('/careers') ? 'page' : undefined}
               className={`group relative px-3 py-2.5 text-[15px] font-semibold tracking-[0.06em] uppercase transition-all duration-300 rounded-lg ${isSolid ? 'text-primary-dark hover:bg-primary/8' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)] hover:bg-white/10'}`}
             >
               Careers
-              {!isSolid && (
-                <span className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-px origin-center scale-x-0 bg-gold-gradient transition-transform duration-300 ease-out group-hover:scale-x-100" />
-              )}
+              <span
+                className={`pointer-events-none absolute inset-x-5 -bottom-0.5 h-[2px] origin-center rounded-full bg-secondary shadow-[0_0_6px_rgba(212,175,55,0.6)] transition-transform duration-300 ease-out group-hover:scale-x-100 ${isActivePath('/careers') ? 'scale-x-100' : 'scale-x-0'}`}
+              />
             </Link>
           </div>
 
@@ -276,17 +287,23 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-x-4 top-full mt-2 flex flex-col gap-1.5 rounded-[24px] border border-white/10 bg-[#0B1320]/95 backdrop-blur-3xl p-6 shadow-[0_40px_80px_rgba(0,0,0,0.6)] min-[901px]:hidden"
             >
-              {LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
-                >
-                  {link.label}
-                  <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
-                </Link>
-              ))}
+              {LINKS.map((link) => {
+                const active = isActivePath(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest rounded-2xl transition-all duration-300 ${active ? 'text-gold-gradient bg-white/5' : 'text-white/80 hover:text-white hover:bg-white/5'}`}
+                  >
+                    {link.label}
+                    <span className={`text-lg font-light transition-colors ${active ? 'text-gold-gradient' : 'text-white/30 group-hover:text-gold-gradient'}`}>
+                      {active ? '•' : '→'}
+                    </span>
+                  </Link>
+                );
+              })}
 
               {/* Properties dropdown — driven by which locations actually have published projects */}
               <div className="rounded-2xl">
@@ -294,11 +311,12 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
                   type="button"
                   onClick={() => setMobilePropertiesOpen((v) => !v)}
                   aria-expanded={mobilePropertiesOpen}
-                  className="group flex w-full items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+                  aria-current={propertiesActive ? 'page' : undefined}
+                  className={`group flex w-full items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest rounded-2xl transition-all duration-300 ${propertiesActive ? 'text-gold-gradient bg-white/5' : 'text-white/80 hover:text-white hover:bg-white/5'}`}
                 >
                   Properties
                   <svg
-                    className={`w-3.5 h-3.5 text-white/40 transition-transform duration-300 ${mobilePropertiesOpen ? 'rotate-180' : ''}`}
+                    className={`w-3.5 h-3.5 transition-transform duration-300 ${propertiesActive ? 'text-gold-gradient' : 'text-white/40'} ${mobilePropertiesOpen ? 'rotate-180' : ''}`}
                     fill="none" stroke="currentColor" viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
@@ -361,19 +379,25 @@ export default function Navbar({ solid = false }: NavbarProps = {}) {
               <Link
                 href={GALLERY_LINK.href}
                 onClick={() => setMenuOpen(false)}
-                className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+                aria-current={isActivePath(GALLERY_LINK.href) ? 'page' : undefined}
+                className={`group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest rounded-2xl transition-all duration-300 ${isActivePath(GALLERY_LINK.href) ? 'text-gold-gradient bg-white/5' : 'text-white/80 hover:text-white hover:bg-white/5'}`}
               >
                 {GALLERY_LINK.label}
-                <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
+                <span className={`text-lg font-light transition-colors ${isActivePath(GALLERY_LINK.href) ? 'text-gold-gradient' : 'text-white/30 group-hover:text-gold-gradient'}`}>
+                  {isActivePath(GALLERY_LINK.href) ? '•' : '→'}
+                </span>
               </Link>
 
               <Link
                 href="/careers"
                 onClick={() => setMenuOpen(false)}
-                className="group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest text-white/80 hover:text-white rounded-2xl hover:bg-white/5 transition-all duration-300"
+                aria-current={isActivePath('/careers') ? 'page' : undefined}
+                className={`group flex items-center justify-between px-4 py-4 text-xs font-bold uppercase tracking-widest rounded-2xl transition-all duration-300 ${isActivePath('/careers') ? 'text-gold-gradient bg-white/5' : 'text-white/80 hover:text-white hover:bg-white/5'}`}
               >
                 Careers
-                <span className="text-white/30 text-lg font-light transition-colors group-hover:text-gold-gradient">→</span>
+                <span className={`text-lg font-light transition-colors ${isActivePath('/careers') ? 'text-gold-gradient' : 'text-white/30 group-hover:text-gold-gradient'}`}>
+                  {isActivePath('/careers') ? '•' : '→'}
+                </span>
               </Link>
               <Link
                 href="/contact"

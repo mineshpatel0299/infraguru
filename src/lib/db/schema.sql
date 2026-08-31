@@ -67,6 +67,10 @@ alter table projects add column if not exists seo_noindex boolean not null defau
 -- guess a project's city from the free-text `location` field.
 alter table projects add column if not exists location_slug text;
 
+-- Section keys (see PROJECT_SECTION_KEYS in src/lib/db/types.ts) the admin has
+-- chosen to hide from the public project detail page — e.g. ["gallery"].
+alter table projects add column if not exists hidden_sections jsonb not null default '[]';
+
 create index if not exists projects_status_idx on projects (status);
 create index if not exists projects_category_idx on projects (category);
 create index if not exists projects_location_slug_idx on projects (location_slug);

@@ -118,7 +118,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
   }, [smoothScrollProgress]);
 
   return (
-    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[240vh] sm:h-[300vh]">
+    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[110vh] sm:h-[300vh]">
       <Navbar />
 
       <div

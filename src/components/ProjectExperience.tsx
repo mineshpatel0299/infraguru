@@ -209,16 +209,17 @@ export default function ProjectExperience({
  </section>
 
  {/* ── HIGHLIGHTS GRID ── */}
+ {!project.hiddenSections.includes("highlights") && (
  <div className="relative z-20 w-full bg-[#132731] border-b border-white/10">
  <motion.div
  variants={fadeUp}
  initial="hidden"
  whileInView="visible"
  viewport={viewportMirror}
- className="grid grid-cols-2 divide-x divide-y md:divide-y-0 divide-white/10 border-t border-white/10 md:grid-cols-3 lg:grid-cols-6"
+ className="flex flex-wrap justify-center divide-x divide-y md:divide-y-0 divide-white/10 border-t border-white/10"
  >
  {project.highlights.map((h) => (
- <div key={h.label} className="flex flex-col justify-center px-6 py-10 text-center hover:bg-white/5 transition-colors">
+ <div key={h.label} className="flex w-1/2 md:w-1/3 lg:w-1/6 flex-col justify-center px-6 py-10 text-center hover:bg-white/5 transition-colors">
  <span className="mb-3 block text-[0.65rem] font-bold text-white/50 uppercase">
  {h.label}
  </span>
@@ -227,6 +228,7 @@ export default function ProjectExperience({
  ))}
  </motion.div>
  </div>
+ )}
 
  {/* ── THE VISION ── */}
  <section className="w-full bg-[#132731] px-6 py-24 sm:px-12 sm:py-32 lg:px-24">
@@ -279,9 +281,11 @@ export default function ProjectExperience({
  </section>
 
  {/* ── AMENITIES & GALLERY ── */}
+ {(!project.hiddenSections.includes("amenities") || !project.hiddenSections.includes("gallery")) && (
  <section className="w-full bg-white py-24 sm:py-32">
  <div className="w-full px-6 sm:px-12 lg:px-24 max-w-[1400px] mx-auto">
  {/* Amenities */}
+ {!project.hiddenSections.includes("amenities") && (
  <div className="mb-24 lg:mb-32">
  <motion.div
  variants={fadeUp}
@@ -312,8 +316,10 @@ export default function ProjectExperience({
  ))}
  </div>
  </div>
+ )}
 
  {/* Gallery */}
+ {!project.hiddenSections.includes("gallery") && (
  <div>
  <motion.div
  variants={fadeUp}
@@ -358,10 +364,13 @@ export default function ProjectExperience({
  ))}
  </div>
  </div>
+ )}
  </div>
  </section>
+ )}
 
  {/* ── ADDRESS & ACCESS ── */}
+ {!project.hiddenSections.includes("landmarks") && (
  <section className="w-full bg-[#f9fafb] px-6 py-24 sm:px-12 lg:px-24 border-t border-[#132731]/10">
  <div className="max-w-[1400px] mx-auto">
  <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportMirror}>
@@ -392,6 +401,7 @@ export default function ProjectExperience({
  </motion.div>
  </div>
  </section>
+ )}
 
  {/* ── ENQUIRE & RELATED ── */}
  <section
