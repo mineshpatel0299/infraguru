@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { AWARDS_DEFAULT_CONTENT, type AwardsContent } from "@/lib/pageSections";
+import { AWARDS_DEFAULT_CONTENT, type AwardItem, type AwardsContent } from "@/lib/pageSections";
 import { useSectionEdit } from "./pagebuilder/SectionEditBoundary";
 import EditableText from "./pagebuilder/EditableText";
 import EditableImage from "./pagebuilder/EditableImage";
@@ -58,6 +58,211 @@ function AutoplayVideo({ src, className }: { src: string; className?: string }) 
   return <video ref={ref} src={src} muted loop autoPlay playsInline className={className} />;
 }
 
+/** One award card — an image or a video panel, decided once at add-time via
+ * the item's mediaType. Shared by the editable (bounded, manual) carousel
+ * and the public infinite marquee, which renders it twice back to back;
+ * `ctx` is always null in the marquee, so every editor-only affordance
+ * inside (RemoveItemButton, EditableText, the "add year" ghost button, …)
+ * is already inert there. */
+function AwardCard({
+  item,
+  idx,
+  ctx,
+  onOpenImage,
+  onOpenVideo,
+}: {
+  item: AwardItem;
+  idx: number;
+  ctx: ReturnType<typeof useSectionEdit>;
+  onOpenImage: (src: string, title: string) => void;
+  onOpenVideo: (src: string, title: string) => void;
+}) {
+  // Decided once, when the award was added (see the two "Add Award" buttons
+  // below) — legacy rows saved before this field existed fall back to
+  // "video" only if they already have a clip attached, otherwise "image".
+  const mediaType = item.mediaType ?? (item.video ? "video" : "image");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7, delay: 0.06 * (idx % 12), ease: [0.16, 1, 0.3, 1] }}
+      className="group relative flex w-[78%] shrink-0 snap-start flex-col sm:w-[46%] lg:w-[31%]"
+    >
+      <RemoveItemButton arrayPath="items" index={idx} />
+
+      {/* Media panel — an image or a video uploader, decided once at
+          add-time via the item's mediaType. Image cards open a
+          fullscreen lightbox on click (outside edit mode, where a
+          click instead triggers EditableImage's replace overlay). */}
+      <div
+        onClick={
+          !ctx && mediaType === "image" && item.image
+            ? () => onOpenImage(item.image, item.title)
+            : undefined
+        }
+        className={`relative aspect-[4/5] w-full overflow-hidden rounded-[24px] ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.25)] transition-all duration-500 group-hover:-translate-y-1.5 group-hover:ring-secondary/40 group-hover:shadow-[0_24px_60px_rgba(212,175,55,0.18)] ${
+          !ctx && mediaType === "image" && item.image ? "cursor-pointer" : ""
+        }`}
+      >
+        {mediaType === "video" ? (
+          ctx ? (
+            <EditableVideo path={`items[${idx}].video`} fallback={item.video} wrapperClassName="relative h-full w-full">
+              {(src) =>
+                src ? (
+                  <AutoplayVideo src={src} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
+                    <PlayIcon className="h-9 w-9 text-secondary/60" />
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-white/35">
+                      Award video coming soon
+                    </span>
+                  </div>
+                )
+              }
+            </EditableVideo>
+          ) : item.video ? (
+            <AutoplayVideo src={item.video} className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
+              <PlayIcon className="h-9 w-9 text-secondary/60" />
+            </div>
+          )
+        ) : ctx ? (
+          <EditableImage path={`items[${idx}].image`} fallback={item.image} wrapperClassName="relative h-full w-full">
+            {(src) =>
+              src ? (
+                <Image
+                  src={src}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
+                  <MedalIcon className="h-9 w-9 text-secondary/60" />
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-white/35">
+                    Award photo coming soon
+                  </span>
+                </div>
+              )
+            }
+          </EditableImage>
+        ) : item.image ? (
+          <Image
+            src={item.image}
+            alt={item.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+          />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
+            <MedalIcon className="h-9 w-9 text-secondary/60" />
+          </div>
+        )}
+
+        {/* Expand-icon hint for image cards — the click target is
+            the whole panel (see onClick above); this is purely a
+            discoverability cue on hover. */}
+        {!ctx && mediaType === "image" && item.image && (
+          <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
+            <ExpandIcon className="h-4 w-4" />
+          </div>
+        )}
+
+        {/* Bottom gradient for text legibility */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark/95 via-primary-dark/15 to-transparent" />
+
+        {/* Year pill — optional like title/issuer: removable via
+            RemoveFieldButton. Unlike plain text, an empty pill still
+            shows its gold background/padding with nothing inside, so
+            once cleared it's hidden completely (edit mode included)
+            rather than left as a blank badge — re-added via a small
+            dashed ghost "+" instead of ever showing an empty pill. */}
+        {item.year.trim() ? (
+          <div className="group/year absolute left-4 top-4 z-10 flex items-center gap-1.5">
+            <EditableText
+              as="span"
+              path={`items[${idx}].year`}
+              fallback={item.year}
+              className="inline-block rounded-full bg-gold-gradient px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-dark shadow-sm"
+            />
+            <RemoveFieldButton
+              paths={[`items[${idx}].year`]}
+              label="Remove year"
+              className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/year:opacity-100"
+            />
+          </div>
+        ) : (
+          ctx && (
+            <button
+              type="button"
+              onClick={() => ctx.setField(`items[${idx}].year`, "2026")}
+              aria-label="Add year"
+              className="absolute left-4 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-white/30 text-sm leading-none text-white/50 opacity-0 transition-opacity hover:border-white/60 hover:text-white/80 group-hover:opacity-100"
+            >
+              +
+            </button>
+          )
+        )}
+
+        {/* Expand button for video cards — the inline video above
+            plays muted/looping as a preview; this opens the full
+            lightbox below with sound and controls. */}
+        {!ctx && mediaType === "video" && item.video && (
+          <button
+            type="button"
+            onClick={() => onOpenVideo(item.video, item.title)}
+            aria-label={`Watch video: ${item.title}`}
+            className="absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-gold-gradient hover:text-primary-dark"
+          >
+            <PlayIcon className="ml-0.5 h-4 w-4" />
+          </button>
+        )}
+
+        {/* Title / issuer overlay — each is independently optional:
+            removable to blank via RemoveFieldButton, and skipped
+            entirely outside edit mode once empty. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5">
+          {(ctx || item.title.trim()) && (
+            <div className="group/title relative flex items-start justify-between gap-2 pointer-events-auto">
+              <EditableText
+                as="h3"
+                path={`items[${idx}].title`}
+                fallback={item.title}
+                className="block flex-1 font-body text-sm font-semibold uppercase tracking-wide text-white leading-snug"
+              />
+              <RemoveFieldButton
+                paths={[`items[${idx}].title`]}
+                label="Remove title"
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/title:opacity-100"
+              />
+            </div>
+          )}
+          {(ctx || item.issuer.trim()) && (
+            <div className="group/issuer relative mt-1 flex items-start justify-between gap-2 pointer-events-auto">
+              <EditableText
+                as="p"
+                path={`items[${idx}].issuer`}
+                fallback={item.issuer}
+                className="block flex-1 text-caption font-medium text-white/60"
+              />
+              <RemoveFieldButton
+                paths={[`items[${idx}].issuer`]}
+                label="Remove issuer"
+                className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/issuer:opacity-100"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Awards({
   content = AWARDS_DEFAULT_CONTENT,
 }: {
@@ -70,6 +275,19 @@ export default function Awards({
   // Shared fullscreen lightbox for both image and video award cards.
   const [activeMedia, setActiveMedia] = useState<{ type: "image" | "video"; src: string; title: string } | null>(null);
   const close = useCallback(() => setActiveMedia(null), []);
+  const openImage = useCallback((src: string, title: string) => setActiveMedia({ type: "image", src, title }), []);
+  const openVideo = useCallback((src: string, title: string) => setActiveMedia({ type: "video", src, title }), []);
+
+  // Public marquee: paused on hover/touch so a visitor can read or click a
+  // card without it sliding away mid-interaction, and stopped outright for
+  // prefers-reduced-motion (checked post-mount to avoid an SSR/client
+  // mismatch — the marquee briefly animates then freezes on such systems).
+  const [marqueePaused, setMarqueePaused] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+  const marqueeDuration = Math.max(items.length * 1.8, 8);
 
   useEffect(() => {
     if (!activeMedia) return;
@@ -211,258 +429,120 @@ export default function Awards({
           </div>
         )}
 
-        {/* ── Carousel nav ── */}
-        <div className="mb-6 flex items-center justify-end gap-3 sm:mb-7">
-          <button
-            type="button"
-            onClick={() => scrollByCard(-1)}
-            disabled={!canScrollPrev}
-            aria-label="Previous awards"
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-all duration-300 hover:scale-105 hover:bg-white/20 active:scale-95 disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollByCard(1)}
-            disabled={!canScrollNext}
-            aria-label="Next awards"
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-gold-gradient text-primary-dark shadow-md transition-all duration-300 hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-
-        {/* ── Awards Carousel ── */}
-        <div className="relative">
-          {/* Edge fades hint that more cards are reachable by scrolling */}
-          <div
-            aria-hidden
-            className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-primary-dark to-transparent transition-opacity duration-300 sm:w-16 ${canScrollPrev ? "opacity-100" : "opacity-0"}`}
-          />
-          <div
-            aria-hidden
-            className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-primary-dark to-transparent transition-opacity duration-300 sm:w-16 ${canScrollNext ? "opacity-100" : "opacity-0"}`}
-          />
-
-          <div
-            ref={trackRef}
-            className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-visible scroll-smooth pt-2 pb-2 sm:gap-7 lg:gap-8"
-          >
-          {items.map((item, idx) => {
-            // Decided once, when the award was added (see the two "Add
-            // Award" buttons below) — legacy rows saved before this field
-            // existed fall back to "video" only if they already have a clip
-            // attached, otherwise "image".
-            const mediaType = item.mediaType ?? (item.video ? "video" : "image");
-            return (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7, delay: 0.06 * idx, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative flex w-[78%] shrink-0 snap-start flex-col sm:w-[46%] lg:w-[31%]"
-            >
-              <RemoveItemButton arrayPath="items" index={idx} />
-
-              {/* Media panel — an image or a video uploader, decided once at
-                  add-time via the item's mediaType. Image cards open a
-                  fullscreen lightbox on click (outside edit mode, where a
-                  click instead triggers EditableImage's replace overlay). */}
-              <div
-                onClick={
-                  !ctx && mediaType === "image" && item.image
-                    ? () => setActiveMedia({ type: "image", src: item.image, title: item.title })
-                    : undefined
-                }
-                className={`relative aspect-[4/5] w-full overflow-hidden rounded-[24px] ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.25)] transition-all duration-500 group-hover:-translate-y-1.5 group-hover:ring-secondary/40 group-hover:shadow-[0_24px_60px_rgba(212,175,55,0.18)] ${
-                  !ctx && mediaType === "image" && item.image ? "cursor-pointer" : ""
-                }`}
+        {ctx ? (
+          <>
+            {/* ── Carousel nav (edit mode: bounded, manual — an admin needs
+                a stable list to add/remove/edit cards, not a self-driving
+                infinite one) ── */}
+            <div className="mb-6 flex items-center justify-end gap-3 sm:mb-7">
+              <button
+                type="button"
+                onClick={() => scrollByCard(-1)}
+                disabled={!canScrollPrev}
+                aria-label="Previous awards"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-all duration-300 hover:scale-105 hover:bg-white/20 active:scale-95 disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12"
               >
-                {mediaType === "video" ? (
-                  ctx ? (
-                    <EditableVideo path={`items[${idx}].video`} fallback={item.video} wrapperClassName="relative h-full w-full">
-                      {(src) =>
-                        src ? (
-                          <AutoplayVideo src={src} className="h-full w-full object-cover" />
-                        ) : (
-                          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
-                            <PlayIcon className="h-9 w-9 text-secondary/60" />
-                            <span className="text-[11px] font-semibold uppercase tracking-wide text-white/35">
-                              Award video coming soon
-                            </span>
-                          </div>
-                        )
-                      }
-                    </EditableVideo>
-                  ) : item.video ? (
-                    <AutoplayVideo src={item.video} className="h-full w-full object-cover" />
-                  ) : (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
-                      <PlayIcon className="h-9 w-9 text-secondary/60" />
-                    </div>
-                  )
-                ) : ctx ? (
-                  <EditableImage path={`items[${idx}].image`} fallback={item.image} wrapperClassName="relative h-full w-full">
-                    {(src) =>
-                      src ? (
-                        <Image
-                          src={src}
-                          alt={item.title}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
-                          <MedalIcon className="h-9 w-9 text-secondary/60" />
-                          <span className="text-[11px] font-semibold uppercase tracking-wide text-white/35">
-                            Award photo coming soon
-                          </span>
-                        </div>
-                      )
-                    }
-                  </EditableImage>
-                ) : item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollByCard(1)}
+                disabled={!canScrollNext}
+                aria-label="Next awards"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-gold-gradient text-primary-dark shadow-md transition-all duration-300 hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-30 sm:h-12 sm:w-12"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="relative">
+              {/* Edge fades hint that more cards are reachable by scrolling */}
+              <div
+                aria-hidden
+                className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-primary-dark to-transparent transition-opacity duration-300 sm:w-16 ${canScrollPrev ? "opacity-100" : "opacity-0"}`}
+              />
+              <div
+                aria-hidden
+                className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-primary-dark to-transparent transition-opacity duration-300 sm:w-16 ${canScrollNext ? "opacity-100" : "opacity-0"}`}
+              />
+
+              <div
+                ref={trackRef}
+                className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-visible scroll-smooth pt-2 pb-2 sm:gap-7 lg:gap-8"
+              >
+                {items.map((item, idx) => (
+                  <AwardCard key={idx} item={item} idx={idx} ctx={ctx} onOpenImage={openImage} onOpenVideo={openVideo} />
+                ))}
+
+                <div className="flex aspect-[4/5] w-[78%] shrink-0 snap-start flex-col gap-3 sm:w-[46%] lg:w-[31%]">
+                  <AddItemButton
+                    arrayPath="items"
+                    newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", mediaType: "image", image: "", video: "" }}
+                    label="Add Award (Image)"
+                    className="flex flex-1 items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70"
                   />
-                ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#253d67] to-[#12223a] px-6 text-center">
-                    <MedalIcon className="h-9 w-9 text-secondary/60" />
-                  </div>
-                )}
-
-                {/* Expand-icon hint for image cards — the click target is
-                    the whole panel (see onClick above); this is purely a
-                    discoverability cue on hover. */}
-                {!ctx && mediaType === "image" && item.image && (
-                  <div className="pointer-events-none absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
-                    <ExpandIcon className="h-4 w-4" />
-                  </div>
-                )}
-
-                {/* Bottom gradient for text legibility */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark/95 via-primary-dark/15 to-transparent" />
-
-                {/* Year pill — optional like title/issuer: removable via
-                    RemoveFieldButton. Unlike plain text, an empty pill still
-                    shows its gold background/padding with nothing inside, so
-                    once cleared it's hidden completely (edit mode included)
-                    rather than left as a blank badge — re-added via a small
-                    dashed ghost "+" instead of ever showing an empty pill. */}
-                {item.year.trim() ? (
-                  <div className="group/year absolute left-4 top-4 z-10 flex items-center gap-1.5">
-                    <EditableText
-                      as="span"
-                      path={`items[${idx}].year`}
-                      fallback={item.year}
-                      className="inline-block rounded-full bg-gold-gradient px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-primary-dark shadow-sm"
-                    />
-                    <RemoveFieldButton
-                      paths={[`items[${idx}].year`]}
-                      label="Remove year"
-                      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/year:opacity-100"
-                    />
-                  </div>
-                ) : (
-                  ctx && (
-                    <button
-                      type="button"
-                      onClick={() => ctx.setField(`items[${idx}].year`, "2026")}
-                      aria-label="Add year"
-                      className="absolute left-4 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-white/30 text-sm leading-none text-white/50 opacity-0 transition-opacity hover:border-white/60 hover:text-white/80 group-hover:opacity-100"
-                    >
-                      +
-                    </button>
-                  )
-                )}
-
-                {/* Expand button for video cards — the inline video above
-                    plays muted/looping as a preview; this opens the full
-                    lightbox below with sound and controls. */}
-                {!ctx && mediaType === "video" && item.video && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveMedia({ type: "video", src: item.video, title: item.title })}
-                    aria-label={`Watch video: ${item.title}`}
-                    className="absolute bottom-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-gold-gradient hover:text-primary-dark"
-                  >
-                    <PlayIcon className="ml-0.5 h-4 w-4" />
-                  </button>
-                )}
-
-                {/* Title / issuer overlay — each is independently optional:
-                    removable to blank via RemoveFieldButton, and skipped
-                    entirely outside edit mode once empty. */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5">
-                  {(ctx || item.title.trim()) && (
-                    <div className="group/title relative flex items-start justify-between gap-2 pointer-events-auto">
-                      <EditableText
-                        as="h3"
-                        path={`items[${idx}].title`}
-                        fallback={item.title}
-                        className="block flex-1 font-body text-sm font-semibold uppercase tracking-wide text-white leading-snug"
-                      />
-                      <RemoveFieldButton
-                        paths={[`items[${idx}].title`]}
-                        label="Remove title"
-                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/title:opacity-100"
-                      />
-                    </div>
-                  )}
-                  {(ctx || item.issuer.trim()) && (
-                    <div className="group/issuer relative mt-1 flex items-start justify-between gap-2 pointer-events-auto">
-                      <EditableText
-                        as="p"
-                        path={`items[${idx}].issuer`}
-                        fallback={item.issuer}
-                        className="block flex-1 text-caption font-medium text-white/60"
-                      />
-                      <RemoveFieldButton
-                        paths={[`items[${idx}].issuer`]}
-                        label="Remove issuer"
-                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] text-white opacity-0 shadow transition-opacity group-hover/issuer:opacity-100"
-                      />
-                    </div>
-                  )}
+                  <AddItemButton
+                    arrayPath="items"
+                    newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", mediaType: "video", image: "", video: "" }}
+                    label="Add Award (Video)"
+                    className="flex flex-1 items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70"
+                  />
                 </div>
               </div>
-
-            </motion.div>
-            );
-          })}
-
-          {ctx && (
-            <div className="flex aspect-[4/5] w-[78%] shrink-0 snap-start flex-col gap-3 sm:w-[46%] lg:w-[31%]">
-              <AddItemButton
-                arrayPath="items"
-                newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", mediaType: "image", image: "", video: "" }}
-                label="Add Award (Image)"
-                className="flex flex-1 items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70"
-              />
-              <AddItemButton
-                arrayPath="items"
-                newItem={{ title: "New Award", issuer: "Issuing Organization", year: "2026", mediaType: "video", image: "", video: "" }}
-                label="Add Award (Video)"
-                className="flex flex-1 items-center justify-center rounded-[24px] border-2 border-dashed border-white/15 text-xs font-bold uppercase tracking-wide text-white/40 transition-colors hover:border-secondary/50 hover:text-white/70"
-              />
             </div>
-          )}
-          </div>
-        </div>
 
-        {items.length === 0 && ctx && (
-          <p className="py-8 text-center text-body text-white/50">No awards yet — add one above.</p>
+            {items.length === 0 && (
+              <p className="py-8 text-center text-body text-white/50">No awards yet — add one above.</p>
+            )}
+          </>
+        ) : (
+          /* ── Public view: a continuously auto-scrolling, infinite marquee.
+             The track renders every award twice back to back and slides
+             exactly one copy-width left on a linear loop — since both
+             copies are pixel-identical, the reset from -50% back to 0%
+             lands on matching content and reads as endless, not a jump.
+             Paused on hover/touch so a visitor can read or click a card. */
+          <div className="relative -mx-6 overflow-hidden px-6 sm:-mx-10 sm:px-10 md:-mx-14 md:px-14 lg:-mx-16 lg:px-16">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-primary-dark to-transparent sm:w-20"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-primary-dark to-transparent sm:w-20"
+            />
+
+            <div
+              onMouseEnter={() => setMarqueePaused(true)}
+              onMouseLeave={() => setMarqueePaused(false)}
+              onTouchStart={() => setMarqueePaused(true)}
+              onTouchEnd={() => setMarqueePaused(false)}
+              className="flex gap-6 pt-2 pb-2 sm:gap-7 lg:gap-8"
+              style={
+                reduceMotion
+                  ? undefined
+                  : {
+                      animation: `marquee-x ${marqueeDuration}s linear infinite`,
+                      animationPlayState: marqueePaused ? "paused" : "running",
+                    }
+              }
+            >
+              {[...items, ...items].map((item, i) => (
+                <AwardCard
+                  key={i}
+                  item={item}
+                  idx={i % items.length}
+                  ctx={null}
+                  onOpenImage={openImage}
+                  onOpenVideo={openVideo}
+                />
+              ))}
+            </div>
+          </div>
         )}
       </div>
 

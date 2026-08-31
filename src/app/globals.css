@@ -129,3 +129,16 @@
     display: none;
   }
 }
+
+/* Continuous infinite-loop track (see Awards.tsx): the track renders its
+   items twice back to back and slides exactly one copy-width to the left,
+   so the reset back to 0% lands on pixel-identical content and reads as
+   seamless rather than a visible jump. */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
