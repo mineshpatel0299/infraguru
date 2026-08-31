@@ -89,7 +89,7 @@ function LocationHero({
         >
           <div className="flex items-center gap-3 mb-4 md:mb-5">
             <div className="h-[1px] w-6 md:w-8 bg-secondary" />
-            <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-secondary">
+            <span className="text-sm font-bold tracking-[0.3em] uppercase text-secondary">
               {location.region}
             </span>
           </div>

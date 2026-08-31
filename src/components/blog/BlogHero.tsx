@@ -77,7 +77,7 @@ export default function BlogHero() {
             className="mb-6 flex items-center gap-3"
           >
             <div className="h-[2px] w-10 bg-gold-gradient" />
-            <span className="font-body text-label font-semibold uppercase tracking-[0.3em] text-gold-gradient">
+            <span className="font-body text-sm font-semibold uppercase tracking-[0.3em] text-gold-gradient">
               The Journal
             </span>
           </motion.div>

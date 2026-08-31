@@ -65,7 +65,7 @@ export default function RegionDestinationsClient({
 
             <div className="flex items-center gap-3 mb-4">
               <div className="h-[1px] w-8 bg-secondary" />
-              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-secondary">
+              <span className="text-sm font-bold tracking-[0.3em] uppercase text-secondary">
                 {isIndia ? "India" : "International"}
               </span>
             </div>

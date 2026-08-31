@@ -29,7 +29,7 @@ export default function BlogNewsletter() {
       >
         <motion.div variants={fadeUp} className="flex items-center gap-3">
           <div className="h-[2px] w-8 bg-gold-gradient" />
-          <span className="font-body text-label font-semibold uppercase tracking-wide text-gold-gradient">
+          <span className="font-body text-sm font-semibold uppercase tracking-wide text-gold-gradient">
             Stay Informed
           </span>
           <div className="h-[2px] w-8 bg-gold-gradient" />

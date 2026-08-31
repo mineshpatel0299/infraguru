@@ -41,7 +41,7 @@ export default function ContactPageClient() {
           {/* Gold eyebrow */}
           <motion.div {...FADE_UP(0.2)} className="flex items-center gap-3 mb-8">
             <div className="h-[1px] w-8 bg-secondary" />
-            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-secondary font-body">Private Advisory</span>
+            <span className="text-sm font-bold tracking-[0.3em] uppercase text-secondary font-body">Private Advisory</span>
           </motion.div>
 
           {/* Main heading */}
@@ -157,7 +157,7 @@ export default function ContactPageClient() {
               <div className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-[1px] w-6 bg-secondary" />
-                  <span className="text-[9px] font-bold tracking-[0.3em] uppercase text-secondary font-body">Send a Message</span>
+                  <span className="text-sm font-bold tracking-[0.3em] uppercase text-secondary font-body">Send a Message</span>
                 </div>
                 <h2 className="font-heading font-light uppercase text-neutral-900 text-[clamp(1.5rem,1.85vw,2.2rem)] leading-tight tracking-tight">
                   Book a <span className="font-semibold text-primary-dark">Consultation</span>

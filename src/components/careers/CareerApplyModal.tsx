@@ -122,7 +122,7 @@ export function CareerApplyModal({
                 <>
                   <div className="mb-1 flex items-center gap-3">
                     <div className="h-0.5 w-6 bg-gold-gradient" />
-                    <span className="font-body text-label font-semibold uppercase tracking-wide text-secondary-hover">
+                    <span className="font-body text-sm font-semibold uppercase tracking-wide text-secondary-hover">
                       Join Us
                     </span>
                   </div>

@@ -98,7 +98,7 @@ export default function CareersHero() {
           className="mb-5 flex items-center justify-center gap-3 sm:mb-7"
         >
           <div className="h-[2px] w-8 bg-gold-gradient" />
-          <span className="font-body text-label font-semibold uppercase tracking-[0.3em] text-gold-gradient">
+          <span className="font-body text-sm font-semibold uppercase tracking-[0.3em] text-gold-gradient">
             Careers
           </span>
           <div className="h-[2px] w-8 bg-gold-gradient" />

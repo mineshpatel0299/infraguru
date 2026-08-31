@@ -50,7 +50,7 @@ export default function CareersValues() {
         >
           <div className="mb-4 flex items-center justify-center gap-3">
             <div className="h-[2px] w-8 bg-gold-gradient" />
-            <span className="font-body text-label font-semibold uppercase tracking-wide text-gold-gradient">
+            <span className="font-body text-sm font-semibold uppercase tracking-wide text-gold-gradient">
               Our Culture
             </span>
             <div className="h-[2px] w-8 bg-gold-gradient" />

@@ -196,7 +196,7 @@ export default function CareerApplyPage({
           <motion.div variants={fadeUp} initial="hidden" animate="visible">
             <div className="mb-4 flex items-center gap-3">
               <div className="h-0.5 w-8 bg-gold-gradient" />
-              <span className="font-body text-label font-semibold uppercase tracking-[0.2em] text-gold-gradient">
+              <span className="font-body text-sm font-semibold uppercase tracking-[0.2em] text-gold-gradient">
                 {job.department} · InfraGuru
               </span>
             </div>
@@ -505,7 +505,7 @@ export default function CareerApplyPage({
               className="mb-10 flex items-center gap-3"
             >
               <div className="h-0.5 w-8 bg-gold-gradient" />
-              <span className="font-body text-label font-semibold uppercase tracking-wide text-secondary-hover">
+              <span className="font-body text-sm font-semibold uppercase tracking-wide text-secondary-hover">
                 Other Roles
               </span>
             </motion.div>

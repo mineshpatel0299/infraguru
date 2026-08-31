@@ -40,7 +40,7 @@ export default function AboutFounder({ content = ABOUT_FOUNDER_DEFAULT_CONTENT }
               as="span"
               path="eyebrow"
               fallback={live.eyebrow}
-              className="font-body text-label font-semibold uppercase tracking-wide text-gold-gradient"
+              className="font-body text-sm font-semibold uppercase tracking-wide text-gold-gradient"
             />
             <div className="h-[2px] w-8 bg-gold-gradient" />
           </div>

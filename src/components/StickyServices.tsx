@@ -130,7 +130,7 @@ export default function StickyServices() {
           className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
         >
           <div className="h-[2px] w-8 bg-gold-gradient" />
-          <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-widest">
+          <span className="inline-block font-body text-sm font-semibold uppercase text-gold-gradient tracking-widest">
             OUR EXPERTISE
           </span>
           <div className="h-[2px] w-8 bg-gold-gradient" />

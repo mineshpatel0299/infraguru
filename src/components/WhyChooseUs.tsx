@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
 import { WHY_CHOOSE_US_DEFAULT_CONTENT, type WhyChooseUsContent } from '@/lib/pageSections';
 import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
@@ -22,11 +23,19 @@ export default function WhyChooseUs({
   const ctx = useSectionEdit();
   const live = (ctx?.content as WhyChooseUsContent | undefined) ?? content;
   const FALLBACK_ICONS = ["HeartHandshake", "ShieldCheck", "Clock", "Building", "Map"];
+  const FALLBACK_IMAGES = [
+    "/why-choose-us-1.jpg",
+    "/why-choose-us-2.jpg",
+    "/why-choose-us-3.jpg",
+    "/why-choose-us-4.jpg",
+    "/why-choose-us-5.jpg",
+  ];
   const CARDS = live.cards.map((card, i) => ({
     number: String(i + 1).padStart(2, "0"),
     title: card.title,
     description: card.description,
     icon: card.icon || FALLBACK_ICONS[i % FALLBACK_ICONS.length],
+    image: card.image || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
   }));
 
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -130,25 +139,36 @@ export default function WhyChooseUs({
                     delay: 0.25 + idx * 0.1,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className="group relative w-[calc(100vw-3rem)] sm:w-[380px] md:w-[420px] lg:w-[460px] shrink-0 rounded-[24px] sm:rounded-[28px] lg:rounded-[32px] bg-gradient-to-br from-[#253d67] to-[#12223a] p-6 sm:p-8 lg:p-10 border border-white/10 flex flex-col justify-between min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] transition-all duration-500 hover:-translate-y-2 hover:border-amber-200/30 cursor-pointer overflow-hidden"
+                  className="group relative w-[calc(100vw-3rem)] sm:w-[380px] md:w-[420px] lg:w-[460px] shrink-0 rounded-[24px] sm:rounded-[28px] lg:rounded-[32px] border border-white/10 flex flex-col justify-between min-h-[320px] sm:min-h-[360px] lg:min-h-[400px] transition-all duration-500 hover:-translate-y-2 hover:border-amber-200/30 cursor-pointer overflow-hidden"
                 >
-                  {/* Premium internal glow effect on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 transition-all duration-500 rounded-[inherit]" />
+                  {/* Full card background image */}
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    fill
+                    sizes="(max-width: 640px) calc(100vw - 3rem), (max-width: 768px) 380px, (max-width: 1024px) 420px, 460px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  {/* Dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#12223a]/70 via-[#12223a]/75 to-[#12223a]/90 transition-all duration-500 group-hover:from-[#12223a]/60 group-hover:via-[#12223a]/65 group-hover:to-[#12223a]/85" />
+                  {/* Gold shimmer overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 to-amber-600/0 group-hover:from-amber-400/10 group-hover:to-amber-600/5 transition-all duration-500" />
+
                   <RemoveItemButton arrayPath="cards" index={idx} />
 
                   {/* Top Left Card Number & Icon */}
-                  <div className="flex items-start justify-between relative z-10">
-                    <span className="font-body text-4xl sm:text-5xl lg:text-6xl font-semibold text-white/10 tracking-tight transition-all duration-500 group-hover:text-gold-gradient">
+                  <div className="flex items-start justify-between relative z-10 p-6 sm:p-8 lg:p-10">
+                    <span className="font-body text-4xl sm:text-5xl lg:text-6xl font-semibold text-white/15 tracking-tight transition-all duration-500 group-hover:text-gold-gradient">
                       {card.number}
                     </span>
                     <div className="flex items-center gap-4">
-                      <LucideIcon name={card.icon} className="w-8 h-8 sm:w-10 sm:h-10 text-white/30 transition-all duration-500 group-hover:text-gold-gradient group-hover:scale-110" />
-                      <span className="h-2 w-2 rounded-full bg-white/20 transition-all duration-500 group-hover:bg-gold-gradient group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
+                      <LucideIcon name={card.icon} className="w-8 h-8 sm:w-10 sm:h-10 text-white/40 transition-all duration-500 group-hover:text-gold-gradient group-hover:scale-110" />
+                      <span className="h-2 w-2 rounded-full bg-white/25 transition-all duration-500 group-hover:bg-gold-gradient group-hover:scale-150 group-hover:shadow-[0_0_10px_rgba(212,175,55,0.5)]" />
                     </div>
                   </div>
 
                   {/* Middle / Bottom Content Block */}
-                  <div className="mt-10 sm:mt-12 lg:mt-16 relative z-10">
+                  <div className="mt-auto relative z-10 p-6 sm:p-8 lg:p-10 pt-0">
                     <EditableText
                       as="h3"
                       path={`cards[${idx}].title`}
@@ -160,7 +180,7 @@ export default function WhyChooseUs({
                       path={`cards[${idx}].description`}
                       fallback={card.description}
                       multiline
-                      className="text-body text-white/70 font-light leading-relaxed"
+                      className="text-body text-white/80 font-light leading-relaxed"
                     />
                   </div>
                 </motion.div>

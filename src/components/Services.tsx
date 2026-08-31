@@ -72,16 +72,18 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
             const isActive = hoveredIndex === idx;
             
             return (
-              <motion.div
+              <Link
                 key={idx}
+                href={item.link}
+                className="block relative overflow-hidden rounded-3xl cursor-pointer group bg-primary-dark"
+                style={{ flex: isActive ? (isMobile ? 5 : 6) : 1, transition: 'flex 0.7s cubic-bezier(0.16, 1, 0.3, 1)' }}
                 onMouseEnter={() => !isMobile && setHoveredIndex(idx)}
-                onClick={() => isMobile && setHoveredIndex(idx)}
-                initial={false}
-                animate={{
-                  flex: isActive ? (isMobile ? 5 : 6) : 1
+                onClick={(e) => {
+                  if (isMobile && !isActive) {
+                    e.preventDefault();
+                    setHoveredIndex(idx);
+                  }
                 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="relative overflow-hidden rounded-3xl cursor-pointer group bg-primary-dark"
               >
                 <RemoveItemButton arrayPath="items" index={idx} className="absolute right-2 top-2 z-40 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white opacity-0 shadow transition-opacity group-hover:opacity-100" />
 
@@ -161,12 +163,11 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
                         />
 
                         <div className="pointer-events-auto">
-                          <Link
-                            href={item.link}
-                            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-transparent px-6 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-label font-semibold uppercase text-white transition-all duration-300 hover:border-transparent hover:bg-gold-gradient hover:text-[#12223a] hover:shadow-[0_8px_20px_rgba(212,175,55,0.3)]"
+                          <span
+                            className="inline-flex items-center justify-center rounded-full border border-white/20 bg-transparent px-6 py-2.5 sm:px-8 sm:py-3 text-xs sm:text-label font-semibold uppercase text-white transition-all duration-300 group-hover:border-transparent group-hover:bg-gold-gradient group-hover:text-[#12223a] group-hover:shadow-[0_8px_20px_rgba(212,175,55,0.3)]"
                           >
                             Explore Service
-                          </Link>
+                          </span>
                         </div>
                       </motion.div>
                     )}
@@ -174,7 +175,7 @@ export default function Services({ content = SERVICES_DEFAULT_CONTENT }: { conte
 
                 </div>
 
-              </motion.div>
+              </Link>
             );
           })}
           {ctx && (

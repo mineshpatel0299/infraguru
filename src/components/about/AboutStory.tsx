@@ -108,7 +108,7 @@ export default function AboutStory({ content = ABOUT_STORY_DEFAULT_CONTENT }: { 
                 as="span"
                 path="eyebrow"
                 fallback={live.eyebrow}
-                className="font-body text-label font-semibold uppercase tracking-widest text-gold-gradient"
+                className="font-body text-sm font-semibold uppercase tracking-widest text-gold-gradient"
               />
             </div>
 

@@ -70,7 +70,7 @@ export const STATS_DEFAULT_CONTENT: StatsContent = {
   ],
 };
 
-export type WhyChooseUsCard = { title: string; description: string; icon: string; };
+export type WhyChooseUsCard = { title: string; description: string; icon: string; image?: string; };
 
 export type WhyChooseUsContent = {
   eyebrow: string;
@@ -91,30 +91,35 @@ export const WHY_CHOOSE_US_DEFAULT_CONTENT: WhyChooseUsContent = {
       description:
         "Infra Guru is a professional real estate consulting company that helps clients find the right home and property investment with a seamless and stress-free process.",
       icon: "Sparkles",
+      image: "/why-choose-us-1.jpg",
     },
     {
       title: "TRUSTED GUIDANCE & SUPPORT",
       description:
         "We focus on delivering trusted guidance and complete transaction support throughout your entire real estate journey.",
       icon: "ShieldCheck",
+      image: "/why-choose-us-2.jpg",
     },
     {
       title: "10+ YEARS OF EXPERIENCE",
       description:
         "With more than a decade in the real estate industry, Infra Guru has been operating as a trusted brand in Gurgaon, Haryana since 2021.",
       icon: "Clock",
+      image: "/why-choose-us-3.jpg",
     },
     {
       title: "WIDE RANGE OF PROPERTIES",
       description:
         "We handle a comprehensive variety of property categories, specializing in residential properties, commercial properties, and farmland.",
       icon: "Building",
+      image: "/why-choose-us-4.jpg",
     },
     {
       title: "RENTALS & LAND DEVELOPMENT",
       description:
         "Our expertise extends across the market, covering commercial rental properties, residential rentals, as well as land and development projects.",
       icon: "Map",
+      image: "/why-choose-us-5.jpg",
     },
   ],
 };
@@ -301,6 +306,12 @@ export type TestimonialItem = {
   role: string;
   quote: string;
   avatar: string;
+  /** Chosen once when the testimonial is added — decides whether the card
+   * shows the written quote or a video testimonial. Missing on legacy rows
+   * (added before this field existed); treat those as "text". */
+  mediaType?: "text" | "video";
+  /** Empty string = no video uploaded yet; only used when mediaType is "video". */
+  video: string;
 };
 
 export type TestimonialsContent = {
@@ -321,6 +332,8 @@ export const TESTIMONIALS_DEFAULT_CONTENT: TestimonialsContent = {
       quote:
         "An exceptional experience from start to finish! Their attention to detail and ability to bring ideas to life is truly unmatched. Highly recommended for anyone looking for top-tier renderings and visuals.",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      mediaType: "text",
+      video: "",
     },
     {
       name: "Sophia Roberts",
@@ -328,6 +341,8 @@ export const TESTIMONIALS_DEFAULT_CONTENT: TestimonialsContent = {
       quote:
         "Working with them was a game-changer for my projects. The virtual tours they created were so immersive and engaging that my clients couldn't stop raving about them!",
       avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+      mediaType: "text",
+      video: "",
     },
     {
       name: "David Vance",
@@ -335,6 +350,8 @@ export const TESTIMONIALS_DEFAULT_CONTENT: TestimonialsContent = {
       quote:
         "The most transparent and seamless real estate acquisition we have ever experienced. Infraguru found us our dream waterfront villa before it even hit the open market.",
       avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+      mediaType: "text",
+      video: "",
     },
     {
       name: "Elena Rostova",
@@ -342,6 +359,8 @@ export const TESTIMONIALS_DEFAULT_CONTENT: TestimonialsContent = {
       quote:
         "Their strategic market insights and asset curation delivered returns that exceeded our portfolio projections by over 30%. A world-class real estate advisory team.",
       avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+      mediaType: "text",
+      video: "",
     },
   ],
 };
