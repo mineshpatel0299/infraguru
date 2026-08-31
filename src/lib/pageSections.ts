@@ -387,6 +387,7 @@ export const FOOTER_DEFAULT_CONTENT: FooterContent = {
   websiteHref: "https://infraguru.in",
   hours: "Mon - Sat : 9:30am - 7:30pm",
   socials: [
+    { label: "LinkedIn", href: "http://linkedin.com/company/infragurugurgaon/?viewAsMember=true" },
     { label: "Facebook", href: "https://www.facebook.com/infraguruluxury" },
     { label: "Instagram", href: "https://www.instagram.com/infra_guru/reels/" },
     { label: "WhatsApp", href: "https://wa.me/919090656575" },

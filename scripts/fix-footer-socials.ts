@@ -1,8 +1,8 @@
 // One-off fix: sets the footer's `socials` array (page_slug='global',
-// section_key='footer') to the requested final state — Facebook,
-// Instagram, and WhatsApp only (X and LinkedIn dropped). Overwrites the
-// whole array (order matters here), unlike add-footer-whatsapp.ts which
-// only appended.
+// section_key='footer') to the requested final state — LinkedIn,
+// Facebook, Instagram, and WhatsApp (X dropped). Overwrites the whole
+// array (order matters here), unlike add-footer-whatsapp.ts which only
+// appended.
 //
 // Usage: node scripts/fix-footer-socials.ts
 import { readFileSync } from "node:fs";
@@ -34,6 +34,7 @@ function loadEnvLocal() {
 loadEnvLocal();
 
 const SOCIALS = [
+  { label: "LinkedIn", href: "http://linkedin.com/company/infragurugurgaon/?viewAsMember=true" },
   { label: "Facebook", href: "https://www.facebook.com/infraguruluxury" },
   { label: "Instagram", href: "https://www.instagram.com/infra_guru/reels/" },
   { label: "WhatsApp", href: "https://wa.me/919090656575" },
