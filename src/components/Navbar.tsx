@@ -11,6 +11,7 @@ import { LOCATIONS, FEATURED_LOCATION_SLUG } from '@/lib/locations';
 type NavLink = { href: string; label: string };
 
 const LINKS: NavLink[] = [
+  { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
   // { href: '/projects', label: 'Projects' },
