@@ -45,7 +45,7 @@ export default function About({ content = ABOUT_DEFAULT_CONTENT }: { content?: A
                 as="span"
                 path="eyebrow"
                 fallback={live.eyebrow}
-                className="font-body text-label uppercase tracking-widest text-gold-gradient font-semibold"
+                className="font-body text-sm uppercase tracking-widest text-gold-gradient font-semibold"
               />
             </div>
 

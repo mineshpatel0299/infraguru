@@ -93,14 +93,14 @@ export default function WhyChooseUs({
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
             >
-              <div className="h-[2px] w-8 bg-gold-gradient" />
+              <div className="h-[2px] w-8 bg-primary" />
               <EditableText
                 as="span"
                 path="eyebrow"
                 fallback={live.eyebrow}
-                className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide"
+                className="inline-block font-body text-sm font-semibold uppercase text-primary tracking-wide"
               />
-              <div className="h-[2px] w-8 bg-gold-gradient" />
+              <div className="h-[2px] w-8 bg-primary" />
             </motion.div>
 
             <motion.h2

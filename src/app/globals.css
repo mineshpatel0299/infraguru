@@ -92,7 +92,7 @@
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2.5 text-label font-semibold uppercase text-primary mb-5 before:content-[''] before:inline-block before:w-7 before:h-0.5 before:bg-secondary;
+    @apply inline-flex items-center gap-2.5 text-sm font-semibold uppercase text-primary mb-5 before:content-[''] before:inline-block before:w-7 before:h-0.5 before:bg-secondary;
   }
 
   .btn-primary {

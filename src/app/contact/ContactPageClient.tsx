@@ -69,7 +69,7 @@ export default function ContactPageClient() {
               <div>
                 <p className="text-[9px] font-bold tracking-[0.25em] uppercase text-white/30 mb-1.5">Headquarters</p>
                 <p className="text-sm text-white/70 font-light leading-relaxed">
-                  Unit No. 1129, Spaze IT Tech Park<br />Sector - 49, Gurugram
+                  Unit No. 1129, Spaze I-Tech Park<br />Sector - 49, Gurugram
                 </p>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function ContactPageClient() {
                 {/* Name row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2 group">
-                    <label htmlFor={firstNameId} className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
+                    <label htmlFor={firstNameId} className="text-xs font-extrabold text-neutral-700 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
                       First Name
                     </label>
                     <input
@@ -182,7 +182,7 @@ export default function ContactPageClient() {
                     />
                   </div>
                   <div className="flex flex-col gap-2 group">
-                    <label htmlFor={lastNameId} className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
+                    <label htmlFor={lastNameId} className="text-xs font-extrabold text-neutral-700 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
                       Last Name
                     </label>
                     <input
@@ -197,7 +197,7 @@ export default function ContactPageClient() {
                 {/* Email + Phone row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2 group">
-                    <label htmlFor={emailId} className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
+                    <label htmlFor={emailId} className="text-xs font-extrabold text-neutral-700 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
                       Email Address
                     </label>
                     <input
@@ -208,7 +208,7 @@ export default function ContactPageClient() {
                     />
                   </div>
                   <div className="flex flex-col gap-2 group">
-                    <label htmlFor={phoneId} className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
+                    <label htmlFor={phoneId} className="text-xs font-extrabold text-neutral-700 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
                       Phone Number
                     </label>
                     <input
@@ -222,7 +222,7 @@ export default function ContactPageClient() {
 
                 {/* Inquiry Type */}
                 <div className="flex flex-col gap-2 group">
-                  <label htmlFor={inquiryId} className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
+                  <label htmlFor={inquiryId} className="text-xs font-extrabold text-neutral-700 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
                     Inquiry Type
                   </label>
                   <div className="relative">
@@ -246,7 +246,7 @@ export default function ContactPageClient() {
 
                 {/* Message */}
                 <div className="flex flex-col gap-2 group">
-                  <label htmlFor={messageId} className="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
+                  <label htmlFor={messageId} className="text-xs font-extrabold text-neutral-700 uppercase tracking-[0.2em] group-focus-within:text-secondary transition-colors">
                     Your Message
                   </label>
                   <textarea
@@ -262,7 +262,7 @@ export default function ContactPageClient() {
                   type="submit"
                   className="mt-2 self-start bg-primary-dark text-white text-[10px] font-bold uppercase tracking-[0.2em] px-10 py-4 rounded-full hover:bg-secondary transition-all duration-300 shadow-lg hover:shadow-[0_10px_30px_rgba(212,175,55,0.3)]"
                 >
-                  Submit Request
+                Enquire now
                 </button>
               </form>
             </motion.div>

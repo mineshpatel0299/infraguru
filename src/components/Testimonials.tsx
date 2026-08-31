@@ -68,7 +68,7 @@ export default function Testimonials({
                   as="span"
                   path="eyebrow"
                   fallback={live.eyebrow}
-                  className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide"
+                  className="inline-block font-body text-sm font-semibold uppercase text-gold-gradient tracking-wide"
                 />
                 <div className="h-[2px] w-8 bg-gold-gradient" />
               </motion.div>

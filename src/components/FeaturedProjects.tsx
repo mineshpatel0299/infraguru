@@ -144,7 +144,7 @@ export default function FeaturedProjects({ projects }: { projects: Project[] }) 
           className="mb-3 sm:mb-4 flex items-center justify-center gap-3"
         >
           <div className="h-[2px] w-8 bg-gold-gradient" />
-          <span className="inline-block font-body text-label font-semibold uppercase text-gold-gradient tracking-wide">
+          <span className="inline-block font-body text-sm font-semibold uppercase text-gold-gradient tracking-wide">
             FEATURED PROJECTS
           </span>
           <div className="h-[2px] w-8 bg-gold-gradient" />
