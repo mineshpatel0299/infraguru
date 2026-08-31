@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import {
   createProject,
   deleteProject,
+  reorderProjects,
   updateProject,
   type ProjectInput,
 } from "@/lib/db/projects";
@@ -42,5 +43,12 @@ export async function saveProjectAction(
 export async function deleteProjectAction(id: string): Promise<void> {
   await requireAdmin();
   await deleteProject(id);
+  revalidatePublicPages();
+}
+
+export async function reorderProjectsAction(orderedIds: string[]): Promise<void> {
+  await requireAdmin();
+  await reorderProjects(orderedIds);
+  revalidatePath("/admin/projects");
   revalidatePublicPages();
 }

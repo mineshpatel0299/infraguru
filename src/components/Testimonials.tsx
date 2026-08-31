@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { fadeDown, slideRight, viewportMirror } from "@/lib/motion";
 import { TESTIMONIALS_DEFAULT_CONTENT, type TestimonialItem, type TestimonialsContent } from "@/lib/pageSections";
 import { useSectionEdit } from "./pagebuilder/SectionEditBoundary";
 import EditableText from "./pagebuilder/EditableText";
-import EditableImage from "./pagebuilder/EditableImage";
 import EditableVideo from "./pagebuilder/EditableVideo";
 import RemoveItemButton from "./pagebuilder/RemoveItemButton";
 import AddItemButton from "./pagebuilder/AddItemButton";
@@ -82,14 +80,11 @@ function TestimonialCard({
       >
         <RemoveItemButton arrayPath="items" index={index} />
 
-        {/* Top Row: Pill Badge + Avatar */}
+        {/* Top Row: Pill Badge */}
         <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8">
           <span className="border border-neutral-400/50 rounded-full px-3.5 py-1 text-label font-medium text-neutral-700 font-body bg-white/40">
             {item.badge}
           </span>
-          <EditableImage path={`items[${index}].avatar`} fallback={item.avatar} wrapperClassName="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 rounded-full overflow-hidden">
-            {(src) => <Image src={src} alt={item.name} fill className="object-cover shadow-sm border-2 border-white" />}
-          </EditableImage>
         </div>
 
         {/* Middle: written quote, or a video testimonial */}

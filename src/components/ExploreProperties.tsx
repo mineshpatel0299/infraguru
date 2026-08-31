@@ -73,47 +73,46 @@ export default function ExploreProperties({
               className="group relative h-[340px] sm:h-[400px] lg:h-[440px] rounded-[24px] sm:rounded-[28px] overflow-hidden shadow-medium"
             >
               <RemoveItemButton arrayPath="destinations" index={idx} />
-              <EditableImage path={`destinations[${idx}].image`} fallback={dest.image} wrapperClassName="absolute inset-0">
-                {(src) => (
-                  <Image
-                    src={src}
-                    alt={dest.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                  />
-                )}
-              </EditableImage>
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/0" />
+              <Link href={dest.href} className="block relative h-full w-full">
+                <EditableImage path={`destinations[${idx}].image`} fallback={dest.image} wrapperClassName="absolute inset-0">
+                  {(src) => (
+                    <Image
+                      src={src}
+                      alt={dest.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                  )}
+                </EditableImage>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/0" />
 
-              <div className="pointer-events-none relative z-10 h-full flex flex-col justify-end p-6 sm:p-8 lg:p-10">
-                <EditableText
-                  as="h3"
-                  path={`destinations[${idx}].title`}
-                  fallback={dest.title}
-                  className="pointer-events-auto font-heading text-2xl sm:text-3xl font-semibold text-white uppercase leading-tight mb-2 drop-shadow block"
-                />
-                <EditableText
-                  as="p"
-                  path={`destinations[${idx}].subtitle`}
-                  fallback={dest.subtitle}
-                  className="pointer-events-auto font-body text-white/85 text-sm sm:text-base mb-6"
-                />
-                <Link
-                  href={dest.href}
-                  className="pointer-events-auto group/btn inline-flex w-fit items-center gap-2.5 rounded-full bg-gold-gradient px-6 py-3 text-label font-bold uppercase text-primary-dark shadow-[0_12px_30px_rgba(212,175,55,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
-                >
-                  <EditableText as="span" path={`destinations[${idx}].cta`} fallback={dest.cta} />
-                  <svg
-                    className="w-3.5 h-3.5 transition-transform duration-300 group-hover/btn:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
-              </div>
+                <div className="pointer-events-none relative z-10 h-full flex flex-col justify-end p-6 sm:p-8 lg:p-10">
+                  <EditableText
+                    as="h3"
+                    path={`destinations[${idx}].title`}
+                    fallback={dest.title}
+                    className="pointer-events-auto font-heading text-2xl sm:text-3xl font-semibold text-white uppercase leading-tight mb-2 drop-shadow block"
+                  />
+                  <EditableText
+                    as="p"
+                    path={`destinations[${idx}].subtitle`}
+                    fallback={dest.subtitle}
+                    className="pointer-events-auto font-body text-white/85 text-sm sm:text-base mb-6"
+                  />
+                  <span className="pointer-events-none inline-flex w-fit items-center gap-2.5 rounded-full bg-gold-gradient px-6 py-3 text-label font-bold uppercase text-primary-dark shadow-[0_12px_30px_rgba(212,175,55,0.3)] transition-all duration-300 group-hover:-translate-y-0.5 group-hover:brightness-110">
+                    <EditableText as="span" path={`destinations[${idx}].cta`} fallback={dest.cta} />
+                    <svg
+                      className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </span>
+                </div>
+              </Link>
             </motion.div>
           ))}
           {ctx && (

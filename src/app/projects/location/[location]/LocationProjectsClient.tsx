@@ -101,107 +101,35 @@ function LocationHero({
           </p>
         </motion.div>
 
-        {/* Right side circle image toggles */}
-        <div className="absolute right-4 md:right-6 sm:right-10 lg:right-16 bottom-[22%] md:bottom-auto md:top-1/2 md:-translate-y-1/2 flex flex-col items-end md:items-center gap-4 md:gap-6 z-20">
-          {/* Residential Toggle */}
-          <div className="relative flex items-center justify-end md:justify-center">
-            <AnimatePresence>
-              {category === "Residential" && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute right-full mr-2 md:mr-4 flex items-center whitespace-nowrap drop-shadow-lg z-10"
+        {/* Residential / Commercial toggle */}
+        <div className="absolute right-4 md:right-8 lg:right-16 bottom-[26%] md:bottom-auto md:top-1/2 md:-translate-y-1/2 flex flex-col items-end gap-5 md:gap-8 z-20">
+          {(["Residential", "Commercial"] as Category[]).map((cat) => {
+            const active = category === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setCategory(cat)}
+                className="group flex flex-col items-end gap-2 md:gap-3 text-right cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5"
+              >
+                <span
+                  className={`font-heading uppercase leading-none drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    active
+                      ? "text-2xl sm:text-3xl md:text-4xl font-semibold text-white tracking-[0.04em]"
+                      : "text-lg sm:text-xl md:text-2xl font-extrabold text-white/95 tracking-[0.08em] group-hover:text-white"
+                  }`}
                 >
-                  <motion.span
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1, duration: 0.4 }}
-                    className="text-white font-body text-[11px] md:text-base tracking-[0.15em] md:tracking-[0.2em] uppercase font-medium mr-2 md:mr-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-                  >
-                    Residential
-                  </motion.span>
-                  <motion.div
-                    initial={{ clipPath: "inset(0 0 0 100%)" }}
-                    animate={{ clipPath: "inset(0 0 0 0%)" }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="w-6 md:w-20 h-px border-b-[2px] md:border-b-[3px] border-dotted border-white/80"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div
-              role="button"
-              tabIndex={0}
-              aria-pressed={category === "Residential"}
-              onClick={() => setCategory("Residential")}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setCategory("Residential");
-                }
-              }}
-              className={`relative rounded-full overflow-hidden transition-all duration-500 shadow-2xl shrink-0 bg-primary-dark cursor-pointer ${
-                category === "Residential"
-                  ? "w-16 h-16 md:w-32 md:h-32 border-[2px] md:border-[3px] border-white z-20 shadow-[0_0_30px_rgba(0,0,0,0.6)] scale-100"
-                  : "w-10 h-10 md:w-16 md:h-16 border-2 border-white/60 opacity-70 hover:opacity-100 scale-90 hover:scale-100 z-10"
-              }`}
-            >
-              <EditableImage path="residentialImage" fallback={resImg} wrapperClassName="absolute inset-0">
-                {(src) => (src ? <Image src={src} alt="Residential" fill className="object-cover" /> : null)}
-              </EditableImage>
-            </div>
-          </div>
-
-          {/* Commercial Toggle */}
-          <div className="relative flex items-center justify-end md:justify-center">
-            <AnimatePresence>
-              {category === "Commercial" && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute right-full mr-2 md:mr-4 flex items-center whitespace-nowrap drop-shadow-lg z-10"
-                >
-                  <motion.span
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1, duration: 0.4 }}
-                    className="text-white font-body text-[11px] md:text-base tracking-[0.15em] md:tracking-[0.2em] uppercase font-medium mr-2 md:mr-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-                  >
-                    Commercial
-                  </motion.span>
-                  <motion.div
-                    initial={{ clipPath: "inset(0 0 0 100%)" }}
-                    animate={{ clipPath: "inset(0 0 0 0%)" }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="w-6 md:w-20 h-px border-b-[2px] md:border-b-[3px] border-dotted border-white/80"
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div
-              role="button"
-              tabIndex={0}
-              aria-pressed={category === "Commercial"}
-              onClick={() => setCategory("Commercial")}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setCategory("Commercial");
-                }
-              }}
-              className={`relative rounded-full overflow-hidden transition-all duration-500 shadow-2xl shrink-0 bg-primary-dark cursor-pointer ${
-                category === "Commercial"
-                  ? "w-16 h-16 md:w-32 md:h-32 border-[2px] md:border-[3px] border-white z-20 shadow-[0_0_30px_rgba(0,0,0,0.6)] scale-100"
-                  : "w-10 h-10 md:w-16 md:h-16 border-2 border-white/60 opacity-70 hover:opacity-100 scale-90 hover:scale-100 z-10"
-              }`}
-            >
-              <EditableImage path="commercialImage" fallback={comImg} wrapperClassName="absolute inset-0">
-                {(src) => (src ? <Image src={src} alt="Commercial" fill className="object-cover" /> : null)}
-              </EditableImage>
-            </div>
-          </div>
+                  {cat}
+                </span>
+                <span
+                  className={`h-px border-b-2 border-dotted transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    active ? "w-full border-white" : "w-2/3 border-white/70 group-hover:border-white"
+                  }`}
+                />
+              </button>
+            );
+          })}
         </div>
 
         {/* Search/Filter Bar (Floating at bottom) */}

@@ -1,10 +1,7 @@
 import Link from "next/link";
 import { listAllProjects } from "@/lib/db/projects";
-import { getLocationConfig } from "@/lib/locations";
 import PageHeader from "@/components/admin/PageHeader";
-import StatusBadge from "@/components/admin/StatusBadge";
-import DeleteButton from "@/components/admin/DeleteButton";
-import { deleteProjectAction } from "./actions";
+import ProjectsTable from "./ProjectsTable";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Projects — InfraGuru CMS" };
@@ -86,82 +83,10 @@ export default async function AdminProjectsPage({
         </button>
       </form>
 
-      <div className="overflow-hidden rounded-2xl border border-[#032E97]/8 bg-white shadow-[0_10px_40px_rgba(3,46,151,0.05)]">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[940px] text-left text-sm">
-            <thead>
-              <tr className="border-b border-[#032E97]/8 bg-[#032E97]/[0.02] text-[10px] font-bold uppercase tracking-wide text-[#5c6480]">
-                <th className="px-5 py-3">Project</th>
-                <th className="px-5 py-3">City</th>
-                <th className="px-5 py-3">Category</th>
-                <th className="px-5 py-3">Price</th>
-                <th className="px-5 py-3">Status</th>
-                <th className="px-5 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((p) => (
-                <tr key={p.id} className="border-b border-[#032E97]/5 last:border-0 hover:bg-[#032E97]/[0.015]">
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={p.image || "/favicon.ico"}
-                        alt=""
-                        className="h-11 w-14 shrink-0 rounded-lg object-cover"
-                      />
-                      <div className="min-w-0">
-                        <p className="truncate font-semibold text-[#0a1435]">{p.title}</p>
-                        <p className="truncate text-xs text-[#5c6480]">{p.location}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5">
-                    {p.locationSlug ? (
-                      <span className="inline-flex items-center rounded-full bg-[#032E97]/8 px-2.5 py-1 text-[11px] font-semibold text-[#032E97]">
-                        {getLocationConfig(p.locationSlug)?.label ?? p.locationSlug}
-                      </span>
-                    ) : (
-                      <span
-                        title="No city assigned — won't reliably show up on any /projects/location page or in the Properties nav dropdown."
-                        className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold text-amber-700"
-                      >
-                        Unassigned
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-5 py-3.5 text-[#5c6480]">{p.category}</td>
-                  <td className="px-5 py-3.5 text-[#5c6480]">{p.price}</td>
-                  <td className="px-5 py-3.5">
-                    <StatusBadge status={p.status} />
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center justify-end gap-1">
-                      <Link
-                        href={`/admin/projects/${p.id}`}
-                        className="rounded-lg px-3 py-1.5 text-xs font-semibold text-[#032E97] transition-colors hover:bg-[#032E97]/5"
-                      >
-                        Edit
-                      </Link>
-                      <DeleteButton
-                        action={deleteProjectAction.bind(null, p.id)}
-                        confirmMessage={`Delete "${p.title}"? This can't be undone.`}
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-sm text-[#5c6480]">
-                    No projects match your filters.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <ProjectsTable
+        projects={filtered}
+        reorderable={!q?.trim() && (!category || category === "All") && (!status || status === "All")}
+      />
     </div>
   );
 }

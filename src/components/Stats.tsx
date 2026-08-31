@@ -28,7 +28,7 @@ export default function Stats({ content = STATS_DEFAULT_CONTENT }: { content?: S
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
 
   return (
-    <section id="stats" ref={containerRef} className="relative h-[250vh] bg-[#132731] w-full">
+    <section id="stats" ref={containerRef} className="relative h-[160vh] bg-[#132731] w-full">
       {/* Sticky container that stays pinned while we scroll */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center items-center perspective-[1000px]">
         

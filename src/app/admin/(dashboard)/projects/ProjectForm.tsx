@@ -395,6 +395,9 @@ export default function ProjectForm({ project }: { project?: Project }) {
               onChange={(e) => set("sortOrder", Number(e.target.value) || 0)}
               className={inputClass}
             />
+            <p className="mt-1.5 text-xs text-[#5c6480]">
+              Lower numbers appear first. Tip: on the Projects list, drag rows by their handle to reorder without typing a number.
+            </p>
           </label>
         </div>
       </FormSection>

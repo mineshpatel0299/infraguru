@@ -216,3 +216,17 @@ export async function updateProject(id: string, input: ProjectInput): Promise<Pr
 export async function deleteProject(id: string): Promise<void> {
   await db.query(`delete from projects where id = $1`, [id]);
 }
+
+/** Rewrites sort_order for every listed project to match its position in
+ * `orderedIds` (0-indexed), in a single statement so the list never renders
+ * a partially-applied order. */
+export async function reorderProjects(orderedIds: string[]): Promise<void> {
+  if (orderedIds.length === 0) return;
+  const positions = orderedIds.map((_, i) => i);
+  await db.query(
+    `update projects set sort_order = data.pos, updated_at = now()
+     from (select unnest($1::uuid[]) as id, unnest($2::int[]) as pos) as data
+     where projects.id = data.id`,
+    [orderedIds, positions]
+  );
+}
