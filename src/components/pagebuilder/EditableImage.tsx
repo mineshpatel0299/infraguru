@@ -71,7 +71,11 @@ export default function EditableImage({
       />
       <button
         type="button"
-        onClick={() => inputRef.current?.click()}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          inputRef.current?.click();
+        }}
         disabled={uploading}
         className={triggerClassName}
       >
