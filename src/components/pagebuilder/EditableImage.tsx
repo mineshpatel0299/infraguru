@@ -76,7 +76,7 @@ export default function EditableImage({
         className={triggerClassName}
       >
         <span className="rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#0a1435] shadow">
-          {uploading ? "Uploading…" : "Replace"}
+          {uploading ? "Uploading…" : "Replace image"}
         </span>
       </button>
       {error && (
