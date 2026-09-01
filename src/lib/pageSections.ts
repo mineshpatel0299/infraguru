@@ -10,6 +10,12 @@ export type HeroContent = {
   description: string;
   ctaLabel: string;
   ctaHref: string;
+  // Which uploaded background is active; "" backgroundVideo/backgroundImage
+  // (the default) falls back to the built-in mhero.mp4/danube.mp4 pair
+  // regardless of this value.
+  backgroundMediaType: "image" | "video";
+  backgroundVideo: string;
+  backgroundImage: string;
   stats: StatPill[];
 };
 
@@ -20,6 +26,9 @@ export const HERO_DEFAULT_CONTENT: HeroContent = {
     "Premium residences crafted for those who value quality, comfort, and timeless living.",
   ctaLabel: "EXPLORE PROJECTS",
   ctaHref: "/projects",
+  backgroundMediaType: "video",
+  backgroundVideo: "",
+  backgroundImage: "",
   stats: [
     { value: "25+", label: "YEARS OF EXCELLENCE" },
     { value: "50+", label: "PREMIUM PROJECTS" },

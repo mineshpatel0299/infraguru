@@ -1,10 +1,14 @@
 "use client";
 
 import { motion, type Variants } from 'framer-motion';
+import Image from 'next/image';
 import Navbar from './Navbar';
 import { HERO_DEFAULT_CONTENT, type HeroContent } from '@/lib/pageSections';
 import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
 import EditableText from './pagebuilder/EditableText';
+import EditableVideo from './pagebuilder/EditableVideo';
+import EditableImage from './pagebuilder/EditableImage';
+import RemoveFieldButton from './pagebuilder/RemoveFieldButton';
 import RemoveItemButton from './pagebuilder/RemoveItemButton';
 import AddItemButton from './pagebuilder/AddItemButton';
 
@@ -56,6 +60,8 @@ function SlideUpWordReveal({
 export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: HeroContent }) {
   const ctx = useSectionEdit();
   const live = (ctx?.content as HeroContent | undefined) ?? content;
+  const mediaType = live.backgroundMediaType === "image" ? "image" : "video";
+  const hasCustomBackground = Boolean(live.backgroundVideo || live.backgroundImage);
 
   return (
     <section id="hero" className="relative bg-primary-dark h-[100svh]">
@@ -64,19 +70,57 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
       <div
         className="relative w-full h-full flex flex-col overflow-hidden"
       >
-        {/* Cinematic background */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <video
-            muted
-            autoPlay
-            playsInline
-            loop
-            preload="auto"
-            className="h-full w-full object-cover"
+        {/* Cinematic background — video and image uploaders are both always
+            mounted (so either trigger button works regardless of which is
+            currently active), but only the active mediaType renders actual
+            media; whichever the admin uploads to becomes the active one. */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <EditableVideo
+            path="backgroundVideo"
+            fallback={live.backgroundVideo}
+            wrapperClassName="absolute inset-0"
+            triggerClassName="absolute right-4 top-20 sm:right-6 sm:top-24 z-40 flex items-center justify-center"
+            onUploaded={() => ctx?.setField("backgroundMediaType", "video")}
           >
-            <source src="/mhero.mp4" media="(max-width: 639px)" />
-            <source src="/danube.mp4" />
-          </video>
+            {(src) =>
+              mediaType === "video" ? (
+                <video
+                  key={src}
+                  muted
+                  autoPlay
+                  playsInline
+                  loop
+                  preload="auto"
+                  className="h-full w-full object-cover"
+                >
+                  {!src && <source src="/mhero.mp4" media="(max-width: 639px)" />}
+                  <source src={src || "/danube.mp4"} />
+                </video>
+              ) : null
+            }
+          </EditableVideo>
+
+          <EditableImage
+            path="backgroundImage"
+            fallback={live.backgroundImage}
+            wrapperClassName="absolute inset-0"
+            triggerClassName="absolute right-4 top-32 sm:right-6 sm:top-[8.5rem] z-40 flex items-center justify-center"
+            onUploaded={() => ctx?.setField("backgroundMediaType", "image")}
+          >
+            {(src) =>
+              mediaType === "image" && src ? (
+                <Image src={src} alt="" fill priority sizes="100vw" className="object-cover" />
+              ) : null
+            }
+          </EditableImage>
+
+          {ctx && hasCustomBackground && (
+            <RemoveFieldButton
+              paths={["backgroundVideo", "backgroundImage", "backgroundMediaType"]}
+              label="Revert to default background"
+              className="absolute right-4 top-44 sm:right-6 sm:top-52 z-40 flex h-7 w-7 items-center justify-center rounded-full bg-red-500 text-xs text-white opacity-100 shadow"
+            />
+          )}
         </div>
 
         {/* Color gradient overlay from bottom to top */}
@@ -93,10 +137,16 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
           transition={{ duration: 0.9, delay: 0.15, ease: [0.85, 0, 0.15, 1] }}
         />
 
-        {/* Main Content Area (Centers the text block vertically) */}
-        <div className="max-w-[1600px] relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-end sm:justify-center w-full pb-6 sm:pb-0">
+        {/* Main Content Area (Centers the text block vertically). This box's
+            own footprint spans nearly the full section (flex-1 + w-full),
+            so it's pointer-events-none — otherwise, being higher in the
+            stacking order than the background layer, it would swallow
+            hover/clicks meant for the background upload buttons above even
+            over the empty space around the text. Each interactive child
+            below opts back in with pointer-events-auto. */}
+        <div className="max-w-[1600px] relative z-10 mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-end sm:justify-center w-full pb-6 sm:pb-0 pointer-events-none">
           <motion.div className="flex flex-col items-center text-center sm:items-start sm:text-left w-full max-w-4xl mx-auto sm:mx-0">
-            <h1 className="mb-4 sm:mb-6 font-heading font-light uppercase text-white sm:text-[#132731] flex flex-col items-center sm:items-start">
+            <h1 className="mb-4 sm:mb-6 font-heading font-light uppercase text-white sm:text-[#132731] flex flex-col items-center sm:items-start pointer-events-auto">
               {ctx ? (
                 <EditableText
                   as="span"
@@ -127,8 +177,8 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
               )}
             </h1>
             
-            <motion.div 
-               className="mt-2 sm:mt-4 hidden sm:flex flex-col gap-4 sm:gap-6"
+            <motion.div
+               className="mt-2 sm:mt-4 hidden sm:flex flex-col gap-4 sm:gap-6 pointer-events-auto"
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.8, delay: 1.75, ease: [0.16, 1, 0.3, 1] }}
@@ -147,7 +197,7 @@ export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: Her
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.8, delay: 1.9, ease: [0.16, 1, 0.3, 1] }}
-               className="mt-6 sm:mt-12"
+               className="mt-6 sm:mt-12 pointer-events-auto"
             >
                <a href={content.ctaHref} className="inline-flex items-center justify-center gap-2 sm:gap-3 bg-[#132731] px-5 sm:px-9 py-3 sm:py-4 text-[10px] sm:text-xs font-bold text-white uppercase tracking-widest rounded-full hover:bg-gold-gradient hover:text-[#132731] transition-all duration-300 border border-transparent shadow-[0_8px_24px_rgba(0,0,0,0.15)] group">
                  <EditableText as="span" path="ctaLabel" fallback={live.ctaLabel} />

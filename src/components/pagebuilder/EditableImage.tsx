@@ -5,6 +5,9 @@ import { useSectionEdit } from "./SectionEditBoundary";
 import { getPath } from "@/lib/objectPath";
 import { uploadMediaAction } from "@/app/admin/media-actions";
 
+const DEFAULT_TRIGGER_CLASSNAME =
+  "absolute inset-0 z-10 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover/editable-image:bg-black/40 group-hover/editable-image:opacity-100";
+
 /** Renders `children(src)` as-is outside of edit mode. Inside a
  * SectionEditBoundary, wraps it with a hover "Replace" overlay that opens
  * a file picker and uploads straight over the image — no side panel. */
@@ -12,11 +15,23 @@ export default function EditableImage({
   path,
   fallback,
   wrapperClassName = "relative",
+  triggerClassName = DEFAULT_TRIGGER_CLASSNAME,
+  onUploaded,
   children,
 }: {
   path: string;
   fallback: string;
   wrapperClassName?: string;
+  /** Overrides the trigger button's own position/size/visibility — use this
+   * when the wrapper is a full-bleed background sitting under other content,
+   * so the click target isn't a full-cover overlay that ends up beneath a
+   * higher z-index sibling's hit box. Defaults to the original full-cover,
+   * hover-to-reveal button. */
+  triggerClassName?: string;
+  /** Called with the uploaded URL right after ctx.setField(path, url) — use
+   * this to also flip a sibling field (e.g. which media type is active)
+   * when a field other than `path` needs updating on upload. */
+  onUploaded?: (url: string) => void;
   children: (src: string) => ReactNode;
 }) {
   const ctx = useSectionEdit();
@@ -46,7 +61,10 @@ export default function EditableImage({
           setUploading(true);
           setError(null);
           uploadMediaAction(file)
-            .then(({ url }) => ctx.setField(path, url))
+            .then(({ url }) => {
+              ctx.setField(path, url);
+              onUploaded?.(url);
+            })
             .catch((err: Error) => setError(err.message))
             .finally(() => setUploading(false));
         }}
@@ -55,7 +73,7 @@ export default function EditableImage({
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-200 group-hover/editable-image:bg-black/40 group-hover/editable-image:opacity-100"
+        className={triggerClassName}
       >
         <span className="rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-wide text-[#0a1435] shadow">
           {uploading ? "Uploading…" : "Replace"}
