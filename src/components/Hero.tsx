@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
-import { motion, useScroll, useSpring, useTransform, type Variants } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import Navbar from './Navbar';
 import { HERO_DEFAULT_CONTENT, type HeroContent } from '@/lib/pageSections';
 import { useSectionEdit } from './pagebuilder/SectionEditBoundary';
@@ -57,93 +56,28 @@ function SlideUpWordReveal({
 export default function Hero({ content = HERO_DEFAULT_CONTENT }: { content?: HeroContent }) {
   const ctx = useSectionEdit();
   const live = (ctx?.content as HeroContent | undefined) ?? content;
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"]
-  });
-
-  // Smooths out jittery/jumpy raw scroll deltas (fast wheel flicks, trackpad
-  // micro-steps) before they drive the video, so the scrub target itself
-  // moves fluidly instead of in the raw, uneven steps the scroll event gives us.
-  const smoothScrollProgress = useSpring(scrollYProgress, {
-    stiffness: 300,
-    damping: 30,
-    mass: 0.4,
-    restDelta: 0.0005,
-  });
-
-  const parallaxScale = useTransform(smoothScrollProgress, [0, 1], [1, 1.05]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    let rafId: number;
-    let duration = video.duration || 0;
-
-    const onLoadedMetadata = () => {
-      duration = video.duration || 0;
-    };
-    video.addEventListener('loadedmetadata', onLoadedMetadata);
-
-    const isMobile = window.matchMedia('(max-width: 640px)').matches;
-
-    if (isMobile) {
-      // Real mobile hardware decoders often fail to render a frame when the
-      // video is only ever seeked via currentTime and never actually played
-      // (it just stays blank). So on mobile we let it play/loop normally,
-      // and get the "smooth on scroll" feel from the parallax scale instead.
-      video.play().catch(() => {});
-    } else {
-      // On desktop, we scrub the video based on scroll position.
-      const tick = () => {
-        if (duration && video.readyState >= 2) {
-          const target = smoothScrollProgress.get() * duration;
-          if (Math.abs(target - video.currentTime) > 1 / 60) {
-            video.currentTime = target;
-          }
-        }
-        rafId = requestAnimationFrame(tick);
-      };
-      rafId = requestAnimationFrame(tick);
-    }
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      video.removeEventListener('loadedmetadata', onLoadedMetadata);
-    };
-  }, [smoothScrollProgress]);
 
   return (
-    <section id="hero" ref={sectionRef} className="relative bg-primary-dark h-[110vh] sm:h-[300vh]">
+    <section id="hero" className="relative bg-primary-dark h-[100svh]">
       <Navbar />
 
       <div
-        className="sticky top-0 left-0 w-full flex h-[100svh] flex-col overflow-hidden"
+        className="relative w-full h-full flex flex-col overflow-hidden"
       >
         {/* Cinematic background */}
-        <motion.div
-          className="absolute inset-0 z-0 pointer-events-none"
-          style={{ scale: parallaxScale }}
-        >
-          <div className="absolute inset-0 z-0 overflow-hidden">
-            <video
-              ref={videoRef}
-              poster=""
-              muted
-              playsInline
-              loop
-              preload="auto"
-              className="h-full w-full object-cover scale-[1.02]"
-            >
-              <source src="/mhero.mp4" media="(max-width: 639px)" />
-              <source src="/danube.mp4" />
-            </video>
-          </div>
-        </motion.div>
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <video
+            muted
+            autoPlay
+            playsInline
+            loop
+            preload="auto"
+            className="h-full w-full object-cover"
+          >
+            <source src="/mhero.mp4" media="(max-width: 639px)" />
+            <source src="/danube.mp4" />
+          </video>
+        </div>
 
         {/* Color gradient overlay from bottom to top */}
         <div className="absolute bottom-0 left-0 right-0 h-[50%] z-1 bg-gradient-to-t from-[#132731] via-[#132731]/60 to-transparent pointer-events-none" />
